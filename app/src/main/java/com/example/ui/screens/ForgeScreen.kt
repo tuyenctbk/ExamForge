@@ -79,9 +79,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.R
 import com.example.data.local.AiUsagePlanState
+import com.example.data.local.SampleStudyDecks
 import com.example.data.model.CardType
 import com.example.data.model.GeneratedCardDraft
 import com.example.data.model.StudyDeck
@@ -89,6 +91,8 @@ import com.example.ui.components.QuotaSoftNudgeBanner
 import com.example.ui.components.SmartQuotaRecoveryCard
 import com.example.ui.theme.DeckAccentPalette
 import com.example.ui.components.PostOperationSupportCard
+import com.example.ui.util.rememberHasCameraHardware
+import com.example.ui.util.tvFocusHighlight
 import com.example.ui.viewmodel.ForgeUiState
 
 @Composable
@@ -115,11 +119,18 @@ fun ForgeScreen(
     onDismissSupportCard: () -> Unit = {}
 ) {
     val context = LocalContext.current
+    val hasCamera = rememberHasCameraHardware()
     var rawNotes by rememberSaveable { mutableStateOf("") }
     var subjectHint by rememberSaveable { mutableStateOf("") }
     var targetCount by rememberSaveable { mutableIntStateOf(6) }
     var selectedAccent by rememberSaveable { mutableIntStateOf(0) }
     var selectedExistingDeckId by rememberSaveable { mutableStateOf<String?>(null) }
+
+    androidx.compose.runtime.LaunchedEffect(existingDecks, selectedExistingDeckId) {
+        if (selectedExistingDeckId != null && existingDecks.none { it.id == selectedExistingDeckId }) {
+            selectedExistingDeckId = null
+        }
+    }
 
     // Live Audio Lecture-to-Flashcards (free on-device SpeechRecognizer, $0 audio API cost)
     var isDictatingLecture by remember { mutableStateOf(false) }
@@ -296,7 +307,7 @@ fun ForgeScreen(
             when (forgeState) {
                 is ForgeUiState.Generating -> {
                     item {
-                        GeneratingCard()
+                        GeneratingCard(isOffline = forgeState.isOffline)
                     }
                 }
 
@@ -472,7 +483,14 @@ fun ForgeScreen(
                                         FilterChip(
                                             selected = selectedExistingDeckId == deck.id,
                                             onClick = { selectedExistingDeckId = deck.id },
-                                            label = { Text(deck.title.take(22)) }
+                                            label = {
+                                                Text(
+                                                    text = deck.title,
+                                                    maxLines = 1,
+                                                    overflow = TextOverflow.Ellipsis,
+                                                    modifier = Modifier.widthIn(max = 180.dp)
+                                                )
+                                            }
                                         )
                                     }
                                 }
@@ -623,21 +641,29 @@ fun ForgeScreen(
                                     horizontalArrangement = Arrangement.spacedBy(10.dp),
                                     modifier = Modifier.fillMaxWidth()
                                 ) {
-                                    Button(
-                                        onClick = onOpenCameraCapture,
-                                        shape = RoundedCornerShape(14.dp),
-                                        modifier = Modifier
-                                            .weight(1f)
-                                            .height(50.dp)
-                                            .testTag("snap_camera_button")
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Default.CameraAlt,
-                                            contentDescription = stringResource(id = R.string.cd_snap_photo),
-                                            modifier = Modifier.size(18.dp)
-                                        )
-                                        Spacer(modifier = Modifier.width(6.dp))
-                                        Text(stringResource(R.string.forge_camerax_scan))
+                                    if (hasCamera) {
+                                        Button(
+                                            onClick = onOpenCameraCapture,
+                                            shape = RoundedCornerShape(14.dp),
+                                            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
+                                            modifier = Modifier
+                                                .weight(1f)
+                                                .height(50.dp)
+                                                .tvFocusHighlight(RoundedCornerShape(14.dp))
+                                                .testTag("snap_camera_button")
+                                        ) {
+                                            Icon(
+                                                imageVector = Icons.Default.CameraAlt,
+                                                contentDescription = stringResource(id = R.string.cd_snap_photo),
+                                                modifier = Modifier.size(18.dp)
+                                            )
+                                            Spacer(modifier = Modifier.width(6.dp))
+                                            Text(
+                                                text = stringResource(R.string.forge_camerax_scan),
+                                                maxLines = 1,
+                                                overflow = TextOverflow.Ellipsis
+                                            )
+                                        }
                                     }
 
                                     OutlinedButton(
@@ -647,9 +673,11 @@ fun ForgeScreen(
                                             )
                                         },
                                         shape = RoundedCornerShape(14.dp),
+                                        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
                                         modifier = Modifier
                                             .weight(1f)
                                             .height(50.dp)
+                                            .tvFocusHighlight(RoundedCornerShape(14.dp))
                                             .testTag("pick_gallery_button")
                                     ) {
                                         Icon(
@@ -658,7 +686,11 @@ fun ForgeScreen(
                                             modifier = Modifier.size(18.dp)
                                         )
                                         Spacer(modifier = Modifier.width(6.dp))
-                                        Text(stringResource(R.string.forge_gallery))
+                                        Text(
+                                            text = stringResource(R.string.forge_gallery),
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
                                     }
                                 }
                             }
@@ -761,6 +793,24 @@ fun ForgeScreen(
                                         .testTag("forge_notes_input")
                                 )
 
+                                if (rawNotes.isBlank()) {
+                                    androidx.compose.material3.AssistChip(
+                                        onClick = {
+                                            rawNotes = SampleStudyDecks.SAMPLE_FORGE_NOTES
+                                            if (subjectHint.isBlank()) subjectHint = "Biochemistry"
+                                        },
+                                        leadingIcon = {
+                                            Icon(
+                                                imageVector = Icons.Default.AutoAwesome,
+                                                contentDescription = null,
+                                                modifier = Modifier.size(16.dp)
+                                            )
+                                        },
+                                        label = { Text(stringResource(id = R.string.forge_try_sample_notes)) },
+                                        modifier = Modifier.testTag("forge_sample_notes_chip")
+                                    )
+                                }
+
                                 OutlinedTextField(
                                     value = subjectHint,
                                     onValueChange = { if (it.length <= 60) subjectHint = it },
@@ -848,7 +898,7 @@ fun ForgeScreen(
 }
 
 @Composable
-private fun GeneratingCard() {
+private fun GeneratingCard(isOffline: Boolean = false) {
     Surface(
         shape = RoundedCornerShape(24.dp),
         color = MaterialTheme.colorScheme.surface,
@@ -865,7 +915,11 @@ private fun GeneratingCard() {
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "Gemini is parsing your study material...",
+                text = if (isOffline) {
+                    "Parsing study notes locally ($0)..."
+                } else {
+                    "Gemini is parsing your study material..."
+                },
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onSurface
             )

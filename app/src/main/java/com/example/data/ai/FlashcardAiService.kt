@@ -381,6 +381,19 @@ class FlashcardAiService(
             text(promptText)
         }
 
+        // Guard against missing FirebaseApp in standalone offline/sideloaded builds
+        if (runCatching { com.google.firebase.FirebaseApp.getInstance() }.isFailure) {
+            if (bitmap == null && rawNotes.isNotBlank()) {
+                return OfflineNoteParser.parseNotesOffline(rawNotes, safeCount, subjectHint).copy(
+                    summary = "Built locally via Offline Instant Parser ($0 cost). Add a free Gemini BYOK key in Settings for cloud AI.",
+                    generatedOffline = true
+                )
+            }
+            throw IllegalStateException(
+                "Add your free Gemini API key (BYOK) in Settings to scan photos with Gemini, or paste/dictate notes to forge offline at \$0 cost."
+            )
+        }
+
         return try {
             val primaryModel = if (startWithEcoLite) flashcardParserEcoLiteModel else flashcardParserPrimaryModel
             val response = try {
@@ -453,6 +466,12 @@ class FlashcardAiService(
             throw AiQuotaExceededException(
                 actionName = "Fact-Check",
                 dailyLimit = plan.dailyFactCheckLimit
+            )
+        }
+
+        if (runCatching { com.google.firebase.FirebaseApp.getInstance() }.isFailure) {
+            throw IllegalStateException(
+                "Add your free Gemini API key (BYOK) in Settings to unlock live Google Search Fact-Checking."
             )
         }
 

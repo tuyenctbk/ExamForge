@@ -1,1 +1,8 @@
 /build
+/release
+*.apk
+*.aab
+*.jks
+*.keystore
+*.log
+google-services.json

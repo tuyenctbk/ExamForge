@@ -176,6 +176,11 @@ class GeminiStudyService(
         }
 
         // Compact sliding context window (last 8 turns) to stretch free-tier tokens
+        if (runCatching { com.google.firebase.FirebaseApp.getInstance() }.isFailure) {
+            emit(LocalQuizmasterFallback.generateReply(deckTitle, cards, history, userMessage))
+            return@flow
+        }
+
         val chatHistory = buildList {
             add(content("user") { text(deckContextPrompt) })
             add(content("model") { text(deckAckReply) })

@@ -23,6 +23,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.filled.CloudDone
 import androidx.compose.material.icons.filled.CloudOff
 import androidx.compose.material.icons.filled.DarkMode
@@ -30,7 +31,6 @@ import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.PhoneAndroid
 import androidx.compose.material.icons.filled.Storage
 import androidx.compose.material.icons.filled.Sync
-import androidx.compose.material.icons.filled.VolumeUp
 import androidx.compose.material.icons.filled.Widgets
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -72,6 +72,7 @@ import com.example.widget.FlashcardAppWidgetProvider
 
 @Composable
 fun SettingsScreen(
+    isCloudSignedIn: Boolean = true,
     userEmail: String?,
     userDisplayName: String?,
     profile: UserProfile?,
@@ -98,6 +99,7 @@ fun SettingsScreen(
     onSignOut: () -> Unit
 ) {
     val context = LocalContext.current
+    val isTv = com.example.ui.util.rememberIsAndroidTv()
     var showPrivacyPolicy by remember { mutableStateOf(false) }
 
     if (showPrivacyPolicy) {
@@ -166,7 +168,7 @@ fun SettingsScreen(
                                 color = MaterialTheme.colorScheme.onSurface
                             )
                             Text(
-                                text = userEmail ?: "Google Account Connected",
+                                text = userEmail ?: if (isCloudSignedIn) "Google Account Connected" else "Offline Local Profile · Room SQLite",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -267,7 +269,7 @@ fun SettingsScreen(
                         modifier = Modifier.padding(16.dp)
                     ) {
                         Icon(
-                            imageVector = Icons.Default.VolumeUp,
+                            imageVector = Icons.AutoMirrored.Filled.VolumeUp,
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.tertiary
                         )
@@ -362,13 +364,27 @@ fun SettingsScreen(
 
                         Spacer(modifier = Modifier.height(12.dp))
 
-                        Button(
-                            onClick = {
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                    val appWidgetManager = AppWidgetManager.getInstance(context)
-                                    val provider = ComponentName(context, FlashcardAppWidgetProvider::class.java)
-                                    if (appWidgetManager.isRequestPinAppWidgetSupported) {
-                                        appWidgetManager.requestPinAppWidget(provider, null, null)
+                        if (isTv) {
+                            Text(
+                                text = stringResource(id = R.string.settings_tv_widget_note),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        } else {
+                            Button(
+                                onClick = {
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                        val appWidgetManager = AppWidgetManager.getInstance(context)
+                                        val provider = ComponentName(context, FlashcardAppWidgetProvider::class.java)
+                                        if (appWidgetManager.isRequestPinAppWidgetSupported) {
+                                            appWidgetManager.requestPinAppWidget(provider, null, null)
+                                        } else {
+                                            Toast.makeText(
+                                                context,
+                                                "Long-press your home screen -> Widgets -> ExamForge Quick Recall",
+                                                Toast.LENGTH_LONG
+                                            ).show()
+                                        }
                                     } else {
                                         Toast.makeText(
                                             context,
@@ -376,27 +392,21 @@ fun SettingsScreen(
                                             Toast.LENGTH_LONG
                                         ).show()
                                     }
-                                } else {
-                                    Toast.makeText(
-                                        context,
-                                        "Long-press your home screen -> Widgets -> ExamForge Quick Recall",
-                                        Toast.LENGTH_LONG
-                                    ).show()
-                                }
-                            },
-                            shape = RoundedCornerShape(14.dp),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(48.dp)
-                                .testTag("pin_widget_button")
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Widgets,
-                                contentDescription = null,
-                                modifier = Modifier.size(18.dp)
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(stringResource(R.string.settings_pin_widget))
+                                },
+                                shape = RoundedCornerShape(14.dp),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(48.dp)
+                                    .testTag("pin_widget_button")
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Widgets,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(18.dp)
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(stringResource(R.string.settings_pin_widget))
+                            }
                         }
                     }
                 }
@@ -513,7 +523,11 @@ fun SettingsScreen(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = stringResource(id = R.string.sign_out),
+                        text = if (isCloudSignedIn) {
+                            stringResource(id = R.string.sign_out)
+                        } else {
+                            stringResource(id = R.string.settings_switch_account)
+                        },
                         fontWeight = FontWeight.SemiBold
                     )
                 }

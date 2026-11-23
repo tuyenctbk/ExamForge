@@ -1,11 +1,17 @@
 package com.example.ui.screens
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -18,12 +24,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Bolt
@@ -55,15 +64,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.example.R
 import com.example.data.model.Flashcard
+import com.example.ui.util.tvFocusHighlight
 import kotlinx.coroutines.delay
+import kotlin.math.roundToInt
 
 private enum class MatchGamePhase {
     READY,
@@ -73,7 +87,8 @@ private enum class MatchGamePhase {
 
 private data class MatchTile(
     val cardId: String,
-    val text: String
+    val text: String,
+    val matchAnswerNormalized: String
 )
 
 private const val INITIAL_GAME_SECONDS = 60
@@ -92,6 +107,7 @@ fun MatchBlitzGameScreen(
     onBack: () -> Unit
 ) {
     BackHandler(onBack = onBack)
+    val haptics = LocalHapticFeedback.current
 
     val playableCards = remember(cards) {
         cards.filter { it.question.isNotBlank() && it.answer.isNotBlank() }
@@ -109,19 +125,32 @@ fun MatchBlitzGameScreen(
 
     var questionTiles by remember { mutableStateOf<List<MatchTile>>(emptyList()) }
     var answerTiles by remember { mutableStateOf<List<MatchTile>>(emptyList()) }
-    var matchedIdsInRound by remember { mutableStateOf<Set<String>>(emptySet()) }
+    var matchedQuestionIds by remember { mutableStateOf<Set<String>>(emptySet()) }
+    var matchedAnswerIds by remember { mutableStateOf<Set<String>>(emptySet()) }
     var selectedQuestionId by remember { mutableStateOf<String?>(null) }
     var selectedAnswerId by remember { mutableStateOf<String?>(null) }
     var mismatchIds by remember { mutableStateOf<Pair<String, String>?>(null) }
+    var feedbackBanner by remember { mutableStateOf<Pair<String, Boolean>?>(null) } // text to isPositive
+    var pendingRoundAdvance by remember { mutableStateOf(false) }
 
     fun loadNextRound() {
-        val roundSample = playableCards.shuffled().take(PAIRS_PER_ROUND.coerceAtMost(playableCards.size))
-        questionTiles = roundSample.map { MatchTile(it.id, it.question.take(110)) }.shuffled()
-        answerTiles = roundSample.map { MatchTile(it.id, it.answer.take(110)) }.shuffled()
-        matchedIdsInRound = emptySet()
+        val shuffled = playableCards.shuffled()
+        // Prefer distinct answers in a round so players never see ambiguous duplicate tiles
+        val distinctByAnswer = shuffled.distinctBy { it.answer.trim().lowercase() }
+        val pool = if (distinctByAnswer.size >= 3) distinctByAnswer else shuffled
+        val roundSample = pool.take(PAIRS_PER_ROUND.coerceAtMost(pool.size))
+        questionTiles = roundSample.map {
+            MatchTile(it.id, it.question.take(110), it.answer.trim().lowercase())
+        }.shuffled()
+        answerTiles = roundSample.map {
+            MatchTile(it.id, it.answer.take(110), it.answer.trim().lowercase())
+        }.shuffled()
+        matchedQuestionIds = emptySet()
+        matchedAnswerIds = emptySet()
         selectedQuestionId = null
         selectedAnswerId = null
         mismatchIds = null
+        pendingRoundAdvance = false
     }
 
     fun startNewGame() {
@@ -133,6 +162,7 @@ fun MatchBlitzGameScreen(
         attemptsTotal = 0
         roundNumber = 1
         timeLeftSeconds = INITIAL_GAME_SECONDS
+        feedbackBanner = null
         loadNextRound()
         phase = MatchGamePhase.PLAYING
     }
@@ -151,6 +181,17 @@ fun MatchBlitzGameScreen(
         }
     }
 
+    // Brief beat on round clear so players see the final green match + bonus banner
+    LaunchedEffect(pendingRoundAdvance) {
+        if (pendingRoundAdvance && phase == MatchGamePhase.PLAYING) {
+            delay(360L)
+            roundNumber += 1
+            timeLeftSeconds = (timeLeftSeconds + 8).coerceAtMost(90)
+            score += 150
+            loadNextRound()
+        }
+    }
+
     // Clear mismatch flash cleanly
     LaunchedEffect(mismatchIds) {
         if (mismatchIds != null) {
@@ -161,31 +202,48 @@ fun MatchBlitzGameScreen(
         }
     }
 
+    // Auto-clear transient score/penalty banner
+    LaunchedEffect(feedbackBanner) {
+        if (feedbackBanner != null) {
+            delay(950L)
+            feedbackBanner = null
+        }
+    }
+
     // Evaluate pair whenever both sides are picked
     fun evaluateSelection(qId: String?, aId: String?) {
-        if (qId == null || aId == null) return
+        if (qId == null || aId == null || pendingRoundAdvance) return
+        val qTile = questionTiles.firstOrNull { it.cardId == qId } ?: return
+        val aTile = answerTiles.firstOrNull { it.cardId == aId } ?: return
         attemptsTotal += 1
-        if (qId == aId) {
+        val isMatch = qId == aId || qTile.matchAnswerNormalized == aTile.matchAnswerNormalized
+        if (isMatch) {
+            haptics.performHapticFeedback(HapticFeedbackType.TextHandleMove)
             combo += 1
             if (combo > maxCombo) maxCombo = combo
             val multiplier = combo.coerceAtMost(5)
-            score += 100 * multiplier
+            val gained = 100 * multiplier
+            score += gained
             matchedPairsTotal += 1
-            val updatedMatched = matchedIdsInRound + qId
-            matchedIdsInRound = updatedMatched
+            val updatedMatchedQ = matchedQuestionIds + qId
+            val updatedMatchedA = matchedAnswerIds + aId
+            matchedQuestionIds = updatedMatchedQ
+            matchedAnswerIds = updatedMatchedA
             selectedQuestionId = null
             selectedAnswerId = null
 
-            if (updatedMatched.size >= questionTiles.size) {
-                roundNumber += 1
-                timeLeftSeconds = (timeLeftSeconds + 8).coerceAtMost(90)
-                score += 150
-                loadNextRound()
+            if (updatedMatchedQ.size >= questionTiles.size) {
+                feedbackBanner = "Round Clear! +150 pts · +8s Bonus" to true
+                pendingRoundAdvance = true
+            } else {
+                feedbackBanner = "+$gained pts${if (multiplier > 1) " (x$multiplier streak!)" else ""}" to true
             }
         } else {
+            haptics.performHapticFeedback(HapticFeedbackType.LongPress)
             combo = 0
             val updatedTime = (timeLeftSeconds - 2).coerceAtLeast(0)
             timeLeftSeconds = updatedTime
+            feedbackBanner = "Mismatch · −2s penalty" to false
             if (updatedTime == 0 && phase == MatchGamePhase.PLAYING) {
                 mismatchIds = null
                 phase = MatchGamePhase.FINISHED
@@ -244,6 +302,7 @@ fun MatchBlitzGameScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .widthIn(max = 520.dp)
+                        .verticalScroll(rememberScrollState())
                         .padding(24.dp)
                 ) {
                     Icon(
@@ -298,10 +357,25 @@ fun MatchBlitzGameScreen(
                 }
 
                 MatchGamePhase.PLAYING -> {
+                    val animatedScore by animateIntAsState(targetValue = score, label = "match_score")
+                    val comboPopScale = remember { Animatable(1f) }
+                    LaunchedEffect(combo) {
+                        if (combo > 1) {
+                            comboPopScale.snapTo(1.18f)
+                            comboPopScale.animateTo(
+                                targetValue = 1f,
+                                animationSpec = spring(
+                                    dampingRatio = Spring.DampingRatioMediumBouncy,
+                                    stiffness = Spring.StiffnessMedium
+                                )
+                            )
+                        }
+                    }
+
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxSize()
-                            .widthIn(max = 720.dp),
+                            .widthIn(max = 820.dp),
                         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
@@ -337,7 +411,8 @@ fun MatchBlitzGameScreen(
 
                                         Surface(
                                             color = MaterialTheme.colorScheme.primaryContainer,
-                                            shape = RoundedCornerShape(10.dp)
+                                            shape = RoundedCornerShape(10.dp),
+                                            modifier = Modifier.scale(comboPopScale.value)
                                         ) {
                                             Row(
                                                 verticalAlignment = Alignment.CenterVertically,
@@ -360,7 +435,7 @@ fun MatchBlitzGameScreen(
                                         }
 
                                         Text(
-                                            text = "$score pts",
+                                            text = "$animatedScore pts",
                                             style = MaterialTheme.typography.titleMedium,
                                             fontWeight = FontWeight.ExtraBold,
                                             color = MaterialTheme.colorScheme.secondary
@@ -382,6 +457,30 @@ fun MatchBlitzGameScreen(
                                             .height(7.dp)
                                             .clip(RoundedCornerShape(4.dp))
                                     )
+
+                                    AnimatedVisibility(
+                                        visible = feedbackBanner != null,
+                                        enter = fadeIn() + expandVertically(),
+                                        exit = fadeOut() + shrinkVertically()
+                                    ) {
+                                        val (bannerText, isPos) = feedbackBanner ?: ("" to true)
+                                        Surface(
+                                            color = if (isPos) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.errorContainer,
+                                            shape = RoundedCornerShape(10.dp),
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(top = 8.dp)
+                                        ) {
+                                            Text(
+                                                text = bannerText,
+                                                style = MaterialTheme.typography.labelMedium,
+                                                fontWeight = FontWeight.Bold,
+                                                color = if (isPos) MaterialTheme.colorScheme.onSecondaryContainer else MaterialTheme.colorScheme.onErrorContainer,
+                                                textAlign = TextAlign.Center,
+                                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)
+                                            )
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -416,11 +515,11 @@ fun MatchBlitzGameScreen(
                             ) {
                                 MatchTileCard(
                                     text = qTile.text,
-                                    isMatched = qTile.cardId in matchedIdsInRound,
+                                    isMatched = qTile.cardId in matchedQuestionIds,
                                     isSelected = selectedQuestionId == qTile.cardId,
                                     isError = mismatchIds?.first == qTile.cardId,
                                     onClick = {
-                                        if (mismatchIds != null || qTile.cardId in matchedIdsInRound) return@MatchTileCard
+                                        if (mismatchIds != null || pendingRoundAdvance || qTile.cardId in matchedQuestionIds) return@MatchTileCard
                                         val nextQ = if (selectedQuestionId == qTile.cardId) null else qTile.cardId
                                         selectedQuestionId = nextQ
                                         if (nextQ != null && selectedAnswerId != null) {
@@ -434,11 +533,11 @@ fun MatchBlitzGameScreen(
 
                                 MatchTileCard(
                                     text = aTile.text,
-                                    isMatched = aTile.cardId in matchedIdsInRound,
+                                    isMatched = aTile.cardId in matchedAnswerIds,
                                     isSelected = selectedAnswerId == aTile.cardId,
                                     isError = mismatchIds?.second == aTile.cardId,
                                     onClick = {
-                                        if (mismatchIds != null || aTile.cardId in matchedIdsInRound) return@MatchTileCard
+                                        if (mismatchIds != null || pendingRoundAdvance || aTile.cardId in matchedAnswerIds) return@MatchTileCard
                                         val nextA = if (selectedAnswerId == aTile.cardId) null else aTile.cardId
                                         selectedAnswerId = nextA
                                         if (selectedQuestionId != null && nextA != null) {
@@ -469,6 +568,17 @@ private fun MatchTileCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val shakeOffset = remember { Animatable(0f) }
+    LaunchedEffect(isError) {
+        if (isError) {
+            listOf(-12f, 12f, -8f, 8f, 0f).forEach { target ->
+                shakeOffset.animateTo(target, spring(stiffness = Spring.StiffnessHigh))
+            }
+        } else {
+            shakeOffset.snapTo(0f)
+        }
+    }
+
     val bgColor by animateColorAsState(
         targetValue = when {
             isMatched -> MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.45f)
@@ -503,8 +613,10 @@ private fun MatchTileCard(
         color = bgColor,
         border = BorderStroke(if (isSelected || isError) 2.dp else 1.dp, borderColor),
         modifier = modifier
+            .offset { IntOffset(shakeOffset.value.roundToInt(), 0) }
             .scale(tileScale)
             .heightIn(min = 78.dp)
+            .tvFocusHighlight(RoundedCornerShape(16.dp))
             .clip(RoundedCornerShape(16.dp))
             .clickable(enabled = !isMatched, onClick = onClick)
     ) {
@@ -543,6 +655,7 @@ private fun MatchBlitzStartOverlay(
         modifier = Modifier
             .fillMaxSize()
             .widthIn(max = 520.dp)
+            .verticalScroll(rememberScrollState())
             .padding(24.dp)
     ) {
         Surface(
@@ -606,6 +719,7 @@ private fun MatchBlitzStartOverlay(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(54.dp)
+                .tvFocusHighlight(RoundedCornerShape(16.dp))
                 .testTag("match_blitz_start_button")
         ) {
             Icon(
@@ -647,6 +761,7 @@ private fun MatchBlitzFinishedSummary(
         modifier = Modifier
             .fillMaxSize()
             .widthIn(max = 520.dp)
+            .verticalScroll(rememberScrollState())
             .padding(24.dp)
     ) {
         Icon(
@@ -700,6 +815,7 @@ private fun MatchBlitzFinishedSummary(
                 modifier = Modifier
                     .weight(1f)
                     .height(50.dp)
+                    .tvFocusHighlight(RoundedCornerShape(14.dp))
                     .testTag("match_blitz_replay_button")
             ) {
                 Icon(
@@ -716,6 +832,7 @@ private fun MatchBlitzFinishedSummary(
                 modifier = Modifier
                     .weight(1f)
                     .height(50.dp)
+                    .tvFocusHighlight(RoundedCornerShape(14.dp))
             ) {
                 Text(stringResource(id = R.string.common_close))
             }

@@ -196,25 +196,27 @@ fun FlashcardListScreen(
             )
         },
         floatingActionButton = {
-            ExtendedFloatingActionButton(
-                onClick = { onTriggerCameraCapture(selectedDeckId) },
-                icon = {
-                    Icon(
-                        imageVector = Icons.Filled.CameraAlt,
-                        contentDescription = stringResource(id = R.string.cd_flashcard_camera_fab)
-                    )
-                },
-                text = {
-                    Text(
-                        text = stringResource(id = R.string.flashcards_fab_scan),
-                        fontWeight = FontWeight.Bold
-                    )
-                },
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary,
-                shape = RoundedCornerShape(18.dp),
-                modifier = Modifier.testTag("camera_capture_fab")
-            )
+            if (com.example.ui.util.rememberHasCameraHardware()) {
+                ExtendedFloatingActionButton(
+                    onClick = { onTriggerCameraCapture(selectedDeckId) },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Filled.CameraAlt,
+                            contentDescription = stringResource(id = R.string.cd_flashcard_camera_fab)
+                        )
+                    },
+                    text = {
+                        Text(
+                            text = stringResource(id = R.string.flashcards_fab_scan),
+                            fontWeight = FontWeight.Bold
+                        )
+                    },
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                    shape = RoundedCornerShape(18.dp),
+                    modifier = Modifier.testTag("camera_capture_fab")
+                )
+            }
         }
     ) { innerPadding ->
         Box(
@@ -325,7 +327,14 @@ fun FlashcardListScreen(
                             FilterChip(
                                 selected = selectedDeckId == deck.id,
                                 onClick = { viewModel.setDeckFilter(deck.id) },
-                                label = { Text(deck.title.take(22)) }
+                                label = {
+                                    Text(
+                                        text = deck.title,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                        modifier = Modifier.widthIn(max = 180.dp)
+                                    )
+                                }
                             )
                         }
                     }

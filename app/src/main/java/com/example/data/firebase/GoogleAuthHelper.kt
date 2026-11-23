@@ -49,13 +49,21 @@ fun attemptAutoSignIn(
     onUnauthenticated: () -> Unit,
     scope: CoroutineScope
 ) {
-    if (Firebase.auth.currentUser != null) {
+    if (!isFirebaseConfigured(context)) {
+        onUnauthenticated()
+        return
+    }
+    if (runCatching { Firebase.auth.currentUser }.getOrNull() != null) {
         onAuthSuccess()
         return
     }
     val clientId = try {
-        context.getString(R.string.default_web_client_id)
+        val resId = context.resources.getIdentifier("default_web_client_id", "string", context.packageName)
+        if (resId == 0) null else context.getString(resId).takeIf { it.isNotBlank() }
     } catch (_: Exception) {
+        null
+    }
+    if (clientId == null) {
         onUnauthenticated()
         return
     }
@@ -92,10 +100,18 @@ fun onGoogleSignInClicked(
     scope: CoroutineScope,
     onAuthCancelled: () -> Unit = {}
 ) {
+    if (!isFirebaseConfigured(context)) {
+        onAuthError("Cloud Sign-In isn't configured in this offline build. Tap \"Continue Offline\" below to start studying immediately!")
+        return
+    }
     val clientId = try {
-        context.getString(R.string.default_web_client_id)
+        val resId = context.resources.getIdentifier("default_web_client_id", "string", context.packageName)
+        if (resId == 0) null else context.getString(resId).takeIf { it.isNotBlank() }
     } catch (_: Exception) {
-        onAuthError("Google Sign-In configuration missing: default_web_client_id not found")
+        null
+    }
+    if (clientId == null) {
+        onAuthError("Google Sign-In isn't configured yet. Tap \"Continue Offline\" below to use all offline study tools.")
         return
     }
     val activity = context.findActivity()
@@ -122,7 +138,7 @@ fun onGoogleSignInClicked(
             onAuthCancelled()
         } catch (e: Exception) {
             Log.e("Auth", "Google Sign-In failed", e)
-            onAuthError(e.localizedMessage ?: "Sign-in failed. Please try again.")
+            onAuthError(e.localizedMessage ?: "Sign-in failed. You can also Continue Offline anytime.")
         }
     }
 }
@@ -141,7 +157,7 @@ fun signOutUser(
             } catch (e: Exception) {
                 Log.w("Auth", "Failed to clear credential state: ${e.message}")
             } finally {
-                Firebase.auth.signOut()
+                runCatching { Firebase.auth.signOut() }
                 onSignOutComplete()
             }
         }

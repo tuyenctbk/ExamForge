@@ -20,7 +20,9 @@
     <string name="tab_settings">Settings</string>
     <string name="auth_headline">Turn study notes into active-recall mastery</string>
     <string name="auth_subtitle">Scan whiteboards, practice oral recall, and sync flashcards offline across your devices.</string>
-    <string name="auth_sync_note">Sign in with Google to back up decks and study progress securely.</string>
+    <string name="auth_sync_note">Sign in with Google to back up decks across devices, or study offline immediately with local Room storage.</string>
+    <string name="auth_offline_note">100% offline-first &amp; ad-free — all decks, 3D flips, and SM-2 progress are stored locally in Room SQLite.</string>
+    <string name="auth_continue_offline">Continue Offline (No Account)</string>
 
     <!-- Accessibility Content Descriptions -->
     <string name="cd_app_logo">ExamForge emblem</string>
@@ -51,6 +53,8 @@
     <string name="camera_retake">Retake</string>
     <string name="camera_analyze_now">Analyze with Gemini</string>
     <string name="camera_add_notes">Attach &amp; Edit Options</string>
+    <string name="camera_no_hardware_title">No Camera Detected</string>
+    <string name="camera_no_hardware_body">This device doesn\'t have a camera. Pick a photo from Gallery or paste/dictate study notes in Snapshot Forge.</string>
     <string name="flashcards_screen_title">Saved Flashcards</string>
     <string name="flashcards_fab_scan">Scan Notes</string>
     <string name="flashcards_search_placeholder">Search questions or answers…</string>
@@ -60,11 +64,13 @@
     <!-- Decks Hub & Study Arena -->
     <string name="decks_all_filter">All</string>
     <string name="decks_due_summary">%1$d due for review</string>
-    <string name="decks_study_all_due">Study Due Cards</string>
+    <string name="decks_due_label">due for review</string>
+    <string name="decks_study_all_due">Study Due</string>
     <string name="decks_match_blitz_button">60s Match Blitz</string>
     <string name="decks_best_score">Best: %1$d</string>
     <string name="decks_empty_title">Build your first study deck</string>
     <string name="decks_empty_subtitle">Capture a whiteboard photo, dictate a lecture, or paste notes to forge active-recall flashcards.</string>
+    <string name="decks_load_sample">Load Starter Study Decks</string>
     <string name="decks_new_deck">New Deck</string>
     <string name="decks_saved_cards">All Cards</string>
     <string name="study_arena_complete_title">Session Complete</string>
@@ -82,7 +88,7 @@
     <string name="forge_subtitle">Snap equations, upload slides, or dictate a live lecture — Gemini or our Offline Parser turns them into active-recall decks.</string>
     <string name="forge_step_capture">1. Snap or Upload Study Material</string>
     <string name="forge_step_notes">2. Lecture Audio, Notes &amp; Options</string>
-    <string name="forge_camerax_scan">CameraX Scan</string>
+    <string name="forge_camerax_scan">Scan Photo</string>
     <string name="forge_gallery">Gallery</string>
     <string name="forge_dictate_start">Dictate ($0)</string>
     <string name="forge_dictate_stop">Stop Mic</string>
@@ -93,6 +99,7 @@
     <string name="forge_generate_eco_lite">Forge with Eco Lite AI</string>
     <string name="forge_generate_offline">Forge Cards Offline ($0)</string>
     <string name="forge_instant_offline_btn">Instant Offline Parser ($0 · Saves AI Quota)</string>
+    <string name="forge_try_sample_notes">Try Sample Notes</string>
     <string name="forge_open_deck">Open Deck</string>
     <string name="forge_scan_another">Scan Another</string>
 
@@ -124,6 +131,8 @@
     <string name="settings_widget_title">Unlock-to-Recall Home Widget</string>
     <string name="settings_widget_desc">Displays 1 quick due flashcard on your home screen every phone unlock.</string>
     <string name="settings_pin_widget">Add Interactive Widget to Home Screen</string>
+    <string name="settings_tv_widget_note">Home screen widgets are available on Android phones and tablets.</string>
+    <string name="settings_switch_account">Switch Account / Sign In</string>
     <string name="settings_sync_now">Sync Pending Reviews</string>
     <string name="ai_plan_title">AI Usage Plan &amp; BYOK Key</string>
     <string name="ai_plan_eco_lite_title">Eco Lite AI Mode (3× Quota Stretch)</string>
@@ -297,7 +306,7 @@
     <string name="review_now_dialog_done_btn">Done</string>
     <string name="review_now_dialog_prev">Prev Card</string>
     <string name="review_now_dialog_next">Next Card</string>
-    <string name="review_flag_never_reviewed">Review Now · Never reviewed</string>
+    <string name="review_flag_never_reviewed">Review Now · New</string>
     <string name="review_flag_reinforce">Review Now · Reinforce</string>
     <string name="review_flag_overdue_days">Review Now · %1$dd overdue</string>
     <string name="review_flag_due_today">Review Now · Due today</string>

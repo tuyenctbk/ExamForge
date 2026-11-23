@@ -65,6 +65,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.credentials.CredentialManager
@@ -78,6 +79,7 @@ import com.example.data.analytics.AppEventTracker
 import com.example.data.analytics.EngagementPromptEngine
 import com.example.data.firebase.authStateFlow
 import com.example.data.firebase.configureAppCheck
+import com.example.data.firebase.isFirebaseConfigured
 import com.example.data.firebase.signOutUser
 import com.example.data.local.AppDatabase
 import com.example.data.local.PreferencesRepository
@@ -102,18 +104,22 @@ import com.example.ui.screens.StudySession
 import com.example.ui.screens.SupportDevelopmentScreen
 import com.example.ui.theme.ExamForgeTheme
 import com.example.ui.theme.ThemeMode
+import com.example.ui.util.rememberHasCameraHardware
+import com.example.ui.util.rememberIsAndroidTv
 import com.example.ui.viewmodel.ExamForgeViewModel
 import com.example.ui.viewmodel.FlashcardViewModel
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // STEP 1: Configure Firebase App Check with launch intent before UI, ViewModels, or Firebase calls
+        // STEP 1: Configure Firebase App Check safely before UI, ViewModels, or Firebase calls
         configureAppCheck(this, intent)
 
         // STEP 2: Enable Edge-to-Edge display
@@ -151,7 +157,7 @@ private enum class MainTab(
 private sealed interface SubScreen {
     data object None : SubScreen
     data class DeckDetail(val deckId: String) : SubScreen
-    data object StudyArena : SubScreen
+    data class StudyArena(val returnToDeckId: String? = null) : SubScreen
     data class MatchBlitz(val deckId: String?, val deckTitle: String) : SubScreen
     data object SavedFlashcards : SubScreen
     data class StudySession(val deckId: String? = null) : SubScreen
@@ -167,7 +173,7 @@ private val SubScreenSaver = listSaver<SubScreen, Any?>(
         when (screen) {
             SubScreen.None -> listOf("none")
             is SubScreen.DeckDetail -> listOf("deck_detail", screen.deckId)
-            SubScreen.StudyArena -> listOf("study_arena")
+            is SubScreen.StudyArena -> listOf("study_arena", screen.returnToDeckId)
             is SubScreen.MatchBlitz -> listOf("match_blitz", screen.deckId, screen.deckTitle)
             SubScreen.SavedFlashcards -> listOf("saved_flashcards")
             is SubScreen.StudySession -> listOf("study_session", screen.deckId)
@@ -178,7 +184,7 @@ private val SubScreenSaver = listSaver<SubScreen, Any?>(
     restore = { list ->
         when (list.firstOrNull() as? String) {
             "deck_detail" -> SubScreen.DeckDetail(list.getOrNull(1) as? String ?: "")
-            "study_arena" -> SubScreen.StudyArena
+            "study_arena" -> SubScreen.StudyArena(returnToDeckId = list.getOrNull(1) as? String)
             "match_blitz" -> SubScreen.MatchBlitz(
                 deckId = list.getOrNull(1) as? String,
                 deckTitle = list.getOrNull(2) as? String ?: "Match Blitz"
@@ -202,19 +208,37 @@ private fun ExamForgeRoot(
     themeMode: ThemeMode,
     oralAutoSpeak: Boolean
 ) {
-    val auth = remember { Firebase.auth }
-    val currentUser by auth.authStateFlow().collectAsStateWithLifecycle(initialValue = auth.currentUser)
-    val user = currentUser
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val firebaseAvailable = remember(context) { isFirebaseConfigured(context) }
+    val auth = remember(firebaseAvailable) {
+        if (firebaseAvailable) runCatching { Firebase.auth }.getOrNull() else null
+    }
+    val authFlow = remember(auth) { auth?.authStateFlow() ?: flowOf<FirebaseUser?>(null) }
+    val currentUser by authFlow.collectAsStateWithLifecycle(initialValue = auth?.currentUser)
+    val isLocalGuestMode by prefsRepo.localGuestMode.collectAsStateWithLifecycle(initialValue = false)
 
-    if (user == null) {
-        AuthScreen(onAuthSuccess = {})
+    val user = currentUser
+    if (user == null && !isLocalGuestMode) {
+        AuthScreen(
+            firebaseAvailable = firebaseAvailable,
+            onAuthSuccess = {
+                scope.launch { prefsRepo.setLocalGuestMode(false) }
+            },
+            onContinueOffline = {
+                scope.launch { prefsRepo.setLocalGuestMode(true) }
+            }
+        )
     } else {
-        key(user.uid) {
+        val effectiveUserId = user?.uid ?: StudyRepository.LOCAL_GUEST_USER_ID
+        val isCloudSignedIn = user != null
+        key(effectiveUserId) {
             ExamForgeAppShell(
                 hostActivity = hostActivity,
-                currentUserId = user.uid,
-                userEmail = user.email,
-                userDisplayName = user.displayName,
+                currentUserId = effectiveUserId,
+                isCloudSignedIn = isCloudSignedIn,
+                userEmail = user?.email,
+                userDisplayName = user?.displayName ?: if (isCloudSignedIn) null else "Local Student",
                 prefsRepo = prefsRepo,
                 themeMode = themeMode,
                 oralAutoSpeak = oralAutoSpeak
@@ -228,6 +252,7 @@ private fun ExamForgeRoot(
 private fun ExamForgeAppShell(
     hostActivity: Activity,
     currentUserId: String,
+    isCloudSignedIn: Boolean,
     userEmail: String?,
     userDisplayName: String?,
     prefsRepo: PreferencesRepository,
@@ -238,6 +263,8 @@ private fun ExamForgeAppShell(
     val scope = rememberCoroutineScope()
     val credentialManager = remember(context) { CredentialManager.create(context) }
     val snackbarHostState = remember { SnackbarHostState() }
+    val isTv = rememberIsAndroidTv()
+    val hasCamera = rememberHasCameraHardware()
 
     val viewModel: ExamForgeViewModel = viewModel(
         key = currentUserId,
@@ -246,13 +273,21 @@ private fun ExamForgeAppShell(
                 val app = checkNotNull(this[APPLICATION_KEY]) {
                     "APPLICATION_KEY missing from CreationExtras"
                 }
-                val databaseId = app.getString(R.string.firestore_database_id)
-                val firestore = FirebaseFirestore.getInstance(databaseId)
+                val firestore = if (isFirebaseConfigured(app)) {
+                    runCatching {
+                        val databaseId = app.getString(R.string.firestore_database_id)
+                        FirebaseFirestore.getInstance(databaseId)
+                    }.getOrNull()
+                } else {
+                    null
+                }
                 val localDb = AppDatabase.getInstance(app)
                 val repo = StudyRepository(
                     appContext = app,
                     db = firestore,
-                    localDb = localDb
+                    localDb = localDb,
+                    ownerUserId = currentUserId,
+                    preferencesRepository = prefsRepo
                 )
                 ExamForgeViewModel(
                     currentUserId = currentUserId,
@@ -274,13 +309,21 @@ private fun ExamForgeAppShell(
                 val app = checkNotNull(this[APPLICATION_KEY]) {
                     "APPLICATION_KEY missing from CreationExtras"
                 }
-                val databaseId = app.getString(R.string.firestore_database_id)
-                val firestore = FirebaseFirestore.getInstance(databaseId)
+                val firestore = if (isFirebaseConfigured(app)) {
+                    runCatching {
+                        val databaseId = app.getString(R.string.firestore_database_id)
+                        FirebaseFirestore.getInstance(databaseId)
+                    }.getOrNull()
+                } else {
+                    null
+                }
                 val localDb = AppDatabase.getInstance(app)
                 val repo = StudyRepository(
                     appContext = app,
                     db = firestore,
-                    localDb = localDb
+                    localDb = localDb,
+                    ownerUserId = currentUserId,
+                    preferencesRepository = prefsRepo
                 )
                 FlashcardViewModel(
                     currentUserId = currentUserId,
@@ -293,6 +336,7 @@ private fun ExamForgeAppShell(
     )
 
     val decks by viewModel.decks.collectAsStateWithLifecycle()
+    val decksLoaded by viewModel.decksLoaded.collectAsStateWithLifecycle()
     val allCards by viewModel.allCards.collectAsStateWithLifecycle()
     val profile by viewModel.userProfile.collectAsStateWithLifecycle()
     val forgeState by viewModel.forgeState.collectAsStateWithLifecycle()
@@ -375,18 +419,31 @@ private fun ExamForgeAppShell(
         }
     )
 
+    val tvSafePaddingModifier = if (isTv) {
+        Modifier.padding(horizontal = 24.dp, vertical = 14.dp)
+    } else {
+        Modifier
+    }
+
     AnimatedContent(
         targetState = subScreen,
         transitionSpec = {
             fadeIn(animationSpec = tween(220)) togetherWith fadeOut(animationSpec = tween(180))
         },
+        modifier = tvSafePaddingModifier,
         label = "subscreen_transition"
     ) { activeSub ->
         when (activeSub) {
             is SubScreen.StudyArena -> {
                 StudyArenaScreen(
                     session = studySession,
-                    onBack = { subScreen = SubScreen.None },
+                    onBack = {
+                        subScreen = if (activeSub.returnToDeckId != null) {
+                            SubScreen.DeckDetail(activeSub.returnToDeckId)
+                        } else {
+                            SubScreen.None
+                        }
+                    },
                     onSelectMcq = viewModel::selectMcqOption,
                     onUpdateCloze = viewModel::updateClozeInput,
                     onCheckCloze = viewModel::checkClozeAnswer,
@@ -421,7 +478,11 @@ private fun ExamForgeAppShell(
             is SubScreen.DeckDetail -> {
                 val deck = decks.firstOrNull { it.id == activeSub.deckId }
                 if (deck == null) {
-                    LaunchedEffect(Unit) { subScreen = SubScreen.None }
+                    LaunchedEffect(decksLoaded, activeSub.deckId) {
+                        if (decksLoaded) {
+                            subScreen = SubScreen.None
+                        }
+                    }
                 } else {
                     val deckCards = remember(allCards, deck.id) {
                         allCards.filter { it.deckId == deck.id }
@@ -432,7 +493,7 @@ private fun ExamForgeAppShell(
                         onBack = { subScreen = SubScreen.None },
                         onStartStudy = { dueOnly ->
                             viewModel.startStudySession(deck, dueOnly = dueOnly)
-                            subScreen = SubScreen.StudyArena
+                            subScreen = SubScreen.StudyArena(returnToDeckId = deck.id)
                         },
                         onStartOralQuiz = {
                             viewModel.startQuizSession(deck.id, oralAutoSpeak)
@@ -452,10 +513,15 @@ private fun ExamForgeAppShell(
                             flashcardViewModel.updateFlashcardById(cardId, q, a, exp, hint)
                         },
                         onSnapCardsForDeck = {
-                            subScreen = SubScreen.CameraCapture(
-                                saveDirectToRoom = true,
-                                targetDeckId = deck.id
-                            )
+                            if (hasCamera) {
+                                subScreen = SubScreen.CameraCapture(
+                                    saveDirectToRoom = true,
+                                    targetDeckId = deck.id
+                                )
+                            } else {
+                                subScreen = SubScreen.None
+                                selectedTab = MainTab.FORGE
+                            }
                         },
                         onDeleteCard = viewModel::deleteCard,
                         onDeleteDeck = {
@@ -472,10 +538,15 @@ private fun ExamForgeAppShell(
                     decks = decks,
                     onBack = { subScreen = SubScreen.None },
                     onTriggerCameraCapture = { targetDeckId ->
-                        subScreen = SubScreen.CameraCapture(
-                            saveDirectToRoom = true,
-                            targetDeckId = targetDeckId
-                        )
+                        if (hasCamera) {
+                            subScreen = SubScreen.CameraCapture(
+                                saveDirectToRoom = true,
+                                targetDeckId = targetDeckId
+                            )
+                        } else {
+                            subScreen = SubScreen.None
+                            selectedTab = MainTab.FORGE
+                        }
                     },
                     onStartStudySession = { deckId ->
                         subScreen = SubScreen.StudySession(deckId = deckId)
@@ -550,7 +621,7 @@ private fun ExamForgeAppShell(
 
             SubScreen.None -> {
                 BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
-                    val useNavRail = maxWidth >= 600.dp
+                    val useNavRail = maxWidth >= 600.dp || isTv
 
                     Scaffold(
                         contentWindowInsets = WindowInsets.safeDrawing,
@@ -562,14 +633,14 @@ private fun ExamForgeAppShell(
                                         Surface(
                                             color = MaterialTheme.colorScheme.primaryContainer,
                                             shape = RoundedCornerShape(10.dp),
-                                            modifier = Modifier.size(32.dp)
+                                            modifier = Modifier.size(34.dp)
                                         ) {
                                             Box(contentAlignment = Alignment.Center) {
                                                 Icon(
-                                                    imageVector = Icons.Filled.AutoAwesome,
+                                                    painter = painterResource(id = R.drawable.ic_launcher_monochrome),
                                                     contentDescription = stringResource(id = R.string.cd_app_logo),
                                                     tint = MaterialTheme.colorScheme.primary,
-                                                    modifier = Modifier.size(18.dp)
+                                                    modifier = Modifier.size(26.dp)
                                                 )
                                             }
                                         }
@@ -580,243 +651,255 @@ private fun ExamForgeAppShell(
                                         )
                                     }
                                 },
-                    actions = {
-                        TopBarSupporterAction(
-                            isActiveSupporter = engagementTelemetry.isActiveSupporter,
-                            onOpenSupport = { viewModel.openDonationSheet(source = "top_bar") }
-                        )
-                        IconButton(
-                            onClick = {
-                                val nextMode = if (themeMode == ThemeMode.LIGHT) ThemeMode.DARK else ThemeMode.LIGHT
-                                scope.launch { prefsRepo.setThemeMode(nextMode) }
-                            },
-                            modifier = Modifier.testTag("top_bar_theme_toggle")
-                        ) {
-                            Icon(
-                                imageVector = if (themeMode == ThemeMode.LIGHT) Icons.Default.DarkMode else Icons.Default.LightMode,
-                                contentDescription = stringResource(id = R.string.cd_toggle_theme),
-                                tint = MaterialTheme.colorScheme.onSurface
-                            )
-                        }
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.background
-                    )
-                )
-            },
-            bottomBar = {
-                if (!useNavRail) {
-                    NavigationBar(containerColor = MaterialTheme.colorScheme.surface) {
-                        MainTab.entries.forEach { tab ->
-                            val selected = selectedTab == tab
-                            NavigationBarItem(
-                                selected = selected,
-                                onClick = { selectedTab = tab },
-                                icon = {
-                                    Icon(
-                                        imageVector = if (selected) tab.selectedIcon else tab.unselectedIcon,
-                                        contentDescription = stringResource(id = tab.labelRes)
+                                actions = {
+                                    TopBarSupporterAction(
+                                        isActiveSupporter = engagementTelemetry.isActiveSupporter,
+                                        onOpenSupport = { viewModel.openDonationSheet(source = "top_bar") }
                                     )
+                                    IconButton(
+                                        onClick = {
+                                            val nextMode = if (themeMode == ThemeMode.LIGHT) ThemeMode.DARK else ThemeMode.LIGHT
+                                            scope.launch { prefsRepo.setThemeMode(nextMode) }
+                                        },
+                                        modifier = Modifier.testTag("top_bar_theme_toggle")
+                                    ) {
+                                        Icon(
+                                            imageVector = if (themeMode == ThemeMode.LIGHT) Icons.Default.DarkMode else Icons.Default.LightMode,
+                                            contentDescription = stringResource(id = R.string.cd_toggle_theme),
+                                            tint = MaterialTheme.colorScheme.onSurface
+                                        )
+                                    }
                                 },
-                                label = { Text(stringResource(id = tab.labelRes)) },
-                                modifier = Modifier.testTag(tab.testTag)
+                                colors = TopAppBarDefaults.topAppBarColors(
+                                    containerColor = MaterialTheme.colorScheme.background
+                                )
                             )
-                        }
-                    }
-                }
-            }
-        ) { innerPadding ->
-            Row(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-            ) {
-                if (useNavRail) {
-                    NavigationRail(
-                        containerColor = MaterialTheme.colorScheme.surface,
-                        modifier = Modifier.fillMaxHeight()
-                    ) {
-                        MainTab.entries.forEach { tab ->
-                            val selected = selectedTab == tab
-                            NavigationRailItem(
-                                selected = selected,
-                                onClick = { selectedTab = tab },
-                                icon = {
-                                    Icon(
-                                        imageVector = if (selected) tab.selectedIcon else tab.unselectedIcon,
-                                        contentDescription = stringResource(id = tab.labelRes)
-                                    )
-                                },
-                                label = { Text(stringResource(id = tab.labelRes)) },
-                                modifier = Modifier.testTag(tab.testTag)
-                            )
-                        }
-                    }
-                }
-
-                Box(modifier = Modifier.weight(1f)) {
-                    AnimatedContent(
-                        targetState = selectedTab,
-                        transitionSpec = {
-                            val dir = if (targetState.ordinal >= initialState.ordinal) 1 else -1
-                            (fadeIn(tween(220)) + slideInHorizontally(tween(220)) { it / 16 * dir })
-                                .togetherWith(fadeOut(tween(180)) + slideOutHorizontally(tween(180)) { -it / 16 * dir })
                         },
-                        label = "main_tab_transition"
-                    ) { tab ->
-                        when (tab) {
-                        MainTab.DECKS -> {
-                            DecksScreen(
-                                decks = decks,
-                                allCards = allCards,
-                                profile = profile,
-                                syncStatus = syncStatus,
-                                matchBlitzBestScore = matchBlitzBestScore,
-                                onOpenForge = { subScreen = SubScreen.CameraCapture() },
-                                onOpenSavedFlashcards = { subScreen = SubScreen.SavedFlashcards },
-                                onOpenMatchBlitzAll = {
-                                    subScreen = SubScreen.MatchBlitz(
-                                        deckId = null,
-                                        deckTitle = "All Saved Decks"
-                                    )
-                                },
-                                onOpenDeckDetail = { deck -> subScreen = SubScreen.DeckDetail(deck.id) },
-                                onQuickStudyAllDue = {
-                                    viewModel.startStudySession(deck = null, dueOnly = true)
-                                    subScreen = SubScreen.StudyArena
-                                },
-                                onQuickStudyDeck = { deck ->
-                                    viewModel.startStudySession(deck = deck, dueOnly = true)
-                                    subScreen = SubScreen.StudyArena
-                                },
-                                onStartOralQuizDeck = { deck ->
-                                    viewModel.startQuizSession(deck.id, oralAutoSpeak)
-                                    selectedTab = MainTab.QUIZMASTER
-                                },
-                                onCreateManualDeck = viewModel::createManualDeck,
-                                showHomeDonationBanner = showHomeDonationBanner,
-                                completedTasksCount = engagementTelemetry.successfulCoreOps,
-                                onOpenSupportSheet = { viewModel.openDonationSheet(source = "home_banner") },
-                                onDismissHomeDonationBanner = viewModel::dismissHomeDonationBanner
-                            )
-                        }
-
-                        MainTab.FORGE -> {
-                            ForgeScreen(
-                                forgeState = forgeState,
-                                selectedSnapshot = selectedSnapshot,
-                                existingDecks = decks,
-                                aiUsagePlan = aiUsagePlan,
-                                onSnapshotSelected = viewModel::setSelectedSnapshot,
-                                onOpenCameraCapture = { subScreen = SubScreen.CameraCapture() },
-                                onForgeRequested = { bmp, notes, count, hint ->
-                                    viewModel.forgeFlashcards(bmp, notes, count, hint)
-                                },
-                                onForgeOfflineRequested = { notes, count, hint ->
-                                    viewModel.forgeFlashcards(
-                                        bitmap = null,
-                                        rawNotes = notes,
-                                        targetCount = count,
-                                        subjectHint = hint,
-                                        forceOffline = true
-                                    )
-                                },
-                                onForgeEcoLiteRequested = { bmp, notes, count, hint ->
-                                    viewModel.forgeFlashcards(
-                                        bitmap = bmp,
-                                        rawNotes = notes,
-                                        targetCount = count,
-                                        subjectHint = hint,
-                                        forceEcoLite = true
-                                    )
-                                },
-                                onEnableEcoLite = { viewModel.setEcoLiteMode(true) },
-                                onClaimGraceCredits = viewModel::claimDailyGraceCredits,
-                                onOpenByokSettings = { selectedTab = MainTab.SETTINGS },
-                                onUpdateDraftMeta = viewModel::updateDraftMetadata,
-                                onRemoveDraftCard = viewModel::removeDraftCard,
-                                onSaveDraft = viewModel::saveForgedDeck,
-                                onResetForge = viewModel::resetForgeState,
-                                onOpenSavedDeck = { deckId ->
-                                    selectedTab = MainTab.DECKS
-                                    subScreen = SubScreen.DeckDetail(deckId)
-                                },
-                                showPostOpSupportCard = showPostOpSupportCard,
-                                onOpenSupportSheet = { viewModel.openDonationSheet(source = "forge_complete_card") },
-                                onDismissSupportCard = viewModel::dismissHomeDonationBanner
-                            )
-                        }
-
-                        MainTab.QUIZMASTER -> {
-                            QuizmasterScreen(
-                                decks = decks,
-                                quizState = quizState,
-                                oralAutoSpeak = oralAutoSpeak,
-                                aiUsagePlan = aiUsagePlan,
-                                onToggleOralAutoSpeak = { enabled ->
-                                    scope.launch { prefsRepo.setOralAutoSpeak(enabled) }
-                                },
-                                onSelectDeck = viewModel::selectQuizDeck,
-                                onStartSession = viewModel::startQuizSession,
-                                onSendMessage = { text, oral -> viewModel.sendQuizMessage(text, oral) },
-                                onClearSpokenReply = viewModel::clearSpokenReply,
-                                onResetConversation = viewModel::resetQuizConversation,
-                                onEnableEcoLite = { viewModel.setEcoLiteMode(true) },
-                                onClaimGraceCredits = viewModel::claimDailyGraceCredits,
-                                onOpenByokSettings = { selectedTab = MainTab.SETTINGS },
-                                onOpenForge = { selectedTab = MainTab.FORGE }
-                            )
-                        }
-
-                        MainTab.SETTINGS -> {
-                            SettingsScreen(
-                                userEmail = userEmail,
-                                userDisplayName = userDisplayName,
-                                profile = profile,
-                                themeMode = themeMode,
-                                oralAutoSpeak = oralAutoSpeak,
-                                syncStatus = syncStatus,
-                                totalCachedCards = allCards.size,
-                                sampleWidgetCard = allCards.firstOrNull(),
-                                aiUsagePlan = aiUsagePlan,
-                                byokKeyState = byokKeyState,
-                                onTestAndSaveByokKey = viewModel::testAndSaveByokKey,
-                                onRemoveByokKey = viewModel::removeByokKey,
-                                onPreferOfflineParserChange = viewModel::setPreferOfflineParser,
-                                onEcoLiteModeChange = viewModel::setEcoLiteMode,
-                                onClaimGraceCredits = viewModel::claimDailyGraceCredits,
-                                engagementTelemetry = engagementTelemetry,
-                                onCheckForUpdate = viewModel::manualCheckForUpdates,
-                                onManualRate = viewModel::logManualRate,
-                                onManualShare = viewModel::logManualShare,
-                                onOpenSupportSheet = {
-                                    viewModel.prepareSupportScreen("settings_support_screen")
-                                    subScreen = SubScreen.SupportDevelopment
-                                },
-                                onThemeModeChange = { mode ->
-                                    scope.launch { prefsRepo.setThemeMode(mode) }
-                                },
-                                onOralAutoSpeakChange = { enabled ->
-                                    scope.launch { prefsRepo.setOralAutoSpeak(enabled) }
-                                },
-                                onSyncNow = viewModel::manualSyncPendingReviews,
-                                onSignOut = {
-                                    signOutUser(
-                                        credentialManager = credentialManager,
-                                        scope = scope,
-                                        beforeSignOut = { prefsRepo.setActiveUserId(null) }
-                                    )
+                        bottomBar = {
+                            if (!useNavRail) {
+                                NavigationBar(containerColor = MaterialTheme.colorScheme.surface) {
+                                    MainTab.entries.forEach { tab ->
+                                        val selected = selectedTab == tab
+                                        NavigationBarItem(
+                                            selected = selected,
+                                            onClick = { selectedTab = tab },
+                                            icon = {
+                                                Icon(
+                                                    imageVector = if (selected) tab.selectedIcon else tab.unselectedIcon,
+                                                    contentDescription = stringResource(id = tab.labelRes)
+                                                )
+                                            },
+                                            label = { Text(stringResource(id = tab.labelRes)) },
+                                            modifier = Modifier.testTag(tab.testTag)
+                                        )
+                                    }
                                 }
-                            )
+                            }
                         }
+                    ) { innerPadding ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(innerPadding)
+                        ) {
+                            if (useNavRail) {
+                                NavigationRail(
+                                    containerColor = MaterialTheme.colorScheme.surface,
+                                    modifier = Modifier.fillMaxHeight()
+                                ) {
+                                    Spacer(modifier = Modifier.size(8.dp))
+                                    MainTab.entries.forEach { tab ->
+                                        val selected = selectedTab == tab
+                                        NavigationRailItem(
+                                            selected = selected,
+                                            onClick = { selectedTab = tab },
+                                            icon = {
+                                                Icon(
+                                                    imageVector = if (selected) tab.selectedIcon else tab.unselectedIcon,
+                                                    contentDescription = stringResource(id = tab.labelRes)
+                                                )
+                                            },
+                                            label = { Text(stringResource(id = tab.labelRes)) },
+                                            modifier = Modifier.testTag(tab.testTag)
+                                        )
+                                    }
+                                }
+                            }
+
+                            Box(modifier = Modifier.weight(1f)) {
+                                AnimatedContent(
+                                    targetState = selectedTab,
+                                    transitionSpec = {
+                                        val dir = if (targetState.ordinal >= initialState.ordinal) 1 else -1
+                                        (fadeIn(tween(220)) + slideInHorizontally(tween(220)) { it / 16 * dir })
+                                            .togetherWith(fadeOut(tween(180)) + slideOutHorizontally(tween(180)) { -it / 16 * dir })
+                                    },
+                                    label = "main_tab_transition"
+                                ) { tab ->
+                                    when (tab) {
+                                        MainTab.DECKS -> {
+                                            DecksScreen(
+                                                decks = decks,
+                                                allCards = allCards,
+                                                profile = profile,
+                                                syncStatus = syncStatus,
+                                                isCloudSignedIn = isCloudSignedIn,
+                                                matchBlitzBestScore = matchBlitzBestScore,
+                                                onOpenForge = {
+                                                    if (hasCamera) {
+                                                        subScreen = SubScreen.CameraCapture()
+                                                    } else {
+                                                        selectedTab = MainTab.FORGE
+                                                    }
+                                                },
+                                                onOpenSavedFlashcards = { subScreen = SubScreen.SavedFlashcards },
+                                                onOpenMatchBlitzAll = {
+                                                    subScreen = SubScreen.MatchBlitz(
+                                                        deckId = null,
+                                                        deckTitle = "All Saved Decks"
+                                                    )
+                                                },
+                                                onOpenDeckDetail = { deck -> subScreen = SubScreen.DeckDetail(deck.id) },
+                                                onQuickStudyAllDue = {
+                                                    viewModel.startStudySession(deck = null, dueOnly = true)
+                                                    subScreen = SubScreen.StudyArena(returnToDeckId = null)
+                                                },
+                                                onQuickStudyDeck = { deck ->
+                                                    viewModel.startStudySession(deck = deck, dueOnly = true)
+                                                    subScreen = SubScreen.StudyArena(returnToDeckId = deck.id)
+                                                },
+                                                onStartOralQuizDeck = { deck ->
+                                                    viewModel.startQuizSession(deck.id, oralAutoSpeak)
+                                                    selectedTab = MainTab.QUIZMASTER
+                                                },
+                                                onCreateManualDeck = viewModel::createManualDeck,
+                                                onLoadSampleDecks = viewModel::loadSampleStudyDecks,
+                                                showHomeDonationBanner = showHomeDonationBanner,
+                                                completedTasksCount = engagementTelemetry.successfulCoreOps,
+                                                onOpenSupportSheet = { viewModel.openDonationSheet(source = "home_banner") },
+                                                onDismissHomeDonationBanner = viewModel::dismissHomeDonationBanner
+                                            )
+                                        }
+
+                                        MainTab.FORGE -> {
+                                            ForgeScreen(
+                                                forgeState = forgeState,
+                                                selectedSnapshot = selectedSnapshot,
+                                                existingDecks = decks,
+                                                aiUsagePlan = aiUsagePlan,
+                                                onSnapshotSelected = viewModel::setSelectedSnapshot,
+                                                onOpenCameraCapture = { subScreen = SubScreen.CameraCapture() },
+                                                onForgeRequested = { bmp, notes, count, hint ->
+                                                    viewModel.forgeFlashcards(bmp, notes, count, hint)
+                                                },
+                                                onForgeOfflineRequested = { notes, count, hint ->
+                                                    viewModel.forgeFlashcards(
+                                                        bitmap = null,
+                                                        rawNotes = notes,
+                                                        targetCount = count,
+                                                        subjectHint = hint,
+                                                        forceOffline = true
+                                                    )
+                                                },
+                                                onForgeEcoLiteRequested = { bmp, notes, count, hint ->
+                                                    viewModel.forgeFlashcards(
+                                                        bitmap = bmp,
+                                                        rawNotes = notes,
+                                                        targetCount = count,
+                                                        subjectHint = hint,
+                                                        forceEcoLite = true
+                                                    )
+                                                },
+                                                onEnableEcoLite = { viewModel.setEcoLiteMode(true) },
+                                                onClaimGraceCredits = viewModel::claimDailyGraceCredits,
+                                                onOpenByokSettings = { selectedTab = MainTab.SETTINGS },
+                                                onUpdateDraftMeta = viewModel::updateDraftMetadata,
+                                                onRemoveDraftCard = viewModel::removeDraftCard,
+                                                onSaveDraft = viewModel::saveForgedDeck,
+                                                onResetForge = viewModel::resetForgeState,
+                                                onOpenSavedDeck = { deckId ->
+                                                    selectedTab = MainTab.DECKS
+                                                    subScreen = SubScreen.DeckDetail(deckId)
+                                                },
+                                                showPostOpSupportCard = showPostOpSupportCard,
+                                                onOpenSupportSheet = { viewModel.openDonationSheet(source = "forge_complete_card") },
+                                                onDismissSupportCard = viewModel::dismissHomeDonationBanner
+                                            )
+                                        }
+
+                                        MainTab.QUIZMASTER -> {
+                                            QuizmasterScreen(
+                                                decks = decks,
+                                                quizState = quizState,
+                                                oralAutoSpeak = oralAutoSpeak,
+                                                aiUsagePlan = aiUsagePlan,
+                                                onToggleOralAutoSpeak = { enabled ->
+                                                    scope.launch { prefsRepo.setOralAutoSpeak(enabled) }
+                                                },
+                                                onSelectDeck = viewModel::selectQuizDeck,
+                                                onStartSession = viewModel::startQuizSession,
+                                                onSendMessage = { text, oral -> viewModel.sendQuizMessage(text, oral) },
+                                                onClearSpokenReply = viewModel::clearSpokenReply,
+                                                onResetConversation = viewModel::resetQuizConversation,
+                                                onEnableEcoLite = { viewModel.setEcoLiteMode(true) },
+                                                onClaimGraceCredits = viewModel::claimDailyGraceCredits,
+                                                onOpenByokSettings = { selectedTab = MainTab.SETTINGS },
+                                                onOpenForge = { selectedTab = MainTab.FORGE }
+                                            )
+                                        }
+
+                                        MainTab.SETTINGS -> {
+                                            SettingsScreen(
+                                                isCloudSignedIn = isCloudSignedIn,
+                                                userEmail = userEmail,
+                                                userDisplayName = userDisplayName,
+                                                profile = profile,
+                                                themeMode = themeMode,
+                                                oralAutoSpeak = oralAutoSpeak,
+                                                syncStatus = syncStatus,
+                                                totalCachedCards = allCards.size,
+                                                sampleWidgetCard = allCards.firstOrNull(),
+                                                aiUsagePlan = aiUsagePlan,
+                                                byokKeyState = byokKeyState,
+                                                onTestAndSaveByokKey = viewModel::testAndSaveByokKey,
+                                                onRemoveByokKey = viewModel::removeByokKey,
+                                                onPreferOfflineParserChange = viewModel::setPreferOfflineParser,
+                                                onEcoLiteModeChange = viewModel::setEcoLiteMode,
+                                                onClaimGraceCredits = viewModel::claimDailyGraceCredits,
+                                                engagementTelemetry = engagementTelemetry,
+                                                onCheckForUpdate = viewModel::manualCheckForUpdates,
+                                                onManualRate = viewModel::logManualRate,
+                                                onManualShare = viewModel::logManualShare,
+                                                onOpenSupportSheet = {
+                                                    viewModel.prepareSupportScreen("settings_support_screen")
+                                                    subScreen = SubScreen.SupportDevelopment
+                                                },
+                                                onThemeModeChange = { mode ->
+                                                    scope.launch { prefsRepo.setThemeMode(mode) }
+                                                },
+                                                onOralAutoSpeakChange = { enabled ->
+                                                    scope.launch { prefsRepo.setOralAutoSpeak(enabled) }
+                                                },
+                                                onSyncNow = viewModel::manualSyncPendingReviews,
+                                                onSignOut = {
+                                                    signOutUser(
+                                                        credentialManager = credentialManager,
+                                                        scope = scope,
+                                                        beforeSignOut = {
+                                                            prefsRepo.setActiveUserId(null)
+                                                            prefsRepo.setLocalGuestMode(false)
+                                                        }
+                                                    )
+                                                }
+                                            )
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
-            }
-        }
-    }
             }
         }
     }
 }
-

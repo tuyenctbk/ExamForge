@@ -55,7 +55,7 @@ private const val TAG = "ExamForgeViewModel"
 
 sealed interface ForgeUiState {
     data object Idle : ForgeUiState
-    data object Generating : ForgeUiState
+    data class Generating(val isOffline: Boolean = false) : ForgeUiState
     data class Preview(val draft: GeneratedDeckDraft) : ForgeUiState
     data object Saving : ForgeUiState
     data class Saved(val deckId: String, val cardCount: Int) : ForgeUiState
@@ -118,7 +118,18 @@ class ExamForgeViewModel(
     appContext: Context
 ) : ViewModel() {
 
+    private val _decksLoaded = MutableStateFlow(false)
+    val decksLoaded: StateFlow<Boolean> = _decksLoaded.asStateFlow()
+
     val decks: StateFlow<List<StudyDeck>> = studyRepository.observeDecksLocal(currentUserId)
+        .let { flow ->
+            kotlinx.coroutines.flow.flow {
+                flow.collect { list ->
+                    _decksLoaded.value = true
+                    emit(list)
+                }
+            }
+        }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000L),
@@ -177,8 +188,30 @@ class ExamForgeViewModel(
     private val sessionStartedAtMs: Long = System.currentTimeMillis()
     private var promptShownThisSession: Boolean = false
 
-    private val _userProfile = MutableStateFlow<UserProfile?>(null)
-    val userProfile: StateFlow<UserProfile?> = _userProfile.asStateFlow()
+    private val _cloudUserProfile = MutableStateFlow<UserProfile?>(null)
+    val userProfile: StateFlow<UserProfile?> = combine(
+        _cloudUserProfile,
+        preferencesRepository.observeLocalStudyProfile(currentUserId, initialDisplayName)
+    ) { cloud, local ->
+        if (cloud == null) {
+            local
+        } else {
+            cloud.copy(
+                streakDays = maxOf(cloud.streakDays, local.streakDays),
+                totalReviewed = maxOf(cloud.totalReviewed, local.totalReviewed)
+            )
+        }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000L),
+        initialValue = UserProfile(
+            userId = currentUserId,
+            displayName = initialDisplayName,
+            streakDays = 0,
+            totalReviewed = 0,
+            lastStudyDayKey = null
+        )
+    )
 
     private val _forgeState = MutableStateFlow<ForgeUiState>(ForgeUiState.Idle)
     val forgeState: StateFlow<ForgeUiState> = _forgeState.asStateFlow()
@@ -283,7 +316,7 @@ class ExamForgeViewModel(
                     Log.w(TAG, "Profile observer error", fsErr ?: error)
                 }
                 .collect { profile ->
-                    _userProfile.value = profile
+                    _cloudUserProfile.value = profile
                 }
         }
     }
@@ -336,7 +369,8 @@ class ExamForgeViewModel(
         forceEcoLite: Boolean = false
     ) {
         viewModelScope.launch {
-            _forgeState.value = ForgeUiState.Generating
+            val isOfflineAttempt = forceOffline || (bitmap == null && aiUsagePlan.value.preferOfflineParser)
+            _forgeState.value = ForgeUiState.Generating(isOffline = isOfflineAttempt)
             try {
                 val draft = geminiService.generateDeckFromSnapshot(
                     bitmap = bitmap,
@@ -433,6 +467,17 @@ class ExamForgeViewModel(
     }
 
     // --- MANUAL DECK & CARD MANAGEMENT ---
+
+    fun loadSampleStudyDecks() {
+        viewModelScope.launch {
+            val result = studyRepository.loadSampleStudyDecks()
+            result.onSuccess { totalCards ->
+                _actionBanner.value = "Loaded 4 starter study decks ($totalCards cards) into offline cache."
+            }.onFailure { err ->
+                _actionBanner.value = err.localizedMessage ?: "Unable to load sample decks."
+            }
+        }
+    }
 
     fun createManualDeck(title: String, subject: String, description: String, accentIndex: Int) {
         viewModelScope.launch {

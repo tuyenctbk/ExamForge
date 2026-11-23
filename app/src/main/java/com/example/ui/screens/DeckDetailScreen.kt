@@ -22,13 +22,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.FactCheck
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Bolt
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.FactCheck
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.AlertDialog
@@ -58,11 +58,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.R
 import com.example.data.model.CardType
 import com.example.data.model.Flashcard
 import com.example.data.model.StudyDeck
+import com.example.ui.util.tvFocusHighlight
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -104,7 +106,8 @@ fun DeckDetailScreen(
                         Text(
                             text = deck.title,
                             style = MaterialTheme.typography.titleLarge,
-                            maxLines = 1
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
                         )
                         Text(
                             text = "${deck.subject} · ${cards.size} cards",
@@ -125,15 +128,17 @@ fun DeckDetailScreen(
                     }
                 },
                 actions = {
-                    IconButton(
-                        onClick = onSnapCardsForDeck,
-                        modifier = Modifier.testTag("snap_cards_for_deck_button")
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.CameraAlt,
-                            contentDescription = "Scan notes into deck",
-                            tint = MaterialTheme.colorScheme.primary
-                        )
+                    if (com.example.ui.util.rememberHasCameraHardware()) {
+                        IconButton(
+                            onClick = onSnapCardsForDeck,
+                            modifier = Modifier.testTag("snap_cards_for_deck_button")
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.CameraAlt,
+                                contentDescription = "Scan notes into deck",
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
                     }
                     IconButton(
                         onClick = { showAddCardDialog = true },
@@ -202,6 +207,7 @@ fun DeckDetailScreen(
                                     modifier = Modifier
                                         .weight(1f)
                                         .height(48.dp)
+                                        .tvFocusHighlight(RoundedCornerShape(14.dp))
                                         .testTag("detail_study_button")
                                 ) {
                                     Icon(
@@ -220,6 +226,7 @@ fun DeckDetailScreen(
                                     modifier = Modifier
                                         .weight(1f)
                                         .height(48.dp)
+                                        .tvFocusHighlight(RoundedCornerShape(14.dp))
                                         .testTag("detail_oral_quiz_button")
                                 ) {
                                     Icon(
@@ -241,6 +248,7 @@ fun DeckDetailScreen(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(48.dp)
+                                    .tvFocusHighlight(RoundedCornerShape(14.dp))
                                     .testTag("detail_match_blitz_button")
                             ) {
                                 Icon(
@@ -406,7 +414,7 @@ private fun DeckCardRow(
                         modifier = Modifier.testTag("deck_verify_card_${card.id}")
                     ) {
                         Icon(
-                            imageVector = Icons.Default.FactCheck,
+                            imageVector = Icons.AutoMirrored.Filled.FactCheck,
                             contentDescription = "Fact-check flashcard",
                             tint = MaterialTheme.colorScheme.secondary
                         )

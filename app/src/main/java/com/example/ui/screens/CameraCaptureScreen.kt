@@ -108,6 +108,7 @@ fun CameraCaptureScreen(
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
+    val hasCamera = com.example.ui.util.rememberHasCameraHardware()
 
     var hasCameraPermission by remember {
         mutableStateOf(
@@ -156,9 +157,9 @@ fun CameraCaptureScreen(
         }
     }
 
-    // Request camera permission automatically on first entry if not yet granted
-    LaunchedEffect(Unit) {
-        if (!hasCameraPermission) {
+    // Request camera permission automatically on first entry if camera exists and not yet granted
+    LaunchedEffect(hasCamera) {
+        if (hasCamera && !hasCameraPermission) {
             permissionLauncher.launch(Manifest.permission.CAMERA)
         }
     }
@@ -173,8 +174,9 @@ fun CameraCaptureScreen(
         return
     }
 
-    if (!hasCameraPermission) {
+    if (!hasCamera || !hasCameraPermission) {
         CameraPermissionFallback(
+            hasCameraHardware = hasCamera,
             onGrantClick = { permissionLauncher.launch(Manifest.permission.CAMERA) },
             onPickGallery = {
                 photoPickerLauncher.launch(
@@ -692,6 +694,7 @@ private fun CapturedNoteReviewOverlay(
 
 @Composable
 private fun CameraPermissionFallback(
+    hasCameraHardware: Boolean = true,
     onGrantClick: () -> Unit,
     onPickGallery: () -> Unit,
     onBack: () -> Unit
@@ -732,30 +735,40 @@ private fun CameraPermissionFallback(
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = stringResource(id = R.string.camera_permission_title),
+                    text = if (hasCameraHardware) {
+                        stringResource(id = R.string.camera_permission_title)
+                    } else {
+                        stringResource(id = R.string.camera_no_hardware_title)
+                    },
                     style = MaterialTheme.typography.headlineSmall,
                     color = MaterialTheme.colorScheme.onSurface,
                     textAlign = TextAlign.Center
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = stringResource(id = R.string.camera_permission_rationale),
+                    text = if (hasCameraHardware) {
+                        stringResource(id = R.string.camera_permission_rationale)
+                    } else {
+                        stringResource(id = R.string.camera_no_hardware_body)
+                    },
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center
                 )
                 Spacer(modifier = Modifier.height(20.dp))
-                Button(
-                    onClick = onGrantClick,
-                    shape = RoundedCornerShape(14.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(52.dp)
-                        .testTag("camera_grant_permission_button")
-                ) {
-                    Text(stringResource(id = R.string.camera_grant_permission), fontWeight = FontWeight.Bold)
+                if (hasCameraHardware) {
+                    Button(
+                        onClick = onGrantClick,
+                        shape = RoundedCornerShape(14.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(52.dp)
+                            .testTag("camera_grant_permission_button")
+                    ) {
+                        Text(stringResource(id = R.string.camera_grant_permission), fontWeight = FontWeight.Bold)
+                    }
+                    Spacer(modifier = Modifier.height(10.dp))
                 }
-                Spacer(modifier = Modifier.height(10.dp))
                 OutlinedButton(
                     onClick = onPickGallery,
                     shape = RoundedCornerShape(14.dp),

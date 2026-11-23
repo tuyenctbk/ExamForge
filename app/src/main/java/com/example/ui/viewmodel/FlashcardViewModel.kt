@@ -591,16 +591,20 @@ class FlashcardViewModel(
 
         viewModelScope.launch {
             try {
-                val safeOptions = if (cardType == CardType.MULTIPLE_CHOICE) {
-                    options.map { it.trim().take(240) }.filter { it.isNotEmpty() }.take(6)
+                val rawOptions = if (cardType == CardType.MULTIPLE_CHOICE) {
+                    options.map { it.trim().take(240) }.filter { it.isNotEmpty() }.take(6).toMutableList()
                 } else {
-                    emptyList()
+                    mutableListOf()
                 }
-                val safeCorrectIndex = if (cardType == CardType.MULTIPLE_CHOICE && safeOptions.isNotEmpty()) {
-                    correctOptionIndex.coerceIn(0, safeOptions.lastIndex)
+                val safeCorrectIndex = if (cardType == CardType.MULTIPLE_CHOICE && rawOptions.isNotEmpty()) {
+                    correctOptionIndex.coerceIn(0, rawOptions.lastIndex)
                 } else {
                     -1
                 }
+                if (cardType == CardType.MULTIPLE_CHOICE && safeCorrectIndex in rawOptions.indices) {
+                    rawOptions[safeCorrectIndex] = cleanAnswer.take(240)
+                }
+                val safeOptions = rawOptions.toList()
                 val draft = GeneratedCardDraft(
                     localId = UUID.randomUUID().toString(),
                     cardType = cardType,
@@ -794,16 +798,20 @@ class FlashcardViewModel(
 
         viewModelScope.launch {
             try {
-                val safeOptions = if (cardType == CardType.MULTIPLE_CHOICE) {
-                    options.map { it.trim().take(240) }.filter { it.isNotEmpty() }.take(6)
+                val rawOptions = if (cardType == CardType.MULTIPLE_CHOICE) {
+                    options.map { it.trim().take(240) }.filter { it.isNotEmpty() }.take(6).toMutableList()
                 } else {
-                    emptyList()
+                    mutableListOf()
                 }
-                val safeCorrectIndex = if (cardType == CardType.MULTIPLE_CHOICE && safeOptions.isNotEmpty()) {
-                    correctOptionIndex.coerceIn(0, safeOptions.lastIndex)
+                val safeCorrectIndex = if (cardType == CardType.MULTIPLE_CHOICE && rawOptions.isNotEmpty()) {
+                    correctOptionIndex.coerceIn(0, rawOptions.lastIndex)
                 } else {
                     -1
                 }
+                if (cardType == CardType.MULTIPLE_CHOICE && safeCorrectIndex in rawOptions.indices) {
+                    rawOptions[safeCorrectIndex] = cleanAnswer.take(240)
+                }
+                val safeOptions = rawOptions.toList()
                 val updatedEntity = card.copy(
                     cardType = cardType.name,
                     question = cleanQuestion,

@@ -141,6 +141,10 @@ class PreferencesRepository(private val context: Context) {
         val GRACE_CLAIMED_TODAY = booleanPreferencesKey("grace_claimed_today")
         val FALLBACK_CASCADE_COUNT = intPreferencesKey("fallback_cascade_count")
         val MATCH_BLITZ_BEST_SCORE = intPreferencesKey("match_blitz_best_score")
+        val LOCAL_GUEST_MODE = booleanPreferencesKey("local_guest_mode")
+        val LOCAL_STREAK_DAYS = intPreferencesKey("local_streak_days")
+        val LOCAL_TOTAL_REVIEWED = intPreferencesKey("local_total_reviewed")
+        val LOCAL_LAST_STUDY_DAY_KEY = stringPreferencesKey("local_last_study_day_key")
     }
 
     val themeMode: Flow<ThemeMode> = context.examForgeDataStore.data.map { prefs ->
@@ -154,6 +158,21 @@ class PreferencesRepository(private val context: Context) {
     val matchBlitzBestScore: Flow<Int> = context.examForgeDataStore.data.map { prefs ->
         prefs[Keys.MATCH_BLITZ_BEST_SCORE] ?: 0
     }
+
+    val localGuestMode: Flow<Boolean> = context.examForgeDataStore.data.map { prefs ->
+        prefs[Keys.LOCAL_GUEST_MODE] ?: false
+    }
+
+    fun observeLocalStudyProfile(userId: String, fallbackDisplayName: String): Flow<com.example.data.model.UserProfile> =
+        context.examForgeDataStore.data.map { prefs ->
+            com.example.data.model.UserProfile(
+                userId = userId,
+                displayName = fallbackDisplayName.ifBlank { "ExamForge Student" },
+                streakDays = prefs[Keys.LOCAL_STREAK_DAYS] ?: 0,
+                totalReviewed = prefs[Keys.LOCAL_TOTAL_REVIEWED] ?: 0,
+                lastStudyDayKey = prefs[Keys.LOCAL_LAST_STUDY_DAY_KEY]
+            )
+        }
 
     val aiUsagePlan: Flow<AiUsagePlanState> = context.examForgeDataStore.data.map { prefs ->
         val today = currentDayKey()
@@ -219,6 +238,31 @@ class PreferencesRepository(private val context: Context) {
             if (score > currentBest) {
                 prefs[Keys.MATCH_BLITZ_BEST_SCORE] = score
             }
+        }
+    }
+
+    suspend fun setLocalGuestMode(enabled: Boolean) {
+        context.examForgeDataStore.edit { prefs ->
+            prefs[Keys.LOCAL_GUEST_MODE] = enabled
+        }
+    }
+
+    suspend fun recordLocalReviewStat(nowMillis: Long = System.currentTimeMillis()) {
+        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+        val todayKey = formatter.format(Date(nowMillis))
+        val yesterdayKey = formatter.format(Date(nowMillis - 86_400_000L))
+        context.examForgeDataStore.edit { prefs ->
+            val prevTotal = prefs[Keys.LOCAL_TOTAL_REVIEWED] ?: 0
+            val prevStreak = prefs[Keys.LOCAL_STREAK_DAYS] ?: 0
+            val prevDay = prefs[Keys.LOCAL_LAST_STUDY_DAY_KEY]
+            val nextStreak = when (prevDay) {
+                todayKey -> prevStreak.coerceAtLeast(1)
+                yesterdayKey -> prevStreak + 1
+                else -> 1
+            }
+            prefs[Keys.LOCAL_STREAK_DAYS] = nextStreak.coerceAtMost(10000)
+            prefs[Keys.LOCAL_TOTAL_REVIEWED] = (prevTotal + 1).coerceAtMost(1000000)
+            prefs[Keys.LOCAL_LAST_STUDY_DAY_KEY] = todayKey
         }
     }
 

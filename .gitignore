@@ -1,7 +1,23 @@
+# Gradle & Build outputs
+.gradle/
+.kotlin/
+build/
+/build
+app/build/
+captures/
+/captures
+.externalNativeBuild/
+.cxx/
+*.apk
+*.ap_
+*.aab
+*.dex
+*.class
+output-metadata.json
+
+# IDE & OS
 *.iml
-.gradle
-.kotlin
-/local.properties
+.idea/
 /.idea/caches
 /.idea/libraries
 /.idea/modules.xml
@@ -9,12 +25,33 @@
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
 .DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
-local.properties
-.env
-debug.keystore
-*-debug.log
+Thumbs.db
+*.swp
+*~
 
+# Local configuration & secrets (NEVER commit)
+local.properties
+/local.properties
+.env
+.env.local
+.env.*.local
+*.jks
+*.keystore
+*.p12
+*.pem
+debug.keystore
+google-services.json
+
+# Logs & Crash dumps
+*.log
+*-debug.log
+firebase-debug.log*
+firestore-debug.log*
+ui-debug.log*
+*.hprof
+
+# Firebase / Node test tooling
+.firebase/
+node_modules/
+npm-debug.log*
+yarn-error.log*

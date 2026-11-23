@@ -17,10 +17,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.OpenInNew
 import androidx.compose.material.icons.filled.Verified
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -263,7 +263,7 @@ fun FactCheckDialog(
                                             )
                                             Spacer(modifier = Modifier.width(6.dp))
                                             Icon(
-                                                imageVector = Icons.Default.OpenInNew,
+                                                imageVector = Icons.AutoMirrored.Filled.OpenInNew,
                                                 contentDescription = stringResource(id = R.string.fact_check_cd_open_citation),
                                                 tint = MaterialTheme.colorScheme.primary,
                                                 modifier = Modifier.size(14.dp)

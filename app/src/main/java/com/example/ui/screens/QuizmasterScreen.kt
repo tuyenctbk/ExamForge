@@ -32,13 +32,13 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.automirrored.filled.VolumeOff
+import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.RecordVoiceOver
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Stop
-import androidx.compose.material.icons.filled.VolumeOff
-import androidx.compose.material.icons.filled.VolumeUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilterChip
@@ -63,6 +63,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.compose.material3.TextButton
@@ -71,6 +72,7 @@ import com.example.data.local.AiUsagePlanState
 import com.example.data.model.QuizMessage
 import com.example.data.model.StudyDeck
 import com.example.ui.components.QuotaSoftNudgeBanner
+import com.example.ui.util.tvFocusHighlight
 import com.example.ui.viewmodel.QuizmasterUiState
 import java.util.Locale
 
@@ -270,7 +272,7 @@ fun QuizmasterScreen(
                         modifier = Modifier.testTag("quiz_tts_toggle")
                     ) {
                         Icon(
-                            imageVector = if (oralAutoSpeak) Icons.Default.VolumeUp else Icons.Default.VolumeOff,
+                            imageVector = if (oralAutoSpeak) Icons.AutoMirrored.Filled.VolumeUp else Icons.AutoMirrored.Filled.VolumeOff,
                             contentDescription = stringResource(id = R.string.cd_speak_toggle),
                             tint = if (oralAutoSpeak) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -345,7 +347,15 @@ fun QuizmasterScreen(
                             tts.stop()
                             onSelectDeck(deck.id)
                         },
-                        label = { Text(deck.title.take(24)) }
+                        label = {
+                            Text(
+                                text = deck.title,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.widthIn(max = 190.dp)
+                            )
+                        },
+                        modifier = Modifier.tvFocusHighlight(RoundedCornerShape(10.dp), focusedScale = 1.03f)
                     )
                 }
             }

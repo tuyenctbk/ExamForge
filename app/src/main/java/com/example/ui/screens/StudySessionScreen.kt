@@ -87,6 +87,7 @@ import com.example.data.model.CardType
 import com.example.data.model.ReviewRating
 import com.example.data.model.SpacedRepetitionEngine
 import com.example.data.model.StudyDeck
+import com.example.ui.util.tvFocusHighlight
 import com.example.ui.viewmodel.FlashcardReviewFlag
 import com.example.ui.viewmodel.FlashcardViewModel
 import com.example.ui.viewmodel.ReviewNowScheduler
@@ -118,11 +119,14 @@ fun StudySession(
 
     BackHandler(onBack = exitSession)
 
-    LaunchedEffect(deckId) {
-        viewModel.startReviewNowCycle(deckId = deckId)
-    }
-
     val session by viewModel.reviewNowSession.collectAsStateWithLifecycle()
+    val haptics = androidx.compose.ui.platform.LocalHapticFeedback.current
+
+    LaunchedEffect(deckId) {
+        if (!session.isActive) {
+            viewModel.startReviewNowCycle(deckId = deckId)
+        }
+    }
     var slideDirection by remember { mutableIntStateOf(1) }
     val deckTitleById = remember(decks) { decks.associate { it.id to it.title } }
     val defaultSessionTitle = stringResource(id = R.string.study_session_title)
@@ -288,7 +292,10 @@ fun StudySession(
                                         reviewFlag = session.currentFlag,
                                         isFlipped = session.answerRevealed,
                                         hintShown = session.hintShown,
-                                        onFlip = viewModel::toggleReviewNowFlip,
+                                        onFlip = {
+                                            haptics.performHapticFeedback(androidx.compose.ui.hapticfeedback.HapticFeedbackType.TextHandleMove)
+                                            viewModel.toggleReviewNowFlip()
+                                        },
                                         onToggleHint = viewModel::toggleReviewNowHint
                                     )
                                 }
@@ -490,6 +497,7 @@ private fun StudySessionFlipCard(
                 scaleY = flipLiftScale
                 cameraDistance = 14f * density
             }
+            .tvFocusHighlight(RoundedCornerShape(28.dp))
             .clip(RoundedCornerShape(28.dp))
             .clickable(onClick = onFlip)
             .testTag("study_session_flip_card")

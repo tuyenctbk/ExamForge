@@ -113,6 +113,18 @@ class FlashcardAppWidgetProvider : AppWidgetProvider() {
                                     pendingSync = true
                                 )
                                 db.flashcardDao().upsertCard(updated.toEntity(pendingSync = true))
+                                val deckCards = db.flashcardDao().getAllCardsSnapshot(domain.userId).filter { it.deckId == domain.deckId }
+                                val masteredCount = deckCards.count { it.toDomain().isMastered() }
+                                db.deckDao().getDeckById(domain.deckId)?.let { existingDeck ->
+                                    db.deckDao().upsertDeck(
+                                        existingDeck.copy(
+                                            cardCount = deckCards.size,
+                                            masteredCount = masteredCount,
+                                            updatedAtMillis = System.currentTimeMillis()
+                                        )
+                                    )
+                                }
+                                PreferencesRepository(context).recordLocalReviewStat()
                             }
                         }
                         val ratedRemoved = !cardId.isNullOrBlank()
