@@ -26,7 +26,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.LibraryBooks
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Bolt
@@ -40,7 +39,6 @@ import androidx.compose.material.icons.filled.Style
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
@@ -95,7 +93,6 @@ fun DecksScreen(
     onQuickStudyDeck: (StudyDeck) -> Unit,
     onStartOralQuizDeck: (StudyDeck) -> Unit,
     onCreateManualDeck: (title: String, subject: String, description: String, accentIndex: Int) -> Unit,
-    onLoadSampleDecks: () -> Unit = {},
     showHomeDonationBanner: Boolean = false,
     completedTasksCount: Int = 0,
     onOpenSupportSheet: () -> Unit = {},
@@ -226,8 +223,7 @@ fun DecksScreen(
                         hasCamera = hasCamera,
                         isWide = useTwoColumnGrid,
                         onOpenForge = onOpenForge,
-                        onCreateManual = { showCreateDialog = true },
-                        onLoadSampleDecks = onLoadSampleDecks
+                        onCreateManual = { showCreateDialog = true }
                     )
                 }
             } else if (useTwoColumnGrid) {
@@ -729,8 +725,7 @@ private fun EmptyDecksCard(
     hasCamera: Boolean,
     isWide: Boolean,
     onOpenForge: () -> Unit,
-    onCreateManual: () -> Unit,
-    onLoadSampleDecks: () -> Unit
+    onCreateManual: () -> Unit
 ) {
     Surface(
         shape = RoundedCornerShape(24.dp),
@@ -790,32 +785,20 @@ private fun EmptyDecksCard(
                             fontWeight = FontWeight.Bold
                         )
                     }
-                    FilledTonalButton(
-                        onClick = onLoadSampleDecks,
+                    OutlinedButton(
+                        onClick = onCreateManual,
                         shape = RoundedCornerShape(14.dp),
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(46.dp)
                             .tvFocusHighlight(RoundedCornerShape(14.dp))
-                            .testTag("load_sample_decks_button")
                     ) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.LibraryBooks,
+                            imageVector = Icons.Default.Add,
                             contentDescription = null,
                             modifier = Modifier.size(18.dp)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = stringResource(id = R.string.decks_load_sample),
-                            fontWeight = FontWeight.SemiBold
-                        )
-                    }
-                    TextButton(
-                        onClick = onCreateManual,
-                        modifier = Modifier
-                            .align(Alignment.CenterHorizontally)
-                            .tvFocusHighlight(RoundedCornerShape(12.dp))
-                    ) {
                         Text(stringResource(id = R.string.decks_new_deck))
                     }
                 }
@@ -868,28 +851,20 @@ private fun EmptyDecksCard(
                     )
                 }
                 Spacer(modifier = Modifier.height(10.dp))
-                FilledTonalButton(
-                    onClick = onLoadSampleDecks,
+                OutlinedButton(
+                    onClick = onCreateManual,
                     shape = RoundedCornerShape(14.dp),
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(48.dp)
                         .tvFocusHighlight(RoundedCornerShape(14.dp))
-                        .testTag("load_sample_decks_button")
                 ) {
                     Icon(
-                        imageVector = Icons.AutoMirrored.Filled.LibraryBooks,
+                        imageVector = Icons.Default.Add,
                         contentDescription = null,
                         modifier = Modifier.size(18.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = stringResource(id = R.string.decks_load_sample),
-                        fontWeight = FontWeight.SemiBold
-                    )
-                }
-                Spacer(modifier = Modifier.height(6.dp))
-                TextButton(onClick = onCreateManual) {
                     Text(stringResource(id = R.string.decks_new_deck))
                 }
             }
@@ -916,7 +891,7 @@ private fun CreateDeckDialog(
                     value = title,
                     onValueChange = { if (it.length <= 120) title = it },
                     label = { Text("Deck Title") },
-                    placeholder = { Text("e.g., Neuroanatomy Cranial Nerves") },
+                    placeholder = { Text("Enter deck title") },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -924,7 +899,7 @@ private fun CreateDeckDialog(
                     value = subject,
                     onValueChange = { if (it.length <= 60) subject = it },
                     label = { Text("Subject") },
-                    placeholder = { Text("e.g., Biology, Calculus, Law") },
+                    placeholder = { Text("Enter subject or topic") },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )

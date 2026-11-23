@@ -83,7 +83,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.R
 import com.example.data.local.AiUsagePlanState
-import com.example.data.local.SampleStudyDecks
 import com.example.data.model.CardType
 import com.example.data.model.GeneratedCardDraft
 import com.example.data.model.StudyDeck
@@ -785,7 +784,7 @@ fun ForgeScreen(
                                     value = rawNotes,
                                     onValueChange = { if (it.length <= 6000) rawNotes = it },
                                     label = { Text(stringResource(R.string.forge_notes_label)) },
-                                    placeholder = { Text("e.g., ATP Synthase: Enzyme driving ATP synthesis via proton gradient...") },
+                                    placeholder = { Text("Paste notes, Term: Definition, or Q:/A: pairs…") },
                                     minLines = 3,
                                     maxLines = 6,
                                     modifier = Modifier
@@ -793,29 +792,11 @@ fun ForgeScreen(
                                         .testTag("forge_notes_input")
                                 )
 
-                                if (rawNotes.isBlank()) {
-                                    androidx.compose.material3.AssistChip(
-                                        onClick = {
-                                            rawNotes = SampleStudyDecks.SAMPLE_FORGE_NOTES
-                                            if (subjectHint.isBlank()) subjectHint = "Biochemistry"
-                                        },
-                                        leadingIcon = {
-                                            Icon(
-                                                imageVector = Icons.Default.AutoAwesome,
-                                                contentDescription = null,
-                                                modifier = Modifier.size(16.dp)
-                                            )
-                                        },
-                                        label = { Text(stringResource(id = R.string.forge_try_sample_notes)) },
-                                        modifier = Modifier.testTag("forge_sample_notes_chip")
-                                    )
-                                }
-
                                 OutlinedTextField(
                                     value = subjectHint,
                                     onValueChange = { if (it.length <= 60) subjectHint = it },
                                     label = { Text(stringResource(R.string.forge_subject_label)) },
-                                    placeholder = { Text("e.g., Physics 201, Organic Chemistry") },
+                                    placeholder = { Text("Course or subject (optional)") },
                                     singleLine = true,
                                     modifier = Modifier.fillMaxWidth()
                                 )

@@ -3,7 +3,6 @@ package com.example.data.donation
 import android.app.Activity
 import android.content.Context
 import android.util.Log
-import com.android.billingclient.api.AcknowledgePurchaseParams
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingClientStateListener
 import com.android.billingclient.api.BillingFlowParams
@@ -46,13 +45,13 @@ data class DonationBillingUiState(
 )
 
 /**
- * Production-grade Google Play Billing Library v7 manager for voluntary one-time donations.
+ * Production-grade Google Play Billing Library v8 manager for voluntary one-time donations.
  *
  * Key safeguards:
  * - Always requires a live, non-finishing [Activity] (passed directly from MainActivity or
  *   unwrapped via [findActivity]) and launches `launchBillingFlow` on Dispatchers.Main.immediate,
  *   completely avoiding "Billing Activity requires an Activity session" errors.
- * - Auto-reconnects BillingClient on demand if disconnected.
+ * - Uses PBL v8 `enableAutoServiceReconnection()` plus explicit connection checks.
  * - Consumes verified donation purchases so supporters can tip again later while permanently
  *   granting the Active Supporter badge on the first verified receipt.
  * - Handles emulator / sideloaded / unpublished SKU environments gracefully with clear feedback.
@@ -75,6 +74,7 @@ class DonationBillingManager(
                 .enableOneTimeProducts()
                 .build()
         )
+        .enableAutoServiceReconnection()
         .build()
 
     fun startConnectionAndLoad() {
@@ -313,7 +313,7 @@ class DonationBillingManager(
         // Permanently mark user as Active Supporter
         onSupporterVerified(productId, purchase.purchaseToken)
 
-        // In Play Billing v7, consumeAsync both acknowledges and consumes a one-time product
+        // In Play Billing v8, consumeAsync both acknowledges and consumes a one-time product
         // so supporters can tip again later without ITEM_ALREADY_OWNED blocks.
         val consumeParams = ConsumeParams.newBuilder()
             .setPurchaseToken(purchase.purchaseToken)
@@ -366,15 +366,22 @@ class DonationBillingManager(
             .build()
 
         suspendCancellableCoroutine { cont ->
-            billingClient.queryProductDetailsAsync(params) { billingResult, productDetailsList ->
+            billingClient.queryProductDetailsAsync(params) { billingResult, queryProductDetailsResult ->
                 if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                     val priceMap = mutableMapOf<String, String>()
-                    productDetailsList.forEach { details ->
+                    queryProductDetailsResult.productDetailsList.forEach { details ->
                         productDetailsCache[details.productId] = details
                         val formatted = details.oneTimePurchaseOfferDetails?.formattedPrice
                         if (!formatted.isNullOrBlank()) {
                             priceMap[details.productId] = formatted
                         }
+                    }
+                    val unfetched = queryProductDetailsResult.unfetchedProductList
+                    if (unfetched.isNotEmpty()) {
+                        Log.w(
+                            TAG,
+                            "Unfetched donation products: ${unfetched.joinToString { "${it.productId}(${it.statusCode})" }}"
+                        )
                     }
                     _billingState.update {
                         it.copy(

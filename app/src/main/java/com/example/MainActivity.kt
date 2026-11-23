@@ -773,7 +773,6 @@ private fun ExamForgeAppShell(
                                                     selectedTab = MainTab.QUIZMASTER
                                                 },
                                                 onCreateManualDeck = viewModel::createManualDeck,
-                                                onLoadSampleDecks = viewModel::loadSampleStudyDecks,
                                                 showHomeDonationBanner = showHomeDonationBanner,
                                                 completedTasksCount = engagementTelemetry.successfulCoreOps,
                                                 onOpenSupportSheet = { viewModel.openDonationSheet(source = "home_banner") },
@@ -858,7 +857,7 @@ private fun ExamForgeAppShell(
                                                 oralAutoSpeak = oralAutoSpeak,
                                                 syncStatus = syncStatus,
                                                 totalCachedCards = allCards.size,
-                                                sampleWidgetCard = allCards.firstOrNull(),
+                                                previewWidgetCard = allCards.firstOrNull(),
                                                 aiUsagePlan = aiUsagePlan,
                                                 byokKeyState = byokKeyState,
                                                 onTestAndSaveByokKey = viewModel::testAndSaveByokKey,

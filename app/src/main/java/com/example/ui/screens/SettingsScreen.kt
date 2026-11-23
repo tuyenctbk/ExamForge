@@ -80,7 +80,7 @@ fun SettingsScreen(
     oralAutoSpeak: Boolean,
     syncStatus: SyncStatusState,
     totalCachedCards: Int,
-    sampleWidgetCard: Flashcard?,
+    previewWidgetCard: Flashcard?,
     aiUsagePlan: AiUsagePlanState,
     byokKeyState: ByokKeyUiState,
     onTestAndSaveByokKey: (String) -> Unit,
@@ -341,7 +341,7 @@ fun SettingsScreen(
                                     modifier = Modifier.fillMaxWidth()
                                 ) {
                                     Text(
-                                        text = "EXAMFORGE · ${sampleWidgetCard?.cardType?.shortBadge ?: "QUICK RECALL"}",
+                                        text = "EXAMFORGE · ${previewWidgetCard?.cardType?.shortBadge ?: "QUICK RECALL"}",
                                         style = MaterialTheme.typography.labelSmall,
                                         color = MaterialTheme.colorScheme.primary
                                     )
@@ -353,7 +353,7 @@ fun SettingsScreen(
                                 }
                                 Spacer(modifier = Modifier.height(8.dp))
                                 Text(
-                                    text = sampleWidgetCard?.question
+                                    text = previewWidgetCard?.question
                                         ?: "Forge a deck from your notes to see live flashcards on your home screen.",
                                     style = MaterialTheme.typography.titleSmall,
                                     color = MaterialTheme.colorScheme.onSurface,

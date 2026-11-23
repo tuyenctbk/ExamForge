@@ -70,7 +70,6 @@
     <string name="decks_best_score">Best: %1$d</string>
     <string name="decks_empty_title">Build your first study deck</string>
     <string name="decks_empty_subtitle">Capture a whiteboard photo, dictate a lecture, or paste notes to forge active-recall flashcards.</string>
-    <string name="decks_load_sample">Load Starter Study Decks</string>
     <string name="decks_new_deck">New Deck</string>
     <string name="decks_saved_cards">All Cards</string>
     <string name="study_arena_complete_title">Session Complete</string>
@@ -99,7 +98,6 @@
     <string name="forge_generate_eco_lite">Forge with Eco Lite AI</string>
     <string name="forge_generate_offline">Forge Cards Offline ($0)</string>
     <string name="forge_instant_offline_btn">Instant Offline Parser ($0 · Saves AI Quota)</string>
-    <string name="forge_try_sample_notes">Try Sample Notes</string>
     <string name="forge_open_deck">Open Deck</string>
     <string name="forge_scan_another">Scan Another</string>
 

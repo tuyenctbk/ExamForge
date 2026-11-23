@@ -468,17 +468,6 @@ class ExamForgeViewModel(
 
     // --- MANUAL DECK & CARD MANAGEMENT ---
 
-    fun loadSampleStudyDecks() {
-        viewModelScope.launch {
-            val result = studyRepository.loadSampleStudyDecks()
-            result.onSuccess { totalCards ->
-                _actionBanner.value = "Loaded 4 starter study decks ($totalCards cards) into offline cache."
-            }.onFailure { err ->
-                _actionBanner.value = err.localizedMessage ?: "Unable to load sample decks."
-            }
-        }
-    }
-
     fun createManualDeck(title: String, subject: String, description: String, accentIndex: Int) {
         viewModelScope.launch {
             val result = studyRepository.createDeckWithCards(
