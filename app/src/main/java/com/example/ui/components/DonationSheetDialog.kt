@@ -63,11 +63,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.example.R
 import com.example.data.donation.BillingConnectionStatus
 import com.example.data.donation.DonationBillingUiState
 import com.example.data.donation.DonationChannel
@@ -105,7 +107,6 @@ fun DonationSheetDialog(
     if (!visible) return
 
     val context = LocalContext.current
-    // Always resolve a real Activity — explicit hostActivity first, then ContextWrapper unwrapping
     val resolvedActivity = remember(hostActivity, context) {
         hostActivity ?: context.findActivity()
     }
@@ -130,7 +131,6 @@ fun DonationSheetDialog(
                 .padding(horizontal = 20.dp)
                 .padding(bottom = 28.dp)
         ) {
-            // Header
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
@@ -153,9 +153,9 @@ fun DonationSheetDialog(
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = when {
-                            isActiveSupporter -> "Active Supporter"
-                            milestoneCount != null -> "$milestoneCount Study Tasks Completed!"
-                            else -> "Support ExamForge"
+                            isActiveSupporter -> stringResource(id = R.string.support_dev_active_supporter)
+                            milestoneCount != null -> stringResource(id = R.string.support_dev_milestone_heading, milestoneCount)
+                            else -> stringResource(id = R.string.support_dev_title)
                         },
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
@@ -163,9 +163,9 @@ fun DonationSheetDialog(
                     )
                     Text(
                         text = if (isActiveSupporter) {
-                            "Thank you for backing independent, ad-free learning."
+                            stringResource(id = R.string.support_dev_thanks_subtitle)
                         } else {
-                            "100% voluntary · Ad-free & offline-first indie app."
+                            stringResource(id = R.string.support_dev_voluntary_subtitle)
                         },
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -191,7 +191,7 @@ fun DonationSheetDialog(
                         )
                         Spacer(modifier = Modifier.width(10.dp))
                         Text(
-                            text = "Your Active Supporter badge is active and all donation banners are permanently disabled.",
+                            text = stringResource(id = R.string.support_dev_active_desc),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSecondaryContainer
                         )
@@ -199,14 +199,13 @@ fun DonationSheetDialog(
                 }
             }
 
-            // Channel Selector (Google Play / PayPal + QR / Ko-fi)
             val channels = DonationChannel.entries
             SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
                 channels.forEachIndexed { idx, channel ->
                     val label = when (channel) {
-                        DonationChannel.GOOGLE_PLAY -> "Google Play"
-                        DonationChannel.PAYPAL -> "PayPal & QR"
-                        DonationChannel.KOFI -> "Ko-fi"
+                        DonationChannel.GOOGLE_PLAY -> stringResource(id = R.string.support_dev_google_play_tab)
+                        DonationChannel.PAYPAL -> stringResource(id = R.string.support_dev_paypal_tab)
+                        DonationChannel.KOFI -> stringResource(id = R.string.support_dev_kofi_tab)
                     }
                     SegmentedButton(
                         selected = selectedChannel == channel,
@@ -225,7 +224,6 @@ fun DonationSheetDialog(
                 }
             }
 
-            // Channel Content
             when (selectedChannel) {
                 DonationChannel.GOOGLE_PLAY -> {
                     GooglePlayDonationTab(
@@ -260,7 +258,6 @@ fun DonationSheetDialog(
                 }
             }
 
-            // Footer controls
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
@@ -275,7 +272,7 @@ fun DonationSheetDialog(
                         modifier = Modifier.testTag("donation_opt_out_button")
                     ) {
                         Text(
-                            text = "Don't ask again",
+                            text = stringResource(id = R.string.support_dev_dont_ask),
                             style = MaterialTheme.typography.labelMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -287,7 +284,7 @@ fun DonationSheetDialog(
                     onClick = onDismiss,
                     modifier = Modifier.testTag("donation_close_button")
                 ) {
-                    Text("Close")
+                    Text(stringResource(id = R.string.common_close))
                 }
             }
         }
@@ -305,12 +302,11 @@ internal fun GooglePlayDonationTab(
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Text(
-            text = "1-Tap Google Pay checkout. Verified supporters permanently receive the Active Supporter header badge and silence all reminders.",
+            text = stringResource(id = R.string.support_dev_play_desc),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
-        // 2x2 Tier Grid
         val rows = DonationTier.entries.chunked(2)
         rows.forEach { rowTiers ->
             Row(
@@ -320,6 +316,8 @@ internal fun GooglePlayDonationTab(
                 rowTiers.forEach { tier ->
                     val isSelected = selectedTier == tier
                     val price = billingState.localizedPrices[tier.productId] ?: tier.fallbackPrice
+                    val tierTitle = localizedTierTitle(tier)
+                    val tierSubtitle = localizedTierSubtitle(tier)
                     Surface(
                         shape = RoundedCornerShape(16.dp),
                         color = if (isSelected) {
@@ -370,7 +368,7 @@ internal fun GooglePlayDonationTab(
                                 }
                             }
                             Text(
-                                text = tier.title,
+                                text = tierTitle,
                                 style = MaterialTheme.typography.labelLarge,
                                 fontWeight = FontWeight.SemiBold,
                                 color = MaterialTheme.colorScheme.onSurface,
@@ -378,7 +376,7 @@ internal fun GooglePlayDonationTab(
                                 overflow = TextOverflow.Ellipsis
                             )
                             Text(
-                                text = tier.subtitle,
+                                text = tierSubtitle,
                                 style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 maxLines = 1,
@@ -422,7 +420,7 @@ internal fun GooglePlayDonationTab(
                         onClick = onSwitchToPayPal,
                         contentPadding = PaddingValues(horizontal = 4.dp, vertical = 0.dp)
                     ) {
-                        Text("Try PayPal & QR instead →")
+                        Text(stringResource(id = R.string.support_dev_play_try_paypal))
                     }
                 }
             }
@@ -445,7 +443,7 @@ internal fun GooglePlayDonationTab(
                     color = MaterialTheme.colorScheme.onPrimary
                 )
                 Spacer(modifier = Modifier.width(10.dp))
-                Text("Opening Google Play…")
+                Text(stringResource(id = R.string.support_dev_play_opening))
             } else {
                 Icon(
                     imageVector = Icons.Default.ShoppingBag,
@@ -454,7 +452,7 @@ internal fun GooglePlayDonationTab(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "Support $activePrice via Google Play",
+                    text = stringResource(id = R.string.support_dev_play_cta, activePrice),
                     fontWeight = FontWeight.Bold
                 )
             }
@@ -466,10 +464,10 @@ internal fun GooglePlayDonationTab(
             modifier = Modifier.fillMaxWidth()
         ) {
             val statusLabel = when (billingState.connectionStatus) {
-                BillingConnectionStatus.READY -> "Play Billing connected"
-                BillingConnectionStatus.CONNECTING -> "Connecting to Google Play…"
-                BillingConnectionStatus.UNAVAILABLE -> "Play Billing unavailable here"
-                BillingConnectionStatus.IDLE -> "Ready on tap"
+                BillingConnectionStatus.READY -> stringResource(id = R.string.support_dev_play_status_ready)
+                BillingConnectionStatus.CONNECTING -> stringResource(id = R.string.support_dev_play_status_connecting)
+                BillingConnectionStatus.UNAVAILABLE -> stringResource(id = R.string.support_dev_play_status_unavailable)
+                BillingConnectionStatus.IDLE -> stringResource(id = R.string.support_dev_play_status_idle)
             }
             Text(
                 text = statusLabel,
@@ -482,7 +480,7 @@ internal fun GooglePlayDonationTab(
             ) {
                 Icon(Icons.Default.Refresh, contentDescription = null, modifier = Modifier.size(15.dp))
                 Spacer(modifier = Modifier.width(4.dp))
-                Text("Restore Supporter")
+                Text(stringResource(id = R.string.support_dev_restore_supporter))
             }
         }
     }
@@ -503,6 +501,9 @@ internal fun PayPalQrDonationTab(
         selectedPreset.amountUsd
     }
     val paypalUrl = remember(effectiveAmount) { DonationConfig.buildPayPalUrl(effectiveAmount) }
+    val paypalClipLabel = stringResource(id = R.string.support_dev_paypal_clipboard_label)
+    val paypalCopiedToast = stringResource(id = R.string.support_dev_paypal_copied)
+    val paypalShareSubject = stringResource(id = R.string.support_dev_share_subject)
 
     val qrBitmap by produceState<Bitmap?>(initialValue = null, key1 = paypalUrl) {
         value = withContext(Dispatchers.Default) {
@@ -512,21 +513,25 @@ internal fun PayPalQrDonationTab(
 
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Text(
-            text = "Scan the live QR code with any banking or PayPal camera, or open the direct link below.",
+            text = stringResource(id = R.string.support_dev_paypal_desc),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
-        // Preset Amount Chips
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier.fillMaxWidth()
         ) {
             PayPalPreset.entries.forEach { preset ->
+                val chipLabel = if (preset == PayPalPreset.ANY) {
+                    stringResource(id = R.string.support_dev_paypal_any_amount)
+                } else {
+                    preset.label
+                }
                 FilterChip(
                     selected = selectedPreset == preset,
                     onClick = { onPresetSelected(preset) },
-                    label = { Text(preset.label, maxLines = 1) },
+                    label = { Text(chipLabel, maxLines = 1) },
                     modifier = Modifier.testTag("paypal_preset_${preset.name.lowercase()}")
                 )
             }
@@ -536,8 +541,8 @@ internal fun PayPalQrDonationTab(
             OutlinedTextField(
                 value = customAmount,
                 onValueChange = onCustomAmountChanged,
-                label = { Text("Custom USD Amount (optional)") },
-                placeholder = { Text("e.g. 7 or leave blank for any") },
+                label = { Text(stringResource(id = R.string.support_dev_paypal_custom_label)) },
+                placeholder = { Text(stringResource(id = R.string.support_dev_paypal_custom_hint)) },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                 modifier = Modifier
@@ -546,7 +551,6 @@ internal fun PayPalQrDonationTab(
             )
         }
 
-        // Crisp Live QR Code Card (high-contrast white card ensures scanning in Dark Mode too)
         Surface(
             shape = RoundedCornerShape(18.dp),
             color = MaterialTheme.colorScheme.surfaceContainerLow,
@@ -569,7 +573,7 @@ internal fun PayPalQrDonationTab(
                     if (bmp != null) {
                         Image(
                             bitmap = bmp.asImageBitmap(),
-                            contentDescription = "PayPal donation QR code for $paypalUrl",
+                            contentDescription = stringResource(id = R.string.support_dev_cd_paypal_qr, paypalUrl),
                             modifier = Modifier
                                 .size(164.dp)
                                 .testTag("paypal_live_qr_image")
@@ -585,7 +589,6 @@ internal fun PayPalQrDonationTab(
                 }
                 Spacer(modifier = Modifier.height(10.dp))
 
-                // Copyable Link Box
                 Surface(
                     color = MaterialTheme.colorScheme.surface,
                     shape = RoundedCornerShape(12.dp),
@@ -606,28 +609,28 @@ internal fun PayPalQrDonationTab(
                         )
                         IconButton(
                             onClick = {
-                                copyTextToClipboard(context, "PayPal Link", paypalUrl)
-                                Toast.makeText(context, "PayPal link copied!", Toast.LENGTH_SHORT).show()
+                                copyTextToClipboard(context, paypalClipLabel, paypalUrl)
+                                Toast.makeText(context, paypalCopiedToast, Toast.LENGTH_SHORT).show()
                                 onExternalAction("PAYPAL_COPY", paypalUrl)
                             },
                             modifier = Modifier.testTag("paypal_copy_link_button")
                         ) {
                             Icon(
                                 imageVector = Icons.Default.ContentCopy,
-                                contentDescription = "Copy PayPal link",
+                                contentDescription = stringResource(id = R.string.support_dev_cd_copy_paypal),
                                 modifier = Modifier.size(18.dp)
                             )
                         }
                         IconButton(
                             onClick = {
-                                shareDonationLink(context, paypalUrl, "Support ExamForge via PayPal")
+                                shareDonationLink(context, paypalUrl, paypalShareSubject)
                                 onExternalAction("PAYPAL_SHARE", paypalUrl)
                             },
                             modifier = Modifier.testTag("paypal_share_link_button")
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Share,
-                                contentDescription = "Share PayPal link",
+                                contentDescription = stringResource(id = R.string.support_dev_cd_share_paypal),
                                 modifier = Modifier.size(18.dp)
                             )
                         }
@@ -638,7 +641,7 @@ internal fun PayPalQrDonationTab(
 
         Button(
             onClick = {
-                openUrlWithClipboardFallback(context, paypalUrl, "PayPal Link")
+                openUrlWithClipboardFallback(context, paypalUrl, paypalClipLabel)
                 onExternalAction("PAYPAL_OPEN", paypalUrl)
             },
             shape = RoundedCornerShape(14.dp),
@@ -650,7 +653,11 @@ internal fun PayPalQrDonationTab(
             Icon(Icons.Default.OpenInNew, contentDescription = null, modifier = Modifier.size(18.dp))
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = if (effectiveAmount != null) "Open PayPal ($$effectiveAmount USD)" else "Open PayPal.me",
+                text = if (effectiveAmount != null) {
+                    stringResource(id = R.string.support_dev_paypal_open_amount, effectiveAmount)
+                } else {
+                    stringResource(id = R.string.support_dev_paypal_open_default)
+                },
                 fontWeight = FontWeight.Bold
             )
         }
@@ -663,6 +670,8 @@ internal fun KofiDonationTab(
 ) {
     val context = LocalContext.current
     val kofiUrl = remember { DonationConfig.buildKofiUrl() }
+    val kofiClipLabel = stringResource(id = R.string.support_dev_kofi_clipboard_label)
+    val kofiCopiedToast = stringResource(id = R.string.support_dev_kofi_copied)
 
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Surface(
@@ -683,13 +692,13 @@ internal fun KofiDonationTab(
                     modifier = Modifier.size(38.dp)
                 )
                 Text(
-                    text = "Buy the Indie Dev a Coffee on Ko-fi",
+                    text = stringResource(id = R.string.support_dev_kofi_headline),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
                 )
                 Text(
-                    text = "Ko-fi takes 0% platform fee on tips and supports cards or PayPal without creating an account. Every tip keeps ExamForge ad-free and offline-ready.",
+                    text = stringResource(id = R.string.support_dev_kofi_desc),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center
@@ -704,7 +713,7 @@ internal fun KofiDonationTab(
 
         Button(
             onClick = {
-                openUrlWithClipboardFallback(context, kofiUrl, "Ko-fi Link")
+                openUrlWithClipboardFallback(context, kofiUrl, kofiClipLabel)
                 onExternalAction("KOFI_OPEN", kofiUrl)
             },
             shape = RoundedCornerShape(14.dp),
@@ -715,13 +724,13 @@ internal fun KofiDonationTab(
         ) {
             Icon(Icons.Default.OpenInNew, contentDescription = null, modifier = Modifier.size(18.dp))
             Spacer(modifier = Modifier.width(8.dp))
-            Text("Support on Ko-fi", fontWeight = FontWeight.Bold)
+            Text(stringResource(id = R.string.support_dev_kofi_cta), fontWeight = FontWeight.Bold)
         }
 
         OutlinedButton(
             onClick = {
-                copyTextToClipboard(context, "Ko-fi Link", kofiUrl)
-                Toast.makeText(context, "Ko-fi link copied!", Toast.LENGTH_SHORT).show()
+                copyTextToClipboard(context, kofiClipLabel, kofiUrl)
+                Toast.makeText(context, kofiCopiedToast, Toast.LENGTH_SHORT).show()
                 onExternalAction("KOFI_COPY", kofiUrl)
             },
             shape = RoundedCornerShape(14.dp),
@@ -732,7 +741,23 @@ internal fun KofiDonationTab(
         ) {
             Icon(Icons.Default.ContentCopy, contentDescription = null, modifier = Modifier.size(16.dp))
             Spacer(modifier = Modifier.width(8.dp))
-            Text("Copy Ko-fi Link")
+            Text(stringResource(id = R.string.support_dev_kofi_copy))
         }
     }
+}
+
+@Composable
+private fun localizedTierTitle(tier: DonationTier): String = when (tier) {
+    DonationTier.TIER_1 -> stringResource(id = R.string.support_dev_tier1_title)
+    DonationTier.TIER_2 -> stringResource(id = R.string.support_dev_tier2_title)
+    DonationTier.TIER_3 -> stringResource(id = R.string.support_dev_tier3_title)
+    DonationTier.TIER_4 -> stringResource(id = R.string.support_dev_tier4_title)
+}
+
+@Composable
+private fun localizedTierSubtitle(tier: DonationTier): String = when (tier) {
+    DonationTier.TIER_1 -> stringResource(id = R.string.support_dev_tier1_sub)
+    DonationTier.TIER_2 -> stringResource(id = R.string.support_dev_tier2_sub)
+    DonationTier.TIER_3 -> stringResource(id = R.string.support_dev_tier3_sub)
+    DonationTier.TIER_4 -> stringResource(id = R.string.support_dev_tier4_sub)
 }

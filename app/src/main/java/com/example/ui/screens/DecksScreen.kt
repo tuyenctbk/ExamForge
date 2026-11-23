@@ -1,5 +1,6 @@
 package com.example.ui.screens
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -50,6 +51,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -96,8 +98,8 @@ fun DecksScreen(
     val subjects = remember(decks) {
         listOf("All") + decks.map { it.subject }.distinct().sorted()
     }
-    var selectedSubject by remember { mutableStateOf("All") }
-    var showCreateDialog by remember { mutableStateOf(false) }
+    var selectedSubject by rememberSaveable { mutableStateOf("All") }
+    var showCreateDialog by rememberSaveable { mutableStateOf(false) }
 
     val filteredDecks = remember(decks, selectedSubject) {
         if (selectedSubject == "All") decks else decks.filter { it.subject == selectedSubject }
@@ -230,7 +232,8 @@ fun DecksScreen(
                         masteredCount = masteredCount,
                         onClick = { onOpenDeckDetail(deck) },
                         onStudyNow = { onQuickStudyDeck(deck) },
-                        onOralQuiz = { onStartOralQuizDeck(deck) }
+                        onOralQuiz = { onStartOralQuizDeck(deck) },
+                        modifier = Modifier.animateItem()
                     )
                 }
             }
@@ -439,16 +442,21 @@ private fun DeckListCard(
     masteredCount: Int,
     onClick: () -> Unit,
     onStudyNow: () -> Unit,
-    onOralQuiz: () -> Unit
+    onOralQuiz: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val accentColor = DeckAccentPalette[deck.accentIndex.coerceIn(0, DeckAccentPalette.lastIndex)]
     val masteryFraction = if (totalCards > 0) masteredCount.toFloat() / totalCards.toFloat() else 0f
+    val animatedMastery by animateFloatAsState(
+        targetValue = masteryFraction,
+        label = "deck_mastery_progress"
+    )
 
     Surface(
         shape = RoundedCornerShape(22.dp),
         color = MaterialTheme.colorScheme.surface,
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(22.dp))
             .clickable(onClick = onClick)
@@ -542,7 +550,7 @@ private fun DeckListCard(
             }
             Spacer(modifier = Modifier.height(6.dp))
             LinearProgressIndicator(
-                progress = { masteryFraction },
+                progress = { animatedMastery },
                 color = accentColor,
                 trackColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                 modifier = Modifier
@@ -667,10 +675,10 @@ private fun CreateDeckDialog(
     onDismiss: () -> Unit,
     onConfirm: (title: String, subject: String, description: String, accentIndex: Int) -> Unit
 ) {
-    var title by remember { mutableStateOf("") }
-    var subject by remember { mutableStateOf("") }
-    var description by remember { mutableStateOf("") }
-    var selectedAccent by remember { mutableIntStateOf(0) }
+    var title by rememberSaveable { mutableStateOf("") }
+    var subject by rememberSaveable { mutableStateOf("") }
+    var description by rememberSaveable { mutableStateOf("") }
+    var selectedAccent by rememberSaveable { mutableIntStateOf(0) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -701,22 +709,28 @@ private fun CreateDeckDialog(
                     modifier = Modifier.fillMaxWidth()
                 )
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     DeckAccentPalette.forEachIndexed { idx, color ->
-                        Surface(
-                            color = color,
-                            shape = CircleShape,
-                            border = if (selectedAccent == idx) {
-                                BorderStroke(3.dp, MaterialTheme.colorScheme.onSurface)
-                            } else {
-                                null
-                            },
+                        Box(
+                            contentAlignment = Alignment.Center,
                             modifier = Modifier
-                                .size(30.dp)
+                                .size(48.dp)
+                                .clip(CircleShape)
                                 .clickable { selectedAccent = idx }
-                        ) {}
+                        ) {
+                            Surface(
+                                color = color,
+                                shape = CircleShape,
+                                border = if (selectedAccent == idx) {
+                                    BorderStroke(3.dp, MaterialTheme.colorScheme.onSurface)
+                                } else {
+                                    null
+                                },
+                                modifier = Modifier.size(30.dp)
+                            ) {}
+                        }
                     }
                 }
             }

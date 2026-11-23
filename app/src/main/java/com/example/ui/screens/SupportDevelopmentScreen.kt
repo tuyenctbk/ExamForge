@@ -49,7 +49,6 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.launch
 import com.example.R
 import com.example.data.donation.DonationBillingUiState
 import com.example.data.donation.DonationTier
@@ -58,6 +57,7 @@ import com.example.data.donation.findActivity
 import com.example.ui.components.GooglePlayDonationTab
 import com.example.ui.components.KofiDonationTab
 import com.example.ui.components.PayPalQrDonationTab
+import kotlinx.coroutines.launch
 
 /**
  * Dedicated 'Support Development' screen launched from the Settings menu.
@@ -96,7 +96,7 @@ fun SupportDevelopmentScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Support Development",
+                        text = stringResource(id = R.string.support_dev_title),
                         style = MaterialTheme.typography.titleLarge
                     )
                 },
@@ -132,7 +132,6 @@ fun SupportDevelopmentScreen(
                 contentPadding = PaddingValues(horizontal = 20.dp, vertical = 14.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Indie & Privacy Pledge Header Card
                 item {
                     Surface(
                         color = if (isActiveSupporter) {
@@ -169,9 +168,9 @@ fun SupportDevelopmentScreen(
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
                                     text = if (isActiveSupporter) {
-                                        "Active Supporter · Thank You!"
+                                        stringResource(id = R.string.support_dev_active_title)
                                     } else {
-                                        "100% Offline & Ad-Free"
+                                        stringResource(id = R.string.support_dev_pledge_title)
                                     },
                                     style = MaterialTheme.typography.titleMedium,
                                     fontWeight = FontWeight.Bold,
@@ -180,9 +179,9 @@ fun SupportDevelopmentScreen(
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Text(
                                     text = if (isActiveSupporter) {
-                                        "Your Active Supporter badge is active and all donation reminders are permanently turned off."
+                                        stringResource(id = R.string.support_dev_active_desc)
                                     } else {
-                                        "ExamForge is built independently with no ads or tracking SDKs. Voluntary support keeps updates shipping."
+                                        stringResource(id = R.string.support_dev_pledge_desc)
                                     },
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -192,7 +191,6 @@ fun SupportDevelopmentScreen(
                     }
                 }
 
-                // Static Section 1: Google Play In-App Purchases (scoped to activeActivity)
                 item {
                     Surface(
                         color = MaterialTheme.colorScheme.surface,
@@ -215,7 +213,7 @@ fun SupportDevelopmentScreen(
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(
-                                    text = "Google Play In-App Purchase",
+                                    text = stringResource(id = R.string.support_dev_google_play_section),
                                     style = MaterialTheme.typography.titleMedium,
                                     fontWeight = FontWeight.Bold,
                                     color = MaterialTheme.colorScheme.onSurface
@@ -236,7 +234,6 @@ fun SupportDevelopmentScreen(
                     }
                 }
 
-                // Static Section 2: PayPal Link & Live QR Code
                 item {
                     Surface(
                         color = MaterialTheme.colorScheme.surface,
@@ -259,7 +256,7 @@ fun SupportDevelopmentScreen(
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(
-                                    text = "PayPal Link & Live QR",
+                                    text = stringResource(id = R.string.support_dev_paypal_section),
                                     style = MaterialTheme.typography.titleMedium,
                                     fontWeight = FontWeight.Bold,
                                     color = MaterialTheme.colorScheme.onSurface
@@ -284,7 +281,6 @@ fun SupportDevelopmentScreen(
                     }
                 }
 
-                // Static Section 3: Ko-fi Tip Jar Link
                 item {
                     Surface(
                         color = MaterialTheme.colorScheme.surface,
@@ -307,7 +303,7 @@ fun SupportDevelopmentScreen(
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(
-                                    text = "Ko-fi Tip Jar",
+                                    text = stringResource(id = R.string.support_dev_kofi_section),
                                     style = MaterialTheme.typography.titleMedium,
                                     fontWeight = FontWeight.Bold,
                                     color = MaterialTheme.colorScheme.onSurface

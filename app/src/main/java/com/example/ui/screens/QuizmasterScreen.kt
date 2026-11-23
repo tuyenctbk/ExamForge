@@ -55,6 +55,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -91,7 +92,7 @@ fun QuizmasterScreen(
     onOpenForge: () -> Unit
 ) {
     val context = LocalContext.current
-    var draftInput by remember { mutableStateOf("") }
+    var draftInput by rememberSaveable { mutableStateOf("") }
     var isListening by remember { mutableStateOf(false) }
     var voiceNotice by remember { mutableStateOf<String?>(null) }
     var ttsReady by remember { mutableStateOf(false) }
@@ -104,7 +105,13 @@ fun QuizmasterScreen(
         var engine: TextToSpeech? = null
         engine = TextToSpeech(context) { status ->
             if (status == TextToSpeech.SUCCESS) {
-                engine?.language = Locale.US
+                val deviceLocale = Locale.getDefault()
+                val availability = engine?.isLanguageAvailable(deviceLocale) ?: TextToSpeech.LANG_NOT_SUPPORTED
+                engine?.language = if (availability >= TextToSpeech.LANG_AVAILABLE) {
+                    deviceLocale
+                } else {
+                    Locale.US
+                }
                 ttsReady = true
             }
         }
@@ -508,7 +515,10 @@ fun QuizmasterScreen(
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     items(quizState.messages, key = { it.id }) { msg ->
-                        QuizChatBubble(message = msg)
+                        QuizChatBubble(
+                            message = msg,
+                            modifier = Modifier.animateItem()
+                        )
                     }
                 }
 
@@ -628,10 +638,13 @@ fun QuizmasterScreen(
 }
 
 @Composable
-private fun QuizChatBubble(message: QuizMessage) {
+private fun QuizChatBubble(
+    message: QuizMessage,
+    modifier: Modifier = Modifier
+) {
     val isUser = message.role == "user"
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         horizontalArrangement = if (isUser) Arrangement.End else Arrangement.Start
     ) {
         Surface(

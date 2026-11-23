@@ -30,6 +30,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -394,33 +395,50 @@ class FlashcardViewModel(
         nowMillis: Long = System.currentTimeMillis()
     ) {
         _scheduleClockMillis.value = nowMillis
-        val sourceCards = allRoomFlashcards.value.let { all ->
-            if (deckId.isNullOrBlank()) all else all.filter { it.deckId == deckId }
+        viewModelScope.launch {
+            val allCards = allRoomFlashcards.value.ifEmpty {
+                localRepository.observeSavedFlashcards(currentUserId).first()
+            }
+            val sourceCards = if (deckId.isNullOrBlank()) {
+                allCards
+            } else {
+                allCards.filter { it.deckId == deckId }
+            }
+            val queue = ReviewNowScheduler.buildReviewNowQueue(sourceCards, nowMillis)
+            if (queue.isEmpty()) {
+                _reviewNowSession.value = ReviewNowSessionUiState(
+                    isActive = true,
+                    queue = emptyList(),
+                    isCompleted = false
+                )
+            } else {
+                _reviewNowSession.value = ReviewNowSessionUiState(
+                    isActive = true,
+                    queue = queue,
+                    currentIndex = 0,
+                    answerRevealed = false,
+                    hintShown = false,
+                    reviewedInCycle = 0,
+                    reinforcedMasteredCount = 0,
+                    totalFlaggedAtStart = queue.size,
+                    currentFlag = ReviewNowScheduler.evaluateFlag(queue.first(), nowMillis),
+                    isCompleted = false
+                )
+            }
         }
-        val queue = ReviewNowScheduler.buildReviewNowQueue(sourceCards, nowMillis)
-        if (queue.isEmpty()) {
-            _reviewNowSession.value = ReviewNowSessionUiState()
-            _statusMessage.value = "All caught up! No cards are due for reinforcement right now."
-            return
-        }
-        _reviewNowSession.value = ReviewNowSessionUiState(
-            isActive = true,
-            queue = queue,
-            currentIndex = 0,
-            answerRevealed = false,
-            hintShown = false,
-            reviewedInCycle = 0,
-            reinforcedMasteredCount = 0,
-            totalFlaggedAtStart = queue.size,
-            currentFlag = ReviewNowScheduler.evaluateFlag(queue.first(), nowMillis),
-            isCompleted = false
-        )
     }
 
     fun revealReviewNowAnswer() {
         _reviewNowSession.update { session ->
             if (!session.isActive || session.isCompleted) session
             else session.copy(answerRevealed = true)
+        }
+    }
+
+    fun toggleReviewNowFlip() {
+        _reviewNowSession.update { session ->
+            if (!session.isActive || session.isCompleted) session
+            else session.copy(answerRevealed = !session.answerRevealed)
         }
     }
 

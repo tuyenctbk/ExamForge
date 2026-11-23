@@ -2,6 +2,10 @@ package com.example.ui.screens
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -50,6 +54,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -100,6 +105,7 @@ fun MatchBlitzGameScreen(
     var matchedPairsTotal by remember { mutableIntStateOf(0) }
     var attemptsTotal by remember { mutableIntStateOf(0) }
     var roundNumber by remember { mutableIntStateOf(1) }
+    var bestScoreAtGameStart by remember { mutableIntStateOf(bestScore) }
 
     var questionTiles by remember { mutableStateOf<List<MatchTile>>(emptyList()) }
     var answerTiles by remember { mutableStateOf<List<MatchTile>>(emptyList()) }
@@ -119,6 +125,7 @@ fun MatchBlitzGameScreen(
     }
 
     fun startNewGame() {
+        bestScoreAtGameStart = bestScore
         score = 0
         combo = 0
         maxCombo = 0
@@ -177,7 +184,14 @@ fun MatchBlitzGameScreen(
             }
         } else {
             combo = 0
-            timeLeftSeconds = (timeLeftSeconds - 2).coerceAtLeast(0)
+            val updatedTime = (timeLeftSeconds - 2).coerceAtLeast(0)
+            timeLeftSeconds = updatedTime
+            if (updatedTime == 0 && phase == MatchGamePhase.PLAYING) {
+                mismatchIds = null
+                phase = MatchGamePhase.FINISHED
+                onScoreRecorded(score)
+                return
+            }
             mismatchIds = qId to aId
         }
     }
@@ -270,7 +284,7 @@ fun MatchBlitzGameScreen(
 
                 MatchGamePhase.FINISHED -> {
                     val accuracy = if (attemptsTotal == 0) 0 else ((matchedPairsTotal * 100) / attemptsTotal)
-                    val isNewBest = score > 0 && score >= bestScore
+                    val isNewBest = score > 0 && score > bestScoreAtGameStart
                     MatchBlitzFinishedSummary(
                         score = score,
                         bestScore = maxOf(score, bestScore),
@@ -355,8 +369,12 @@ fun MatchBlitzGameScreen(
 
                                     Spacer(modifier = Modifier.height(10.dp))
 
+                                    val animatedTimeProgress by animateFloatAsState(
+                                        targetValue = (timeLeftSeconds.toFloat() / INITIAL_GAME_SECONDS.toFloat()).coerceIn(0f, 1f),
+                                        label = "match_blitz_timer_progress"
+                                    )
                                     LinearProgressIndicator(
-                                        progress = { (timeLeftSeconds.toFloat() / INITIAL_GAME_SECONDS.toFloat()).coerceIn(0f, 1f) },
+                                        progress = { animatedTimeProgress },
                                         color = if (timeLeftSeconds <= 12) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
                                         trackColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                                         modifier = Modifier
@@ -470,11 +488,22 @@ private fun MatchTileCard(
         label = "match_tile_border"
     )
 
+    val tileScale by animateFloatAsState(
+        targetValue = when {
+            isSelected -> 1.03f
+            isMatched -> 0.97f
+            else -> 1f
+        },
+        animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
+        label = "match_tile_scale"
+    )
+
     Surface(
         shape = RoundedCornerShape(16.dp),
         color = bgColor,
         border = BorderStroke(if (isSelected || isError) 2.dp else 1.dp, borderColor),
         modifier = modifier
+            .scale(tileScale)
             .heightIn(min = 78.dp)
             .clip(RoundedCornerShape(16.dp))
             .clickable(enabled = !isMatched, onClick = onClick)
@@ -601,6 +630,17 @@ private fun MatchBlitzFinishedSummary(
     onPlayAgain: () -> Unit,
     onBack: () -> Unit
 ) {
+    val iconScale = remember { Animatable(0.6f) }
+    LaunchedEffect(Unit) {
+        iconScale.animateTo(
+            targetValue = 1f,
+            animationSpec = spring(
+                dampingRatio = Spring.DampingRatioMediumBouncy,
+                stiffness = Spring.StiffnessLow
+            )
+        )
+    }
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -613,7 +653,9 @@ private fun MatchBlitzFinishedSummary(
             imageVector = Icons.Default.EmojiEvents,
             contentDescription = null,
             tint = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.size(56.dp)
+            modifier = Modifier
+                .size(56.dp)
+                .scale(iconScale.value)
         )
         Spacer(modifier = Modifier.height(12.dp))
         Text(

@@ -2,6 +2,7 @@ package com.example.ui.screens
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -106,7 +107,7 @@ import java.util.Locale
 /**
  * Composable screen that directly observes [FlashcardViewModel], lists saved Room [Flashcard]
  * entities in a [LazyColumn] showing each card's question, answer, and study metadata, and
- * provides a Floating Action Button to launch the CameraX capture workflow.
+ * launches either the full-screen [StudySession] or CameraX capture workflow.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -114,7 +115,8 @@ fun FlashcardListScreen(
     viewModel: FlashcardViewModel,
     decks: List<StudyDeck>,
     onBack: () -> Unit,
-    onTriggerCameraCapture: (targetDeckId: String?) -> Unit
+    onTriggerCameraCapture: (targetDeckId: String?) -> Unit,
+    onStartStudySession: ((targetDeckId: String?) -> Unit)? = null
 ) {
     BackHandler(onBack = onBack)
 
@@ -134,6 +136,7 @@ fun FlashcardListScreen(
     var editingCard by remember { mutableStateOf<Flashcard?>(null) }
 
     val deckTitleById = remember(decks) { decks.associate { it.id to it.title } }
+    val savedCardsFallback = stringResource(id = R.string.flashcard_saved_cards_fallback)
 
     Scaffold(
         contentWindowInsets = WindowInsets.safeDrawing,
@@ -147,9 +150,15 @@ fun FlashcardListScreen(
                         )
                         val subtitle = when (val state = uiState) {
                             is FlashcardListUiState.Success ->
-                                "${state.totalCount} saved in Room · ${state.averageStudyProgress}% avg mastery"
-                            is FlashcardListUiState.Loading -> "Loading Room database…"
-                            is FlashcardListUiState.Error -> "Offline cache unavailable"
+                                stringResource(
+                                    id = R.string.flashcard_saved_subtitle,
+                                    state.totalCount,
+                                    state.averageStudyProgress
+                                )
+                            is FlashcardListUiState.Loading ->
+                                stringResource(id = R.string.flashcard_loading_db)
+                            is FlashcardListUiState.Error ->
+                                stringResource(id = R.string.flashcard_offline_cache_unavailable)
                         }
                         Text(
                             text = subtitle,
@@ -246,7 +255,13 @@ fun FlashcardListScreen(
                             scopedDueCount = reviewNowQueue.size,
                             totalDueCount = success.reviewNowCount,
                             isDeckScoped = !selectedDeckId.isNullOrBlank(),
-                            onStartReviewNow = { viewModel.startReviewNowCycle(selectedDeckId) }
+                            onStartReviewNow = {
+                                if (onStartStudySession != null) {
+                                    onStartStudySession(selectedDeckId)
+                                } else {
+                                    viewModel.startReviewNowCycle(selectedDeckId)
+                                }
+                            }
                         )
                     }
                 }
@@ -262,7 +277,10 @@ fun FlashcardListScreen(
                         trailingIcon = {
                             if (searchQuery.isNotEmpty()) {
                                 IconButton(onClick = { viewModel.setSearchQuery("") }) {
-                                    Icon(imageVector = Icons.Default.Close, contentDescription = "Clear search")
+                                    Icon(
+                                        imageVector = Icons.Default.Close,
+                                        contentDescription = stringResource(id = R.string.cd_clear_search)
+                                    )
                                 }
                             }
                         },
@@ -292,7 +310,7 @@ fun FlashcardListScreen(
                                         modifier = Modifier.size(16.dp)
                                     )
                                 },
-                                label = { Text("Review Now ($dueChipCount)") },
+                                label = { Text(stringResource(id = R.string.review_now_chip, dueChipCount)) },
                                 modifier = Modifier.testTag("filter_review_now_chip")
                             )
                         }
@@ -300,7 +318,7 @@ fun FlashcardListScreen(
                             FilterChip(
                                 selected = selectedDeckId == null,
                                 onClick = { viewModel.setDeckFilter(null) },
-                                label = { Text("All Decks") }
+                                label = { Text(stringResource(id = R.string.review_now_all_decks)) }
                             )
                         }
                         items(decks, key = { it.id }) { deck ->
@@ -359,11 +377,12 @@ fun FlashcardListScreen(
                             items(state.flashcards, key = { it.id }) { card ->
                                 FlashcardListItemCard(
                                     card = card,
-                                    deckTitle = deckTitleById[card.deckId] ?: "Saved Cards",
+                                    deckTitle = deckTitleById[card.deckId] ?: savedCardsFallback,
                                     reviewFlag = state.reviewFlags[card.id],
                                     onEdit = { editingCard = card },
                                     onMarkReviewed = { viewModel.recordFlashcardReview(card, ReviewRating.GOOD) },
-                                    onDelete = { viewModel.deleteFlashcard(card) }
+                                    onDelete = { viewModel.deleteFlashcard(card) },
+                                    modifier = Modifier.animateItem()
                                 )
                             }
                         }
@@ -375,12 +394,12 @@ fun FlashcardListScreen(
 
     if (showCreateDialog) {
         RoomFlashcardEditorDialog(
-            title = "New Flashcard",
+            title = stringResource(id = R.string.flashcard_new_title),
             initialQuestion = "",
             initialAnswer = "",
             initialExplanation = "",
             initialHint = "",
-            confirmLabel = "Save",
+            confirmLabel = stringResource(id = R.string.flashcard_save),
             onDismiss = { showCreateDialog = false },
             onConfirm = { q, a, exp, hint ->
                 showCreateDialog = false
@@ -397,12 +416,12 @@ fun FlashcardListScreen(
 
     editingCard?.let { card ->
         RoomFlashcardEditorDialog(
-            title = "Edit Flashcard",
+            title = stringResource(id = R.string.flashcard_edit_title),
             initialQuestion = card.question,
             initialAnswer = card.answer,
             initialExplanation = card.explanation,
             initialHint = card.hint,
-            confirmLabel = "Update",
+            confirmLabel = stringResource(id = R.string.flashcard_update),
             onDismiss = { editingCard = null },
             onConfirm = { q, a, exp, hint ->
                 editingCard = null
@@ -416,7 +435,8 @@ fun FlashcardListScreen(
             }
         )
     }
-    if (reviewNowSession.isActive) {
+
+    if (reviewNowSession.isActive && onStartStudySession == null) {
         ReviewNowCycleDialog(
             session = reviewNowSession,
             deckTitleById = deckTitleById,
@@ -473,9 +493,9 @@ private fun ReviewNowLauncherBanner(
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = if (hasDue) {
-                        "$activeCount card(s) flagged for Review Now"
+                        stringResource(id = R.string.review_now_banner_due_title, activeCount)
                     } else {
-                        "All reinforcement cards caught up"
+                        stringResource(id = R.string.review_now_banner_caught_up_title)
                     },
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Bold,
@@ -483,9 +503,9 @@ private fun ReviewNowLauncherBanner(
                 )
                 Text(
                     text = if (hasDue) {
-                        "Scheduled from each card's last reviewed date."
+                        stringResource(id = R.string.review_now_banner_due_desc)
                     } else {
-                        "Cards automatically re-flag when their retention interval elapses."
+                        stringResource(id = R.string.review_now_banner_caught_up_desc)
                     },
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -504,7 +524,10 @@ private fun ReviewNowLauncherBanner(
                         modifier = Modifier.size(18.dp)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text("Review Now", fontWeight = FontWeight.Bold)
+                    Text(
+                        text = stringResource(id = R.string.review_now_label),
+                        fontWeight = FontWeight.Bold
+                    )
                 }
             }
         }
@@ -539,10 +562,10 @@ private fun FlashcardStatsBanner(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            StatColumn(label = "Saved", value = "$totalCount")
-            StatColumn(label = "Review Now", value = "$reviewNowCount")
-            StatColumn(label = "Mastered", value = "$masteredCount")
-            StatColumn(label = "Mastery", value = "$averageProgress%")
+            StatColumn(label = stringResource(id = R.string.review_now_stat_saved), value = "$totalCount")
+            StatColumn(label = stringResource(id = R.string.review_now_label), value = "$reviewNowCount")
+            StatColumn(label = stringResource(id = R.string.review_now_stat_mastered), value = "$masteredCount")
+            StatColumn(label = stringResource(id = R.string.review_now_stat_mastery), value = "$averageProgress%")
         }
     }
 }
@@ -571,10 +594,11 @@ private fun FlashcardListItemCard(
     reviewFlag: FlashcardReviewFlag?,
     onEdit: () -> Unit,
     onMarkReviewed: () -> Unit,
-    onDelete: () -> Unit
+    onDelete: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val cardType = remember(card.cardType) { CardType.fromRaw(card.cardType) }
-    val lastReviewText = remember(card.lastReviewDate) { formatReviewTimestamp(card.lastReviewDate) }
+    val lastReviewText = formatReviewTimestamp(card.lastReviewDate)
     var expanded by remember(card.id) { mutableStateOf(false) }
     val hasDetails = card.explanation.isNotBlank() || card.hint.isNotBlank()
     val isFlaggedReviewNow = reviewFlag?.isReviewNow == true
@@ -591,7 +615,7 @@ private fun FlashcardListItemCard(
             }
         ),
         tonalElevation = 1.dp,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(20.dp))
             .clickable(enabled = hasDetails) { expanded = !expanded }
@@ -642,7 +666,7 @@ private fun FlashcardListItemCard(
                             modifier = Modifier.testTag("review_flag_badge_${card.id}")
                         ) {
                             Text(
-                                text = reviewFlag.statusLabel,
+                                text = localizedReviewFlagLabel(reviewFlag),
                                 style = MaterialTheme.typography.labelSmall,
                                 fontWeight = if (reviewFlag.isReviewNow) FontWeight.Bold else FontWeight.Medium,
                                 color = badgeTextColor,
@@ -686,7 +710,6 @@ private fun FlashcardListItemCard(
 
             Spacer(modifier = Modifier.height(6.dp))
 
-            // Question row
             Row(
                 verticalAlignment = Alignment.Top,
                 horizontalArrangement = Arrangement.spacedBy(10.dp),
@@ -697,7 +720,7 @@ private fun FlashcardListItemCard(
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text(
-                        text = "Q",
+                        text = stringResource(id = R.string.flashcard_q_badge),
                         style = MaterialTheme.typography.labelMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -714,7 +737,6 @@ private fun FlashcardListItemCard(
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            // Answer row
             Surface(
                 color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.45f),
                 shape = RoundedCornerShape(14.dp),
@@ -730,7 +752,7 @@ private fun FlashcardListItemCard(
                         shape = RoundedCornerShape(8.dp)
                     ) {
                         Text(
-                            text = "A",
+                            text = stringResource(id = R.string.flashcard_a_badge),
                             style = MaterialTheme.typography.labelMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSecondary,
@@ -758,14 +780,14 @@ private fun FlashcardListItemCard(
                 ) {
                     if (card.explanation.isNotBlank()) {
                         Text(
-                            text = "Explanation: ${card.explanation}",
+                            text = stringResource(id = R.string.flashcard_explanation_prefix, card.explanation),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                     if (card.hint.isNotBlank()) {
                         Text(
-                            text = "Hint: ${card.hint}",
+                            text = stringResource(id = R.string.flashcard_hint_prefix, card.hint),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.primary
                         )
@@ -781,7 +803,7 @@ private fun FlashcardListItemCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Progress ${card.studyProgress}%",
+                    text = stringResource(id = R.string.flashcard_progress_pct, card.studyProgress),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -792,8 +814,12 @@ private fun FlashcardListItemCard(
                 )
             }
             Spacer(modifier = Modifier.height(5.dp))
+            val animatedStudyProgress by animateFloatAsState(
+                targetValue = card.studyProgress.coerceIn(0, 100) / 100f,
+                label = "flashcard_item_progress"
+            )
             LinearProgressIndicator(
-                progress = { card.studyProgress.coerceIn(0, 100) / 100f },
+                progress = { animatedStudyProgress },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(6.dp)
@@ -814,7 +840,13 @@ private fun FlashcardListItemCard(
                             modifier = Modifier.size(18.dp)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text(if (expanded) "Hide Notes" else "Explanation")
+                        Text(
+                            text = if (expanded) {
+                                stringResource(id = R.string.flashcard_hide_notes)
+                            } else {
+                                stringResource(id = R.string.flashcard_explanation)
+                            }
+                        )
                     }
                 } else {
                     Spacer(modifier = Modifier.width(1.dp))
@@ -830,7 +862,7 @@ private fun FlashcardListItemCard(
                         modifier = Modifier.size(16.dp)
                     )
                     Spacer(modifier = Modifier.width(6.dp))
-                    Text("Mark Reviewed")
+                    Text(stringResource(id = R.string.review_now_mark_reviewed))
                 }
             }
         }
@@ -873,7 +905,7 @@ private fun CameraImportStatusBanner(
                         modifier = Modifier.size(22.dp)
                     )
                     Text(
-                        text = "Gemini is parsing your captured photo into structured flashcards…",
+                        text = stringResource(id = R.string.flashcard_camera_parsing),
                         style = MaterialTheme.typography.bodySmall,
                         color = contentColor,
                         modifier = Modifier.weight(1f)
@@ -888,13 +920,17 @@ private fun CameraImportStatusBanner(
                         modifier = Modifier.size(22.dp)
                     )
                     Text(
-                        text = "Added ${state.addedCount} flashcards from camera into \"${state.deckTitle}\".",
+                        text = stringResource(id = R.string.flashcard_camera_added, state.addedCount, state.deckTitle),
                         style = MaterialTheme.typography.bodySmall,
                         color = contentColor,
                         modifier = Modifier.weight(1f)
                     )
                     IconButton(onClick = onDismiss) {
-                        Icon(imageVector = Icons.Default.Close, contentDescription = "Dismiss", tint = contentColor)
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            contentDescription = stringResource(id = R.string.cd_dismiss),
+                            tint = contentColor
+                        )
                     }
                 }
 
@@ -906,7 +942,11 @@ private fun CameraImportStatusBanner(
                         modifier = Modifier.weight(1f)
                     )
                     IconButton(onClick = onDismiss) {
-                        Icon(imageVector = Icons.Default.Close, contentDescription = "Dismiss", tint = contentColor)
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            contentDescription = stringResource(id = R.string.cd_dismiss),
+                            tint = contentColor
+                        )
                     }
                 }
 
@@ -951,8 +991,8 @@ private fun EmptyFlashcardsState(
             Spacer(modifier = Modifier.height(14.dp))
             Text(
                 text = when {
-                    isReviewNowFiltered -> "No cards currently flagged for Review Now"
-                    isFiltered -> "No matching flashcards"
+                    isReviewNowFiltered -> stringResource(id = R.string.flashcard_review_now_empty_title)
+                    isFiltered -> stringResource(id = R.string.flashcard_no_matching)
                     else -> stringResource(id = R.string.flashcards_empty_title)
                 },
                 style = MaterialTheme.typography.titleMedium,
@@ -962,7 +1002,7 @@ private fun EmptyFlashcardsState(
             Spacer(modifier = Modifier.height(6.dp))
             Text(
                 text = if (isReviewNowFiltered) {
-                    "You are caught up based on your last review timestamps. View all saved cards to browse ahead."
+                    stringResource(id = R.string.flashcard_review_now_empty_body)
                 } else {
                     stringResource(id = R.string.flashcards_empty_body)
                 },
@@ -977,7 +1017,7 @@ private fun EmptyFlashcardsState(
                     shape = RoundedCornerShape(14.dp),
                     modifier = Modifier.testTag("empty_show_all_cards_button")
                 ) {
-                    Text("Show All Cards")
+                    Text(stringResource(id = R.string.review_now_show_all))
                 }
             } else {
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -988,13 +1028,13 @@ private fun EmptyFlashcardsState(
                     ) {
                         Icon(imageVector = Icons.Default.CameraAlt, contentDescription = null, modifier = Modifier.size(18.dp))
                         Spacer(modifier = Modifier.width(6.dp))
-                        Text("Scan Notes")
+                        Text(stringResource(id = R.string.flashcards_fab_scan))
                     }
                     OutlinedButton(
                         onClick = onAddManual,
                         shape = RoundedCornerShape(14.dp)
                     ) {
-                        Text("Add Card")
+                        Text(stringResource(id = R.string.flashcard_add_card))
                     }
                 }
             }
@@ -1026,7 +1066,7 @@ internal fun RoomFlashcardEditorDialog(
                 OutlinedTextField(
                     value = question,
                     onValueChange = { if (it.length <= 1000) question = it },
-                    label = { Text("Question") },
+                    label = { Text(stringResource(id = R.string.flashcard_question_label)) },
                     maxLines = 3,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -1035,7 +1075,7 @@ internal fun RoomFlashcardEditorDialog(
                 OutlinedTextField(
                     value = answer,
                     onValueChange = { if (it.length <= 1500) answer = it },
-                    label = { Text("Answer") },
+                    label = { Text(stringResource(id = R.string.flashcard_answer_label)) },
                     maxLines = 3,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -1044,14 +1084,14 @@ internal fun RoomFlashcardEditorDialog(
                 OutlinedTextField(
                     value = explanation,
                     onValueChange = { if (it.length <= 1500) explanation = it },
-                    label = { Text("Explanation (optional)") },
+                    label = { Text(stringResource(id = R.string.flashcard_explanation_opt)) },
                     maxLines = 2,
                     modifier = Modifier.fillMaxWidth()
                 )
                 OutlinedTextField(
                     value = hint,
                     onValueChange = { if (it.length <= 300) hint = it },
-                    label = { Text("Hint (optional)") },
+                    label = { Text(stringResource(id = R.string.flashcard_hint_opt)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -1067,7 +1107,9 @@ internal fun RoomFlashcardEditorDialog(
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Cancel") }
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(id = R.string.common_cancel))
+            }
         }
     )
 }
@@ -1116,16 +1158,21 @@ private fun ReviewNowCycleDialog(
                     ) {
                         Column {
                             Text(
-                                text = "Review Now · Reinforcement",
+                                text = stringResource(id = R.string.review_now_dialog_title),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
                             Text(
                                 text = if (session.isCompleted) {
-                                    "Reinforced ${session.reviewedInCycle} card(s)"
+                                    stringResource(id = R.string.review_now_dialog_reinforced_count, session.reviewedInCycle)
                                 } else {
-                                    "Card ${session.currentIndex + 1} of ${session.queue.size} due · ${session.reviewedInCycle} completed"
+                                    stringResource(
+                                        id = R.string.review_now_dialog_progress,
+                                        session.currentIndex + 1,
+                                        session.queue.size,
+                                        session.reviewedInCycle
+                                    )
                                 },
                                 style = MaterialTheme.typography.labelMedium,
                                 color = MaterialTheme.colorScheme.primary
@@ -1137,7 +1184,7 @@ private fun ReviewNowCycleDialog(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Close,
-                                contentDescription = "Close Review Now cycle"
+                                contentDescription = stringResource(id = R.string.review_now_dialog_close_cd)
                             )
                         }
                     }
@@ -1172,13 +1219,13 @@ private fun ReviewNowCycleDialog(
                                 modifier = Modifier.size(48.dp)
                             )
                             Text(
-                                text = "Reinforcement Complete!",
+                                text = stringResource(id = R.string.review_now_dialog_done_title),
                                 style = MaterialTheme.typography.headlineSmall,
                                 fontWeight = FontWeight.Bold,
                                 textAlign = TextAlign.Center
                             )
                             Text(
-                                text = "Updated last reviewed dates for ${session.reviewedInCycle} card(s) and rescheduled their next review windows.",
+                                text = stringResource(id = R.string.review_now_dialog_done_body, session.reviewedInCycle),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 textAlign = TextAlign.Center
@@ -1192,11 +1239,15 @@ private fun ReviewNowCycleDialog(
                                     .height(48.dp)
                                     .testTag("review_now_done_button")
                             ) {
-                                Text("Done", fontWeight = FontWeight.Bold)
+                                Text(
+                                    text = stringResource(id = R.string.review_now_dialog_done_btn),
+                                    fontWeight = FontWeight.Bold
+                                )
                             }
                         }
                     } else {
-                        val deckName = deckTitleById[activeCard.deckId] ?: "Saved Cards"
+                        val deckName = deckTitleById[activeCard.deckId]
+                            ?: stringResource(id = R.string.flashcard_saved_cards_fallback)
                         val flag = session.currentFlag
                         Row(
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -1209,7 +1260,7 @@ private fun ReviewNowCycleDialog(
                                     shape = RoundedCornerShape(8.dp)
                                 ) {
                                     Text(
-                                        text = flag.statusLabel,
+                                        text = localizedReviewFlagLabel(flag),
                                         style = MaterialTheme.typography.labelSmall,
                                         fontWeight = FontWeight.Bold,
                                         color = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -1255,11 +1306,17 @@ private fun ReviewNowCycleDialog(
                                             modifier = Modifier.size(16.dp)
                                         )
                                         Spacer(modifier = Modifier.width(6.dp))
-                                        Text(if (session.hintShown) "Hide Hint" else stringResource(id = R.string.study_arena_show_hint))
+                                        Text(
+                                            text = if (session.hintShown) {
+                                                stringResource(id = R.string.study_session_hide_hint)
+                                            } else {
+                                                stringResource(id = R.string.study_arena_show_hint)
+                                            }
+                                        )
                                     }
                                     AnimatedVisibility(visible = session.hintShown) {
                                         Text(
-                                            text = "Hint: ${activeCard.hint}",
+                                            text = stringResource(id = R.string.flashcard_hint_prefix, activeCard.hint),
                                             style = MaterialTheme.typography.bodySmall,
                                             color = MaterialTheme.colorScheme.primary
                                         )
@@ -1337,7 +1394,7 @@ private fun ReviewNowCycleDialog(
                                     ) {
                                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                             Text(
-                                                text = rating.label,
+                                                text = localizedRatingLabel(rating),
                                                 style = MaterialTheme.typography.labelMedium,
                                                 fontWeight = FontWeight.Bold,
                                                 maxLines = 1
@@ -1353,7 +1410,6 @@ private fun ReviewNowCycleDialog(
                             }
                         }
 
-                        // Free card cycling controls (Previous / Next Card)
                         if (session.queue.size > 1) {
                             Row(
                                 horizontalArrangement = Arrangement.spacedBy(10.dp),
@@ -1373,7 +1429,7 @@ private fun ReviewNowCycleDialog(
                                         modifier = Modifier.size(18.dp)
                                     )
                                     Spacer(modifier = Modifier.width(4.dp))
-                                    Text("Prev Card")
+                                    Text(stringResource(id = R.string.review_now_dialog_prev))
                                 }
                                 OutlinedButton(
                                     onClick = onNextCard,
@@ -1383,7 +1439,7 @@ private fun ReviewNowCycleDialog(
                                         .height(48.dp)
                                         .testTag("review_now_next_button")
                                 ) {
-                                    Text("Next Card")
+                                    Text(stringResource(id = R.string.review_now_dialog_next))
                                     Spacer(modifier = Modifier.width(4.dp))
                                     Icon(
                                         imageVector = Icons.AutoMirrored.Filled.NavigateNext,
@@ -1400,8 +1456,9 @@ private fun ReviewNowCycleDialog(
     }
 }
 
+@Composable
 private fun formatReviewTimestamp(epochMillis: Long): String {
-    if (epochMillis <= 0L) return "Not reviewed yet"
+    if (epochMillis <= 0L) return stringResource(id = R.string.flashcard_not_reviewed_yet)
     val formatter = SimpleDateFormat("MMM d, h:mm a", Locale.getDefault())
-    return "Reviewed ${formatter.format(Date(epochMillis))}"
+    return stringResource(id = R.string.flashcard_reviewed_date, formatter.format(Date(epochMillis)))
 }

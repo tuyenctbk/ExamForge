@@ -30,8 +30,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.R
 import com.example.data.local.AiUsagePlanState
 
 /**
@@ -68,7 +70,7 @@ fun QuotaSoftNudgeBanner(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "Approaching today's $featureLabel limit ($remainingCount left • $resetLabel)",
+                    text = stringResource(id = R.string.quota_nudge_headline, featureLabel, remainingCount, resetLabel),
                     style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onTertiaryContainer
@@ -81,7 +83,7 @@ fun QuotaSoftNudgeBanner(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
-                        text = "Turn on Eco Lite AI to stretch remaining quota 3× further.",
+                        text = stringResource(id = R.string.quota_nudge_desc),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = 0.9f),
                         modifier = Modifier.weight(1f)
@@ -98,12 +100,12 @@ fun QuotaSoftNudgeBanner(
                             modifier = Modifier.size(16.dp)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text("Eco Lite")
+                        Text(stringResource(id = R.string.quota_nudge_eco_btn))
                     }
                 }
             } else {
                 Text(
-                    text = "Eco Lite AI is active — using our lightweight fast tier to preserve your remaining credits.",
+                    text = stringResource(id = R.string.quota_nudge_eco_active),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = 0.9f)
                 )
@@ -178,12 +180,11 @@ fun SmartQuotaRecoveryCard(
             }
 
             Text(
-                text = "Mid-study? Pick a zero-wait option below to keep moving without losing progress:",
+                text = stringResource(id = R.string.quota_recovery_subtitle),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
-            // Suggestion 1: One-Time Daily Grace Credits (+3 Free)
             if (aiUsagePlan.canClaimGraceCredits) {
                 Button(
                     onClick = onClaimGraceCredits,
@@ -199,11 +200,10 @@ fun SmartQuotaRecoveryCard(
                         modifier = Modifier.size(18.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Claim +3 Free Grace Credits (Once Daily)")
+                    Text(stringResource(id = R.string.quota_recovery_claim_grace))
                 }
             }
 
-            // Suggestion 2: Retry with Eco Lite AI
             FilledTonalButton(
                 onClick = onRetryWithEcoLite,
                 shape = RoundedCornerShape(12.dp),
@@ -218,10 +218,9 @@ fun SmartQuotaRecoveryCard(
                     modifier = Modifier.size(18.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Retry with Eco Lite AI (Fast & Lightweight)")
+                Text(stringResource(id = R.string.quota_recovery_retry_eco))
             }
 
-            // Suggestion 3: Zero-Quota Local Alternative
             if (showLocalFallbackButton) {
                 OutlinedButton(
                     onClick = onUseLocalFallback,
@@ -241,7 +240,6 @@ fun SmartQuotaRecoveryCard(
                 }
             }
 
-            // Suggestion 4: Free BYOK Key in Settings
             TextButton(
                 onClick = onOpenByokSettings,
                 modifier = Modifier
@@ -254,7 +252,7 @@ fun SmartQuotaRecoveryCard(
                     modifier = Modifier.size(16.dp)
                 )
                 Spacer(modifier = Modifier.width(6.dp))
-                Text("Connect Free BYOK Key (Unlimited)")
+                Text(stringResource(id = R.string.quota_recovery_connect_byok))
             }
         }
     }

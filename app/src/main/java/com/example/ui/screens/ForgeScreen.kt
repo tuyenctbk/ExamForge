@@ -68,6 +68,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -114,11 +115,11 @@ fun ForgeScreen(
     onDismissSupportCard: () -> Unit = {}
 ) {
     val context = LocalContext.current
-    var rawNotes by remember { mutableStateOf("") }
-    var subjectHint by remember { mutableStateOf("") }
-    var targetCount by remember { mutableIntStateOf(6) }
-    var selectedAccent by remember { mutableIntStateOf(0) }
-    var selectedExistingDeckId by remember { mutableStateOf<String?>(null) }
+    var rawNotes by rememberSaveable { mutableStateOf("") }
+    var subjectHint by rememberSaveable { mutableStateOf("") }
+    var targetCount by rememberSaveable { mutableIntStateOf(6) }
+    var selectedAccent by rememberSaveable { mutableIntStateOf(0) }
+    var selectedExistingDeckId by rememberSaveable { mutableStateOf<String?>(null) }
 
     // Live Audio Lecture-to-Flashcards (free on-device SpeechRecognizer, $0 audio API cost)
     var isDictatingLecture by remember { mutableStateOf(false) }
@@ -477,18 +478,24 @@ fun ForgeScreen(
                                 }
 
                                 if (selectedExistingDeckId == null) {
-                                    Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                                    Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                                         DeckAccentPalette.forEachIndexed { idx, color ->
-                                            Surface(
-                                                color = color,
-                                                shape = CircleShape,
-                                                border = if (selectedAccent == idx) {
-                                                    BorderStroke(3.dp, MaterialTheme.colorScheme.onSurface)
-                                                } else null,
+                                            Box(
+                                                contentAlignment = Alignment.Center,
                                                 modifier = Modifier
-                                                    .size(28.dp)
+                                                    .size(48.dp)
+                                                    .clip(CircleShape)
                                                     .clickable { selectedAccent = idx }
-                                            ) {}
+                                            ) {
+                                                Surface(
+                                                    color = color,
+                                                    shape = CircleShape,
+                                                    border = if (selectedAccent == idx) {
+                                                        BorderStroke(3.dp, MaterialTheme.colorScheme.onSurface)
+                                                    } else null,
+                                                    modifier = Modifier.size(28.dp)
+                                                ) {}
+                                            }
                                         }
                                     }
                                 }
@@ -518,7 +525,8 @@ fun ForgeScreen(
                     items(draft.cards, key = { it.localId }) { cardDraft ->
                         DraftCardPreviewItem(
                             card = cardDraft,
-                            onRemove = { onRemoveDraftCard(cardDraft.localId) }
+                            onRemove = { onRemoveDraftCard(cardDraft.localId) },
+                            modifier = Modifier.animateItem()
                         )
                     }
                 }
@@ -874,13 +882,14 @@ private fun GeneratingCard() {
 @Composable
 private fun DraftCardPreviewItem(
     card: GeneratedCardDraft,
-    onRemove: () -> Unit
+    onRemove: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Surface(
         shape = RoundedCornerShape(18.dp),
         color = MaterialTheme.colorScheme.surface,
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
-        modifier = Modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth()
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(

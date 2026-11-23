@@ -5,6 +5,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Row
@@ -16,6 +23,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.DarkMode
@@ -38,6 +46,7 @@ import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -48,6 +57,7 @@ import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -88,6 +98,7 @@ import com.example.ui.screens.MatchBlitzGameScreen
 import com.example.ui.screens.QuizmasterScreen
 import com.example.ui.screens.SettingsScreen
 import com.example.ui.screens.StudyArenaScreen
+import com.example.ui.screens.StudySession
 import com.example.ui.screens.SupportDevelopmentScreen
 import com.example.ui.theme.ExamForgeTheme
 import com.example.ui.theme.ThemeMode
@@ -143,12 +154,46 @@ private sealed interface SubScreen {
     data object StudyArena : SubScreen
     data class MatchBlitz(val deckId: String?, val deckTitle: String) : SubScreen
     data object SavedFlashcards : SubScreen
+    data class StudySession(val deckId: String? = null) : SubScreen
     data object SupportDevelopment : SubScreen
     data class CameraCapture(
         val saveDirectToRoom: Boolean = false,
         val targetDeckId: String? = null
     ) : SubScreen
 }
+
+private val SubScreenSaver = listSaver<SubScreen, Any?>(
+    save = { screen ->
+        when (screen) {
+            SubScreen.None -> listOf("none")
+            is SubScreen.DeckDetail -> listOf("deck_detail", screen.deckId)
+            SubScreen.StudyArena -> listOf("study_arena")
+            is SubScreen.MatchBlitz -> listOf("match_blitz", screen.deckId, screen.deckTitle)
+            SubScreen.SavedFlashcards -> listOf("saved_flashcards")
+            is SubScreen.StudySession -> listOf("study_session", screen.deckId)
+            SubScreen.SupportDevelopment -> listOf("support_dev")
+            is SubScreen.CameraCapture -> listOf("camera_capture", screen.saveDirectToRoom, screen.targetDeckId)
+        }
+    },
+    restore = { list ->
+        when (list.firstOrNull() as? String) {
+            "deck_detail" -> SubScreen.DeckDetail(list.getOrNull(1) as? String ?: "")
+            "study_arena" -> SubScreen.StudyArena
+            "match_blitz" -> SubScreen.MatchBlitz(
+                deckId = list.getOrNull(1) as? String,
+                deckTitle = list.getOrNull(2) as? String ?: "Match Blitz"
+            )
+            "saved_flashcards" -> SubScreen.SavedFlashcards
+            "study_session" -> SubScreen.StudySession(deckId = list.getOrNull(1) as? String)
+            "support_dev" -> SubScreen.SupportDevelopment
+            "camera_capture" -> SubScreen.CameraCapture(
+                saveDirectToRoom = list.getOrNull(1) as? Boolean ?: false,
+                targetDeckId = list.getOrNull(2) as? String
+            )
+            else -> SubScreen.None
+        }
+    }
+)
 
 @Composable
 private fun ExamForgeRoot(
@@ -275,7 +320,7 @@ private fun ExamForgeAppShell(
     val flashcardStatusMessage by flashcardViewModel.statusMessage.collectAsStateWithLifecycle()
 
     var selectedTab by rememberSaveable { mutableStateOf(MainTab.DECKS) }
-    var subScreen by remember { mutableStateOf<SubScreen>(SubScreen.None) }
+    var subScreen by rememberSaveable(stateSaver = SubScreenSaver) { mutableStateOf<SubScreen>(SubScreen.None) }
 
     LaunchedEffect(syncStatus.lastActionBanner) {
         val banner = syncStatus.lastActionBanner
@@ -330,193 +375,211 @@ private fun ExamForgeAppShell(
         }
     )
 
-    // Sub-screens take full screen with BackHandler support
-    when (val activeSub = subScreen) {
-        is SubScreen.StudyArena -> {
-            StudyArenaScreen(
-                session = studySession,
-                onBack = { subScreen = SubScreen.None },
-                onSelectMcq = viewModel::selectMcqOption,
-                onUpdateCloze = viewModel::updateClozeInput,
-                onCheckCloze = viewModel::checkClozeAnswer,
-                onReveal = viewModel::revealCurrentCard,
-                onToggleHint = viewModel::toggleHint,
-                onRate = viewModel::rateCurrentCard,
-                showPostOpSupportCard = showPostOpSupportCard,
-                onOpenSupportSheet = { viewModel.openDonationSheet(source = "study_complete_card") },
-                onDismissSupportCard = viewModel::dismissHomeDonationBanner
-            )
-            return
-        }
-
-        is SubScreen.MatchBlitz -> {
-            val gameCards = remember(allCards, activeSub.deckId) {
-                if (activeSub.deckId == null) allCards else allCards.filter { it.deckId == activeSub.deckId }
-            }
-            MatchBlitzGameScreen(
-                deckTitle = activeSub.deckTitle,
-                cards = gameCards,
-                bestScore = matchBlitzBestScore,
-                onScoreRecorded = viewModel::recordMatchBlitzScore,
-                onBack = {
-                    subScreen = if (activeSub.deckId != null) {
-                        SubScreen.DeckDetail(activeSub.deckId)
-                    } else {
-                        SubScreen.None
-                    }
-                }
-            )
-            return
-        }
-
-        is SubScreen.DeckDetail -> {
-            val deck = decks.firstOrNull { it.id == activeSub.deckId }
-            if (deck == null) {
-                LaunchedEffect(Unit) { subScreen = SubScreen.None }
-            } else {
-                val deckCards = remember(allCards, deck.id) {
-                    allCards.filter { it.deckId == deck.id }
-                }
-                DeckDetailScreen(
-                    deck = deck,
-                    cards = deckCards,
+    AnimatedContent(
+        targetState = subScreen,
+        transitionSpec = {
+            fadeIn(animationSpec = tween(220)) togetherWith fadeOut(animationSpec = tween(180))
+        },
+        label = "subscreen_transition"
+    ) { activeSub ->
+        when (activeSub) {
+            is SubScreen.StudyArena -> {
+                StudyArenaScreen(
+                    session = studySession,
                     onBack = { subScreen = SubScreen.None },
-                    onStartStudy = { dueOnly ->
-                        viewModel.startStudySession(deck, dueOnly = dueOnly)
-                        subScreen = SubScreen.StudyArena
-                    },
-                    onStartOralQuiz = {
-                        viewModel.startQuizSession(deck.id, oralAutoSpeak)
-                        subScreen = SubScreen.None
-                        selectedTab = MainTab.QUIZMASTER
-                    },
-                    onStartMatchBlitz = {
-                        subScreen = SubScreen.MatchBlitz(deckId = deck.id, deckTitle = deck.title)
-                    },
-                    onVerifyCard = { card ->
-                        viewModel.verifyFlashcard(card = card, subject = deck.subject)
-                    },
-                    onAddManualCard = { type, q, a, exp, hint, opts, correctIdx ->
-                        viewModel.addManualCard(deck.id, type, q, a, exp, hint, opts, correctIdx)
-                    },
-                    onEditCard = { cardId, q, a, exp, hint ->
-                        flashcardViewModel.updateFlashcardById(cardId, q, a, exp, hint)
-                    },
-                    onSnapCardsForDeck = {
-                        subScreen = SubScreen.CameraCapture(
-                            saveDirectToRoom = true,
-                            targetDeckId = deck.id
-                        )
-                    },
-                    onDeleteCard = viewModel::deleteCard,
-                    onDeleteDeck = {
-                        viewModel.deleteDeck(deck)
-                        subScreen = SubScreen.None
+                    onSelectMcq = viewModel::selectMcqOption,
+                    onUpdateCloze = viewModel::updateClozeInput,
+                    onCheckCloze = viewModel::checkClozeAnswer,
+                    onReveal = viewModel::revealCurrentCard,
+                    onToggleHint = viewModel::toggleHint,
+                    onRate = viewModel::rateCurrentCard,
+                    showPostOpSupportCard = showPostOpSupportCard,
+                    onOpenSupportSheet = { viewModel.openDonationSheet(source = "study_complete_card") },
+                    onDismissSupportCard = viewModel::dismissHomeDonationBanner
+                )
+            }
+
+            is SubScreen.MatchBlitz -> {
+                val gameCards = remember(allCards, activeSub.deckId) {
+                    if (activeSub.deckId == null) allCards else allCards.filter { it.deckId == activeSub.deckId }
+                }
+                MatchBlitzGameScreen(
+                    deckTitle = activeSub.deckTitle,
+                    cards = gameCards,
+                    bestScore = matchBlitzBestScore,
+                    onScoreRecorded = viewModel::recordMatchBlitzScore,
+                    onBack = {
+                        subScreen = if (activeSub.deckId != null) {
+                            SubScreen.DeckDetail(activeSub.deckId)
+                        } else {
+                            SubScreen.None
+                        }
                     }
                 )
-                return
             }
-        }
 
-        is SubScreen.SavedFlashcards -> {
-            FlashcardListScreen(
-                viewModel = flashcardViewModel,
-                decks = decks,
-                onBack = { subScreen = SubScreen.None },
-                onTriggerCameraCapture = { targetDeckId ->
-                    subScreen = SubScreen.CameraCapture(
-                        saveDirectToRoom = true,
-                        targetDeckId = targetDeckId
+            is SubScreen.DeckDetail -> {
+                val deck = decks.firstOrNull { it.id == activeSub.deckId }
+                if (deck == null) {
+                    LaunchedEffect(Unit) { subScreen = SubScreen.None }
+                } else {
+                    val deckCards = remember(allCards, deck.id) {
+                        allCards.filter { it.deckId == deck.id }
+                    }
+                    DeckDetailScreen(
+                        deck = deck,
+                        cards = deckCards,
+                        onBack = { subScreen = SubScreen.None },
+                        onStartStudy = { dueOnly ->
+                            viewModel.startStudySession(deck, dueOnly = dueOnly)
+                            subScreen = SubScreen.StudyArena
+                        },
+                        onStartOralQuiz = {
+                            viewModel.startQuizSession(deck.id, oralAutoSpeak)
+                            subScreen = SubScreen.None
+                            selectedTab = MainTab.QUIZMASTER
+                        },
+                        onStartMatchBlitz = {
+                            subScreen = SubScreen.MatchBlitz(deckId = deck.id, deckTitle = deck.title)
+                        },
+                        onVerifyCard = { card ->
+                            viewModel.verifyFlashcard(card = card, subject = deck.subject)
+                        },
+                        onAddManualCard = { type, q, a, exp, hint, opts, correctIdx ->
+                            viewModel.addManualCard(deck.id, type, q, a, exp, hint, opts, correctIdx)
+                        },
+                        onEditCard = { cardId, q, a, exp, hint ->
+                            flashcardViewModel.updateFlashcardById(cardId, q, a, exp, hint)
+                        },
+                        onSnapCardsForDeck = {
+                            subScreen = SubScreen.CameraCapture(
+                                saveDirectToRoom = true,
+                                targetDeckId = deck.id
+                            )
+                        },
+                        onDeleteCard = viewModel::deleteCard,
+                        onDeleteDeck = {
+                            viewModel.deleteDeck(deck)
+                            subScreen = SubScreen.None
+                        }
                     )
                 }
-            )
-            return
-        }
+            }
 
-        is SubScreen.CameraCapture -> {
-            CameraCaptureScreen(
-                onBack = {
-                    subScreen = if (activeSub.saveDirectToRoom) {
-                        if (activeSub.targetDeckId != null) {
-                            SubScreen.DeckDetail(activeSub.targetDeckId)
-                        } else {
-                            SubScreen.SavedFlashcards
-                        }
-                    } else {
-                        SubScreen.None
-                    }
-                },
-                onUsePhotoForForge = { bitmap ->
-                    viewModel.setSelectedSnapshot(bitmap)
-                    selectedTab = MainTab.FORGE
-                    subScreen = SubScreen.None
-                },
-                onAnalyzePhotoNow = { bitmap ->
-                    if (activeSub.saveDirectToRoom) {
-                        flashcardViewModel.addFlashcardsFromCameraCapture(
-                            bitmap = bitmap,
-                            targetDeckId = activeSub.targetDeckId
+            is SubScreen.SavedFlashcards -> {
+                FlashcardListScreen(
+                    viewModel = flashcardViewModel,
+                    decks = decks,
+                    onBack = { subScreen = SubScreen.None },
+                    onTriggerCameraCapture = { targetDeckId ->
+                        subScreen = SubScreen.CameraCapture(
+                            saveDirectToRoom = true,
+                            targetDeckId = targetDeckId
                         )
-                        subScreen = if (activeSub.targetDeckId != null) {
-                            SubScreen.DeckDetail(activeSub.targetDeckId)
-                        } else {
-                            SubScreen.SavedFlashcards
-                        }
-                    } else {
-                        viewModel.setSelectedSnapshot(bitmap)
-                        viewModel.forgeFlashcards(
-                            bitmap = bitmap,
-                            rawNotes = "",
-                            targetCount = 6,
-                            subjectHint = ""
-                        )
-                        selectedTab = MainTab.FORGE
-                        subScreen = SubScreen.None
+                    },
+                    onStartStudySession = { deckId ->
+                        subScreen = SubScreen.StudySession(deckId = deckId)
                     }
-                }
-            )
-            return
-        }
+                )
+            }
 
-        is SubScreen.SupportDevelopment -> {
-            SupportDevelopmentScreen(
-                hostActivity = hostActivity,
-                isActiveSupporter = engagementTelemetry.isActiveSupporter,
-                billingState = donationBillingState,
-                onPurchaseGooglePlay = viewModel::purchaseDonationViaGooglePlay,
-                onRestorePurchases = viewModel::restoreDonationPurchases,
-                onExternalChannelUsed = viewModel::recordExternalDonationAction,
-                onBack = { subScreen = SubScreen.None }
-            )
-            return
-        }
+            is SubScreen.StudySession -> {
+                StudySession(
+                    viewModel = flashcardViewModel,
+                    decks = decks,
+                    deckId = activeSub.deckId,
+                    onBack = { subScreen = SubScreen.SavedFlashcards }
+                )
+            }
 
-        SubScreen.None -> Unit
-    }
-
-    BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
-        val useNavRail = maxWidth >= 600.dp
-
-        Scaffold(
-            contentWindowInsets = WindowInsets.safeDrawing,
-            snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-            topBar = {
-                TopAppBar(
-                    title = {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                imageVector = Icons.Filled.AutoAwesome,
-                                contentDescription = stringResource(id = R.string.cd_app_logo),
-                                tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.size(22.dp)
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(
-                                text = stringResource(id = R.string.app_name),
-                                style = MaterialTheme.typography.titleLarge
-                            )
+            is SubScreen.CameraCapture -> {
+                CameraCaptureScreen(
+                    onBack = {
+                        subScreen = if (activeSub.saveDirectToRoom) {
+                            if (activeSub.targetDeckId != null) {
+                                SubScreen.DeckDetail(activeSub.targetDeckId)
+                            } else {
+                                SubScreen.SavedFlashcards
+                            }
+                        } else {
+                            SubScreen.None
                         }
                     },
+                    onUsePhotoForForge = { bitmap ->
+                        viewModel.setSelectedSnapshot(bitmap)
+                        selectedTab = MainTab.FORGE
+                        subScreen = SubScreen.None
+                    },
+                    onAnalyzePhotoNow = { bitmap ->
+                        if (activeSub.saveDirectToRoom) {
+                            flashcardViewModel.addFlashcardsFromCameraCapture(
+                                bitmap = bitmap,
+                                targetDeckId = activeSub.targetDeckId
+                            )
+                            subScreen = if (activeSub.targetDeckId != null) {
+                                SubScreen.DeckDetail(activeSub.targetDeckId)
+                            } else {
+                                SubScreen.SavedFlashcards
+                            }
+                        } else {
+                            viewModel.setSelectedSnapshot(bitmap)
+                            viewModel.forgeFlashcards(
+                                bitmap = bitmap,
+                                rawNotes = "",
+                                targetCount = 6,
+                                subjectHint = ""
+                            )
+                            selectedTab = MainTab.FORGE
+                            subScreen = SubScreen.None
+                        }
+                    }
+                )
+            }
+
+            is SubScreen.SupportDevelopment -> {
+                SupportDevelopmentScreen(
+                    hostActivity = hostActivity,
+                    isActiveSupporter = engagementTelemetry.isActiveSupporter,
+                    billingState = donationBillingState,
+                    onPurchaseGooglePlay = viewModel::purchaseDonationViaGooglePlay,
+                    onRestorePurchases = viewModel::restoreDonationPurchases,
+                    onExternalChannelUsed = viewModel::recordExternalDonationAction,
+                    onBack = { subScreen = SubScreen.None }
+                )
+            }
+
+            SubScreen.None -> {
+                BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+                    val useNavRail = maxWidth >= 600.dp
+
+                    Scaffold(
+                        contentWindowInsets = WindowInsets.safeDrawing,
+                        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+                        topBar = {
+                            TopAppBar(
+                                title = {
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        Surface(
+                                            color = MaterialTheme.colorScheme.primaryContainer,
+                                            shape = RoundedCornerShape(10.dp),
+                                            modifier = Modifier.size(32.dp)
+                                        ) {
+                                            Box(contentAlignment = Alignment.Center) {
+                                                Icon(
+                                                    imageVector = Icons.Filled.AutoAwesome,
+                                                    contentDescription = stringResource(id = R.string.cd_app_logo),
+                                                    tint = MaterialTheme.colorScheme.primary,
+                                                    modifier = Modifier.size(18.dp)
+                                                )
+                                            }
+                                        }
+                                        Spacer(modifier = Modifier.width(10.dp))
+                                        Text(
+                                            text = stringResource(id = R.string.app_name),
+                                            style = MaterialTheme.typography.titleLarge
+                                        )
+                                    }
+                                },
                     actions = {
                         TopBarSupporterAction(
                             isActiveSupporter = engagementTelemetry.isActiveSupporter,
@@ -592,7 +655,16 @@ private fun ExamForgeAppShell(
                 }
 
                 Box(modifier = Modifier.weight(1f)) {
-                    when (selectedTab) {
+                    AnimatedContent(
+                        targetState = selectedTab,
+                        transitionSpec = {
+                            val dir = if (targetState.ordinal >= initialState.ordinal) 1 else -1
+                            (fadeIn(tween(220)) + slideInHorizontally(tween(220)) { it / 16 * dir })
+                                .togetherWith(fadeOut(tween(180)) + slideOutHorizontally(tween(180)) { -it / 16 * dir })
+                        },
+                        label = "main_tab_transition"
+                    ) { tab ->
+                        when (tab) {
                         MainTab.DECKS -> {
                             DecksScreen(
                                 decks = decks,
@@ -737,9 +809,14 @@ private fun ExamForgeAppShell(
                                 }
                             )
                         }
+                        }
                     }
                 }
             }
         }
     }
+            }
+        }
+    }
 }
+

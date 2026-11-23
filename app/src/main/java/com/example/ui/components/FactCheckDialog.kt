@@ -35,9 +35,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.example.R
 import com.example.data.ai.FactCheckVerdict
 import com.example.data.model.Flashcard
 import com.example.ui.viewmodel.FactCheckUiState
@@ -57,7 +59,7 @@ fun FactCheckDialog(
         is FactCheckUiState.Checking -> {
             AlertDialog(
                 onDismissRequest = onDismiss,
-                title = { Text("Verifying Flashcard...") },
+                title = { Text(stringResource(id = R.string.fact_check_verifying_title)) },
                 text = {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
@@ -66,14 +68,16 @@ fun FactCheckDialog(
                         CircularProgressIndicator(modifier = Modifier.size(36.dp))
                         Spacer(modifier = Modifier.height(14.dp))
                         Text(
-                            text = "Cross-checking \"${state.card.question.take(80)}\" for academic accuracy and citations.",
+                            text = stringResource(id = R.string.fact_check_verifying_body, state.card.question.take(80)),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 },
                 confirmButton = {
-                    TextButton(onClick = onDismiss) { Text("Cancel") }
+                    TextButton(onClick = onDismiss) {
+                        Text(stringResource(id = R.string.common_cancel))
+                    }
                 }
             )
         }
@@ -88,7 +92,15 @@ fun FactCheckDialog(
                         tint = MaterialTheme.colorScheme.error
                     )
                 },
-                title = { Text(if (state.isQuotaLimit) "Daily Fact-Check Limit Reached" else "Fact-Check Unavailable") },
+                title = {
+                    Text(
+                        text = if (state.isQuotaLimit) {
+                            stringResource(id = R.string.fact_check_quota_title)
+                        } else {
+                            stringResource(id = R.string.fact_check_error_title)
+                        }
+                    )
+                },
                 text = {
                     Text(
                         text = state.message,
@@ -104,15 +116,19 @@ fun FactCheckDialog(
                             },
                             modifier = Modifier.testTag("fact_check_open_settings_button")
                         ) {
-                            Text("Add Free BYOK Key")
+                            Text(stringResource(id = R.string.fact_check_add_byok))
                         }
                     } else {
-                        Button(onClick = onDismiss) { Text("OK") }
+                        Button(onClick = onDismiss) {
+                            Text(stringResource(id = R.string.fact_check_ok))
+                        }
                     }
                 },
                 dismissButton = {
                     if (state.isQuotaLimit) {
-                        TextButton(onClick = onDismiss) { Text("Later") }
+                        TextButton(onClick = onDismiss) {
+                            Text(stringResource(id = R.string.fact_check_later))
+                        }
                     }
                 }
             )
@@ -189,7 +205,7 @@ fun FactCheckDialog(
                         ) {
                             Column(modifier = Modifier.padding(12.dp)) {
                                 Text(
-                                    text = "SUGGESTED VERIFIED ANSWER",
+                                    text = stringResource(id = R.string.fact_check_suggested_answer),
                                     style = MaterialTheme.typography.labelSmall,
                                     color = MaterialTheme.colorScheme.primary
                                 )
@@ -214,7 +230,7 @@ fun FactCheckDialog(
                         if (result.sources.isNotEmpty()) {
                             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                                 Text(
-                                    text = "GOOGLE SEARCH SOURCES",
+                                    text = stringResource(id = R.string.fact_check_sources),
                                     style = MaterialTheme.typography.labelSmall,
                                     color = MaterialTheme.colorScheme.secondary
                                 )
@@ -248,7 +264,7 @@ fun FactCheckDialog(
                                             Spacer(modifier = Modifier.width(6.dp))
                                             Icon(
                                                 imageVector = Icons.Default.OpenInNew,
-                                                contentDescription = "Open citation",
+                                                contentDescription = stringResource(id = R.string.fact_check_cd_open_citation),
                                                 tint = MaterialTheme.colorScheme.primary,
                                                 modifier = Modifier.size(14.dp)
                                             )
@@ -284,14 +300,18 @@ fun FactCheckDialog(
                                 modifier = Modifier.size(16.dp)
                             )
                             Spacer(modifier = Modifier.width(6.dp))
-                            Text("Apply Answer")
+                            Text(stringResource(id = R.string.fact_check_apply_answer))
                         }
                     } else {
-                        Button(onClick = onDismiss) { Text("Done") }
+                        Button(onClick = onDismiss) {
+                            Text(stringResource(id = R.string.fact_check_done))
+                        }
                     }
                 },
                 dismissButton = {
-                    TextButton(onClick = onDismiss) { Text("Close") }
+                    TextButton(onClick = onDismiss) {
+                        Text(stringResource(id = R.string.common_close))
+                    }
                 }
             )
         }

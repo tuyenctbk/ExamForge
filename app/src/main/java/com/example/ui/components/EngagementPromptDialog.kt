@@ -118,23 +118,23 @@ fun EngagementPromptDialog(
         AutoPopupType.RATE_APP -> stringResource(R.string.popup_rate_title)
         AutoPopupType.SHARE_APP -> stringResource(R.string.popup_share_title)
         AutoPopupType.DONATE_SUPPORT -> if (suggestion.milestoneCount != null) {
-            "${suggestion.milestoneCount} Study Milestones Completed!"
+            stringResource(R.string.support_dev_milestone_heading, suggestion.milestoneCount)
         } else {
-            "Enjoying Ad-Free ExamForge?"
+            stringResource(R.string.popup_donate_default_title)
         }
     }
 
     val body = when (suggestion.type) {
         AutoPopupType.UPDATE_APP -> stringResource(
             R.string.popup_update_body,
-            suggestion.targetVersionName ?: "latest"
+            suggestion.targetVersionName ?: stringResource(R.string.popup_update_latest_fallback)
         )
         AutoPopupType.RATE_APP -> stringResource(R.string.popup_rate_body)
         AutoPopupType.SHARE_APP -> stringResource(R.string.popup_share_body)
         AutoPopupType.DONATE_SUPPORT -> if (suggestion.milestoneCount != null) {
-            "You've completed ${suggestion.milestoneCount} study milestones! If ExamForge has been helpful, consider supporting independent, offline-first development."
+            stringResource(R.string.popup_donate_milestone_body, suggestion.milestoneCount)
         } else {
-            "ExamForge is built independently with no ads. If it saves you study time, you can buy the developer a coffee via Google Play, PayPal, or Ko-fi."
+            stringResource(R.string.popup_donate_default_body)
         }
     }
 
@@ -142,7 +142,7 @@ fun EngagementPromptDialog(
         AutoPopupType.UPDATE_APP -> stringResource(R.string.popup_update_primary)
         AutoPopupType.RATE_APP -> stringResource(R.string.popup_rate_primary)
         AutoPopupType.SHARE_APP -> stringResource(R.string.popup_share_primary)
-        AutoPopupType.DONATE_SUPPORT -> "Support Options"
+        AutoPopupType.DONATE_SUPPORT -> stringResource(R.string.popup_donate_primary)
     }
 
     val laterLabel = when (suggestion.type) {

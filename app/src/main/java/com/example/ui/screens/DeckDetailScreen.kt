@@ -17,7 +17,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
@@ -38,6 +40,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -291,7 +294,8 @@ fun DeckDetailScreen(
                             isDueNow = card.isDue(now),
                             onVerify = { onVerifyCard(card) },
                             onEdit = { editingCard = card },
-                            onDelete = { onDeleteCard(card) }
+                            onDelete = { onDeleteCard(card) },
+                            modifier = Modifier.animateItem()
                         )
                     }
                 }
@@ -313,12 +317,12 @@ fun DeckDetailScreen(
 
     editingCard?.let { card ->
         RoomFlashcardEditorDialog(
-            title = "Edit Flashcard",
+            title = stringResource(id = R.string.flashcard_edit_title),
             initialQuestion = card.question,
             initialAnswer = card.answer,
             initialExplanation = card.explanation,
             initialHint = card.hint,
-            confirmLabel = "Update",
+            confirmLabel = stringResource(id = R.string.flashcard_update),
             onDismiss = { editingCard = null },
             onConfirm = { q, a, exp, hint ->
                 editingCard = null
@@ -343,7 +347,9 @@ fun DeckDetailScreen(
                 }
             },
             dismissButton = {
-                TextButton(onClick = { showDeleteDeckConfirm = false }) { Text("Cancel") }
+                TextButton(onClick = { showDeleteDeckConfirm = false }) {
+                    Text(stringResource(id = R.string.common_cancel))
+                }
             }
         )
     }
@@ -355,13 +361,14 @@ private fun DeckCardRow(
     isDueNow: Boolean,
     onVerify: () -> Unit,
     onEdit: () -> Unit,
-    onDelete: () -> Unit
+    onDelete: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Surface(
         shape = RoundedCornerShape(18.dp),
         color = MaterialTheme.colorScheme.surface,
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
-        modifier = Modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth()
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(
@@ -459,11 +466,20 @@ private fun AddManualCardDialog(
     var optD by remember { mutableStateOf("") }
     var correctIdx by remember { mutableIntStateOf(0) }
 
+    val rawOptions = listOf(optA, optB, optC, optD)
+    val nonBlankIndexed = rawOptions.mapIndexedNotNull { idx, value ->
+        val trimmed = value.trim()
+        if (trimmed.isNotEmpty()) idx to trimmed else null
+    }
+
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text("Add Flashcard") },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+                modifier = Modifier.verticalScroll(rememberScrollState())
+            ) {
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     CardType.entries.forEach { type ->
                         FilterChip(
@@ -481,10 +497,44 @@ private fun AddManualCardDialog(
                     modifier = Modifier.fillMaxWidth()
                 )
                 if (cardType == CardType.MULTIPLE_CHOICE) {
-                    OutlinedTextField(value = optA, onValueChange = { optA = it.take(200) }, label = { Text("Option A (Correct)") }, singleLine = true, modifier = Modifier.fillMaxWidth())
-                    OutlinedTextField(value = optB, onValueChange = { optB = it.take(200) }, label = { Text("Option B") }, singleLine = true, modifier = Modifier.fillMaxWidth())
-                    OutlinedTextField(value = optC, onValueChange = { optC = it.take(200) }, label = { Text("Option C") }, singleLine = true, modifier = Modifier.fillMaxWidth())
-                    OutlinedTextField(value = optD, onValueChange = { optD = it.take(200) }, label = { Text("Option D") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+                    Text(
+                        text = "Tap a radio button to mark the correct choice",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    listOf(
+                        0 to Pair(optA, { v: String -> optA = v }),
+                        1 to Pair(optB, { v: String -> optB = v }),
+                        2 to Pair(optC, { v: String -> optC = v }),
+                        3 to Pair(optD, { v: String -> optD = v })
+                    ).forEach { (slotIdx, pair) ->
+                        val (value, onChange) = pair
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            RadioButton(
+                                selected = correctIdx == slotIdx,
+                                onClick = { correctIdx = slotIdx },
+                                enabled = value.isNotBlank() || slotIdx < 2
+                            )
+                            OutlinedTextField(
+                                value = value,
+                                onValueChange = {
+                                    onChange(it.take(200))
+                                    if (correctIdx == slotIdx && it.isBlank() && optA.isNotBlank()) {
+                                        correctIdx = 0
+                                    }
+                                },
+                                label = {
+                                    val letter = ('A' + slotIdx)
+                                    Text(if (correctIdx == slotIdx) "Option $letter (Correct)" else "Option $letter")
+                                },
+                                singleLine = true,
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
+                    }
                 } else {
                     OutlinedTextField(
                         value = answer,
@@ -511,26 +561,39 @@ private fun AddManualCardDialog(
             }
         },
         confirmButton = {
+            val validCorrectSelected = nonBlankIndexed.any { it.first == correctIdx }
             val isValid = if (cardType == CardType.MULTIPLE_CHOICE) {
-                question.isNotBlank() && optA.isNotBlank() && optB.isNotBlank()
+                question.isNotBlank() && nonBlankIndexed.size >= 2 && (validCorrectSelected || nonBlankIndexed.isNotEmpty())
             } else {
                 question.isNotBlank() && answer.isNotBlank()
             }
             Button(
                 onClick = {
-                    val opts = if (cardType == CardType.MULTIPLE_CHOICE) {
-                        listOf(optA, optB, optC, optD).map { it.trim() }.filter { it.isNotEmpty() }
-                    } else emptyList()
-                    val finalAns = if (cardType == CardType.MULTIPLE_CHOICE) optA.trim() else answer.trim()
-                    onSave(
-                        cardType,
-                        question.trim(),
-                        finalAns,
-                        explanation.trim(),
-                        hint.trim(),
-                        opts,
-                        if (cardType == CardType.MULTIPLE_CHOICE) correctIdx else -1
-                    )
+                    if (cardType == CardType.MULTIPLE_CHOICE) {
+                        val filteredOpts = nonBlankIndexed.map { it.second }
+                        val resolvedIndex = nonBlankIndexed.indexOfFirst { it.first == correctIdx }
+                            .let { if (it >= 0) it else 0 }
+                        val finalAns = filteredOpts.getOrElse(resolvedIndex) { "" }
+                        onSave(
+                            cardType,
+                            question.trim(),
+                            finalAns,
+                            explanation.trim(),
+                            hint.trim(),
+                            filteredOpts,
+                            resolvedIndex
+                        )
+                    } else {
+                        onSave(
+                            cardType,
+                            question.trim(),
+                            answer.trim(),
+                            explanation.trim(),
+                            hint.trim(),
+                            emptyList(),
+                            -1
+                        )
+                    }
                 },
                 enabled = isValid
             ) {

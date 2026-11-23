@@ -115,9 +115,17 @@ class FlashcardAppWidgetProvider : AppWidgetProvider() {
                                 db.flashcardDao().upsertCard(updated.toEntity(pendingSync = true))
                             }
                         }
+                        val ratedRemoved = !cardId.isNullOrBlank()
                         val targetIds = if (widgetId != AppWidgetManager.INVALID_APPWIDGET_ID) intArrayOf(widgetId) else widgetIds
                         for (id in targetIds) {
-                            renderWidget(context, appWidgetManager, id, advanceCard = true, reveal = false)
+                            renderWidget(
+                                context = context,
+                                manager = appWidgetManager,
+                                widgetId = id,
+                                advanceCard = !ratedRemoved,
+                                reveal = false,
+                                previousCardId = cardId
+                            )
                         }
                     } finally {
                         pendingResult.finish()
@@ -132,7 +140,8 @@ class FlashcardAppWidgetProvider : AppWidgetProvider() {
         manager: AppWidgetManager,
         widgetId: Int,
         advanceCard: Boolean,
-        reveal: Boolean
+        reveal: Boolean,
+        previousCardId: String? = null
     ) {
         val db = AppDatabase.getInstance(context)
         val prefs = PreferencesRepository(context)
@@ -150,12 +159,15 @@ class FlashcardAppWidgetProvider : AppWidgetProvider() {
 
         val widgetPrefs = context.getSharedPreferences(WIDGET_PREFS, Context.MODE_PRIVATE)
         val lastIndex = widgetPrefs.getInt(KEY_INDEX_PREFIX + widgetId, 0)
-        val selectedIndex = if (pool.isEmpty()) {
-            0
-        } else if (advanceCard) {
-            (lastIndex + 1) % pool.size
-        } else {
-            lastIndex.coerceIn(0, pool.lastIndex)
+        val selectedIndex = when {
+            pool.isEmpty() -> 0
+            previousCardId != null -> {
+                val stillAt = pool.indexOfFirst { it.id == previousCardId }
+                if (stillAt >= 0) (stillAt + 1) % pool.size
+                else lastIndex.coerceIn(0, pool.lastIndex)
+            }
+            advanceCard -> (lastIndex + 1) % pool.size
+            else -> lastIndex.coerceIn(0, pool.lastIndex)
         }
         widgetPrefs.edit().putInt(KEY_INDEX_PREFIX + widgetId, selectedIndex).apply()
 
@@ -167,7 +179,7 @@ class FlashcardAppWidgetProvider : AppWidgetProvider() {
         }
         val openAppPending = PendingIntent.getActivity(
             context,
-            widgetId,
+            (widgetId shl 3) or 0,
             openAppIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
@@ -175,8 +187,8 @@ class FlashcardAppWidgetProvider : AppWidgetProvider() {
         views.setOnClickPendingIntent(R.id.widget_question, openAppPending)
 
         if (pool.isEmpty()) {
-            views.setTextViewText(R.id.widget_brand, "EXAMFORGE")
-            views.setTextViewText(R.id.widget_due_badge, "0 due")
+            views.setTextViewText(R.id.widget_brand, context.getString(R.string.widget_header_default))
+            views.setTextViewText(R.id.widget_due_badge, context.getString(R.string.widget_due_default))
             views.setTextViewText(R.id.widget_question, context.getString(R.string.widget_empty_question))
             views.setViewVisibility(R.id.widget_answer, View.GONE)
             views.setViewVisibility(R.id.widget_actions_hidden, View.GONE)
@@ -187,12 +199,18 @@ class FlashcardAppWidgetProvider : AppWidgetProvider() {
 
         val card = pool[selectedIndex].toDomain()
         val deck = db.deckDao().getDeckById(card.deckId)
-        val headerLabel = deck?.subject?.uppercase()?.take(18) ?: "EXAMFORGE"
+        val headerLabel = deck?.subject?.uppercase()?.take(18) ?: context.getString(R.string.widget_header_default)
 
         views.setTextViewText(R.id.widget_brand, "$headerLabel · ${card.cardType.shortBadge}")
-        views.setTextViewText(R.id.widget_due_badge, "${dueCards.size} due")
+        views.setTextViewText(
+            R.id.widget_due_badge,
+            context.getString(R.string.study_session_due_badge, dueCards.size)
+        )
         views.setTextViewText(R.id.widget_question, card.question)
-        views.setTextViewText(R.id.widget_answer, "Answer: ${card.answer}")
+        views.setTextViewText(
+            R.id.widget_answer,
+            "${context.getString(R.string.flashcard_a_badge)}: ${card.answer}"
+        )
 
         if (reveal) {
             views.setViewVisibility(R.id.widget_answer, View.VISIBLE)
@@ -206,19 +224,19 @@ class FlashcardAppWidgetProvider : AppWidgetProvider() {
 
         views.setOnClickPendingIntent(
             R.id.btn_widget_reveal,
-            buildActionPendingIntent(context, ACTION_REVEAL, widgetId, card.id, 100 + widgetId)
+            buildActionPendingIntent(context, ACTION_REVEAL, widgetId, card.id, (widgetId shl 3) or 1)
         )
         views.setOnClickPendingIntent(
             R.id.btn_widget_next,
-            buildActionPendingIntent(context, ACTION_NEXT, widgetId, card.id, 200 + widgetId)
+            buildActionPendingIntent(context, ACTION_NEXT, widgetId, card.id, (widgetId shl 3) or 2)
         )
         views.setOnClickPendingIntent(
             R.id.btn_widget_again,
-            buildActionPendingIntent(context, ACTION_RATE_AGAIN, widgetId, card.id, 300 + widgetId)
+            buildActionPendingIntent(context, ACTION_RATE_AGAIN, widgetId, card.id, (widgetId shl 3) or 3)
         )
         views.setOnClickPendingIntent(
             R.id.btn_widget_good,
-            buildActionPendingIntent(context, ACTION_RATE_GOOD, widgetId, card.id, 400 + widgetId)
+            buildActionPendingIntent(context, ACTION_RATE_GOOD, widgetId, card.id, (widgetId shl 3) or 4)
         )
 
         manager.updateAppWidget(widgetId, views)

@@ -1,0 +1,30 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- 4-point spark star above anvil (inside 108dp safe zone 24..84) -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M54,25 L56.4,31.6 L63,34 L56.4,36.4 L54,43 L51.6,36.4 L45,34 L51.6,31.6 Z" />
+
+    <!-- Anvil horn (left) -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M29,46 L42,46 L42,53.5 C35.5,53 31,50 29,46 Z" />
+
+    <!-- Anvil main body and base -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M43.5,45 L75,45 L75,49 C75,51.8 70.5,53 66.5,53.8 C64.2,54.3 63.5,56.5 63.5,59 C63.5,61.5 65,63.5 67,64.8 L67,67.5 L41,67.5 L41,64.8 C43.2,63.2 44.5,61 44.5,58.5 C44.5,55.5 43.5,53.5 43.5,53.5 Z" />
+
+    <!-- Fanned flashcard deck underneath anvil -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M35.5,69.5 L40,69.5 L40,70 L68,70 L68,69.5 L72.5,69.5 L70,74 L54,79.5 L38,74 Z" />
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:fillAlpha="0.72"
+        android:pathData="M36,76 L54,82 L72,76 L70.5,79.2 L54,84.8 L37.5,79.2 Z" />
+</vector>

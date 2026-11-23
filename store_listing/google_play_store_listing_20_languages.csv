@@ -1,221 +1,241 @@
 language_code,language_name,app_name,short_description,full_description
-en-US,English,"ExamForge: AI Study Cards","Turn whiteboard photos and lecture notes into active-recall flashcards.","ExamForge helps students turn whiteboards, handwritten notes, textbook diagrams, and spoken lectures into structured active-recall flashcards.
+en-US,English,"ExamForge: No-Ad AI Cards","Turn notes and photos into 3D flip flashcards with smart Review Now scheduling.","ExamForge helps students turn whiteboards, handwritten notes, textbook diagrams, and spoken lectures into structured active-recall flashcards without ads or distractions.
 
 Core Study Features:
 - CameraX Note Scanner: Capture equations, slides, or handwritten pages and convert them into multiple-choice, fill-in-the-blank, and concept flashcards with Gemini.
+- Review Now Smart Scheduling: Automatically flags cards due for reinforcement based on each card's last reviewed date so you focus on what needs attention first.
+- Full-Screen 3D Flip Study Session: Focus on one flagged card at a time with smooth 3D flip animations, hints, explanations, and SM-2 recall grading.
 - Instant Offline Parser: Convert pasted or dictated Q:/A: and Term: Definition notes into study decks directly on your device without using cloud quota.
 - Oral Quizmaster: Practice speaking answers aloud using voice recognition and Text-to-Speech feedback to test deep recall.
-- Spaced Repetition (SM-2): Rate cards as Again, Hard, Good, or Easy so reviews resurface right before you forget them.
 - 60-Second Match Blitz: Build recall speed with an offline timed matching game powered by your own decks.
 - Home Screen Recall Widget: Review one due flashcard directly from your home screen whenever you unlock your phone.
 - Offline Cache and Cloud Sync: Study reliably offline with local Room storage and back up your decks securely with Google Sign-In.
-- Flexible AI Options: Stretch daily usage with Eco Lite mode or connect your own Gemini API key (BYOK) in Settings."
-vi,Vietnamese,"ExamForge: Thẻ học AI","Biến ảnh bảng viết và ghi chú bài giảng thành thẻ ghi nhớ chủ động.","ExamForge giúp học sinh và sinh viên chuyển ảnh bảng viết, ghi chú viết tay, sơ đồ sách giáo khoa và bài giảng thành bộ thẻ ghi nhớ chủ động có cấu trúc.
+- Ad-Free & Flexible AI: Stretch daily usage with Eco Lite mode or connect your own Gemini API key (BYOK) encrypted via Android Keystore in Settings."
+vi,Vietnamese,"ExamForge: Thẻ AI Không Ads","Biến ghi chú và ảnh thành thẻ lật 3D với lịch ôn tập thông minh Review Now.","ExamForge giúp học sinh và sinh viên chuyển ảnh bảng viết, ghi chú viết tay, sơ đồ sách giáo khoa và bài giảng thành bộ thẻ ghi nhớ chủ động có cấu trúc, hoàn toàn không quảng cáo.
 
 Tính năng học tập chính:
 - Quét ghi chú CameraX: Chụp công thức, trang trình chiếu hoặc vở viết tay để Gemini tạo thẻ trắc nghiệm, điền khuyết và khái niệm.
+- Lập lịch Review Now thông minh: Tự động đánh dấu thẻ cần củng cố dựa trên ngày ôn tập gần nhất để bạn tập trung đúng trọng tâm.
+- Phiên học lật thẻ 3D toàn màn hình: Tập trung vào từng thẻ được đánh dấu với hiệu ứng lật 3D mượt mà, gợi ý, giải thích và chấm mức độ nhớ SM-2.
 - Trình phân tích ngoại tuyến: Chuyển nhanh ghi chú dán vào hoặc đọc giọng nói theo dạng Q:/A: hay Thuật ngữ: Định nghĩa ngay trên thiết bị mà không tốn hạn mức đám mây.
 - Luyện vấn đáp Oral Quizmaster: Luyện trả lời bằng giọng nói kết hợp đọc phản hồi bằng âm thanh để củng cố trí nhớ sâu.
-- Lặp lại ngắt quãng (SM-2): Đánh giá mức độ nhớ để ứng dụng lên lịch ôn tập đúng thời điểm.
 - Trò chơi ghép cặp 60 giây: Rèn tốc độ phản xạ hoàn toàn ngoại tuyến ngay trên bộ thẻ của bạn.
 - Tiện ích màn hình chính: Ôn nhanh một thẻ đến hạn mỗi khi mở khóa điện thoại.
 - Lưu ngoại tuyến và đồng bộ: Học tập ổn định khi không có mạng nhờ cơ sở dữ liệu cục bộ và sao lưu an toàn với tài khoản Google.
-- Tùy chọn AI linh hoạt: Kéo dài hạn mức hàng ngày với chế độ Eco Lite hoặc dùng khóa Gemini API cá nhân (BYOK) trong Cài đặt."
-es-ES,Spanish,"ExamForge: Tarjetas con IA","Convierte fotos de pizarras y apuntes en tarjetas de recuerdo activo.","ExamForge ayuda a los estudiantes a transformar fotos de pizarras, apuntes a mano, diagramas y clases dictadas en tarjetas estructuradas de recuerdo activo.
+- Không quảng cáo & AI linh hoạt: Kéo dài hạn mức hàng ngày với chế độ Eco Lite hoặc dùng khóa Gemini API cá nhân (BYOK) mã hóa bằng Android Keystore."
+es-ES,Spanish,"ExamForge: IA Sin Anuncios","Convierte apuntes y fotos en tarjetas 3D con repaso inteligente Review Now.","ExamForge ayuda a los estudiantes a transformar fotos de pizarras, apuntes a mano, diagramas y clases dictadas en tarjetas estructuradas de recuerdo activo, totalmente libre de anuncios.
 
 Funciones principales:
 - Escáner CameraX: Captura ecuaciones, diapositivas o páginas manuscritas para generar tarjetas de opción múltiple, completar espacios y conceptos con Gemini.
+- Programación inteligente Review Now: Marca automáticamente las tarjetas pendientes según su última fecha de repaso para reforzar lo esencial primero.
+- Sesión de estudio 3D a pantalla completa: Repasa una tarjeta a la vez con animación de giro 3D, pistas, explicaciones y calificación SM-2.
 - Analizador sin conexión: Convierte apuntes pegados o dictados en mazos de estudio directamente en el dispositivo sin consumir cuota en la nube.
 - Quizmaster Oral: Practica respuestas en voz alta con reconocimiento de voz y lectura en audio para reforzar la memoria.
-- Repetición espaciada (SM-2): Califica cada tarjeta para programar el repaso justo antes de olvidarla.
 - Match Blitz de 60 segundos: Mejora tu agilidad con un juego de emparejamiento sin conexión basado en tus propios mazos.
 - Widget de pantalla de inicio: Repasa una tarjeta pendiente cada vez que desbloqueas el teléfono.
 - Modo sin conexión y sincronización: Estudia sin internet con almacenamiento local y respalda tu progreso mediante inicio de sesión con Google.
-- Opciones flexibles de IA: Optimiza tu cuota diaria con el modo Eco Lite o conecta tu propia clave Gemini API (BYOK) en Ajustes."
-fr-FR,French,"ExamForge: Fiches IA","Transformez vos photos de tableaux et notes en fiches de révision.","ExamForge permet aux étudiants de transformer des tableaux blancs, notes manuscrites, schémas et cours dictés en fiches structurées de rappel actif.
+- Sin anuncios e IA flexible: Optimiza tu cuota diaria con Eco Lite o conecta tu propia clave Gemini API (BYOK) cifrada con Android Keystore."
+fr-FR,French,"ExamForge: Fiches IA Sans Pub","Transformez photos et notes en fiches 3D avec révision intelligente Review Now.","ExamForge permet aux étudiants de transformer des tableaux blancs, notes manuscrites, schémas et cours dictés en fiches structurées de rappel actif, sans aucune publicité.
 
 Fonctionnalités clés :
 - Scanner CameraX : Photographiez équations, diapositives ou pages manuscrites pour créer des fiches QCM, textes à trous et concepts avec Gemini.
+- Planification Review Now : Signale automatiquement les fiches à consolider selon leur dernière date de révision pour cibler vos priorités.
+- Session d'étude 3D plein écran : Révisez une fiche à la fois avec animation de retournement 3D, indices, explications et notation SM-2.
 - Analyseur hors ligne : Transformez vos notes collées ou dictées en paquets directement sur l'appareil sans consommer de quota cloud.
 - Quizmaster Oral : Répondez à voix haute grâce à la reconnaissance vocale et aux retours audio pour ancrer vos connaissances.
-- Répétition espacée (SM-2) : Évaluez chaque fiche pour programmer vos révisions au moment opportun.
 - Match Blitz 60 secondes : Entraînez votre rapidité hors ligne en associant questions et réponses de vos paquets.
 - Widget d'écran d'accueil : Révisez une fiche à chaque déverrouillage du téléphone.
 - Cache hors ligne et synchronisation : Révisez sans connexion grâce au stockage local et sauvegardez vos progrès avec Google.
-- Options IA flexibles : Prolongez votre quota quotidien avec le mode Eco Lite ou utilisez votre propre clé Gemini API (BYOK) dans les Paramètres."
-de-DE,German,"ExamForge: KI-Lernkarten","Verwandle Tafelfotos und Notizen in strukturierte Lernkarten.","ExamForge unterstützt Lernende dabei, Tafelbilder, handschriftliche Notizen, Diagramme und diktierte Vorlesungen in strukturierte Lernkarten für aktives Abrufen zu verwandeln.
+- Zéro pub et IA flexible : Prolongez votre quota quotidien avec Eco Lite ou utilisez votre clé Gemini API (BYOK) chiffrée via Android Keystore."
+de-DE,German,"ExamForge: KI Ohne Werbung","Mach aus Fotos & Notizen 3D-Lernkarten mit smartem Review-Now-Zeitplan.","ExamForge unterstützt Lernende dabei, Tafelbilder, handschriftliche Notizen, Diagramme und diktierte Vorlesungen in strukturierte Lernkarten für aktives Abrufen zu verwandeln — komplett werbefrei.
 
 Hauptfunktionen:
 - CameraX-Notizscanner: Fotografiere Formeln, Folien oder Mitschriften und erstelle mit Gemini Multiple-Choice-, Lückentext- und Konzeptkarten.
+- Review-Now-Zeitplanung: Markiert Karten automatisch anhand des letzten Wiederholungsdatums, damit fälliger Stoff gezielt zuerst erscheint.
+- Vollbild-3D-Lernsitzung: Konzentriere dich auf eine Karte nach der anderen mit 3D-Drehanimation, Hinweisen, Erklärungen und SM-2-Bewertung.
 - Offline-Parser: Wandle eingefügte oder diktierte Notizen direkt auf dem Gerät in Stapel um, ohne Cloud-Kontingent zu verbrauchen.
 - Mündlicher Quizmaster: Sprich Antworten laut ein und erhalte direkte Auswertung samt Sprachausgabe.
-- Spaced Repetition (SM-2): Bewerte Karten nach Schwierigkeit für optimal geplante Wiederholungen.
 - 60-Sekunden-Match-Blitz: Trainiere dein Tempo offline im Zeitspiel mit deinen eigenen Lernkarten.
 - Startbildschirm-Widget: Wiederhole bei jedem Entsperren eine fällige Karte direkt auf dem Homescreen.
 - Offline-Speicher und Cloud-Sync: Lerne unterwegs offline mit lokaler Datenbank und sichere deine Stapel über Google-Anmeldung.
-- Flexible KI-Optionen: Spare Kontingent mit dem Eco-Lite-Modus oder nutze deinen eigenen Gemini-API-Schlüssel (BYOK) in den Einstellungen."
-pt-BR,Portuguese,"ExamForge: Cartões com IA","Transforme fotos de quadros e anotações em flashcards de revisão ativa.","ExamForge ajuda estudantes a transformar quadros brancos, anotações manuscritas, diagramas e aulas ditadas em flashcards estruturados de recordação ativa.
+- Werbefrei & flexible KI: Spare Kontingent im Eco-Lite-Modus oder nutze deinen eigenen Gemini-API-Schlüssel (BYOK) per Android Keystore."
+pt-BR,Portuguese,"ExamForge: IA Sem Anúncios","Transforme fotos e notas em cartões 3D com agenda inteligente Review Now.","ExamForge ajuda estudantes a transformar quadros brancos, anotações manuscritas, diagramas e aulas ditadas em flashcards estruturados de recordação ativa, sem anúncios.
 
 Recursos principais:
 - Scanner CameraX: Fotografe fórmulas, slides ou cadernos para gerar cartões de múltipla escolha, lacunas e conceitos com Gemini.
+- Agendamento Review Now: Sinaliza automaticamente os cartões devidos com base na data da última revisão para reforçar o que importa primeiro.
+- Sessão de Estudo 3D em Tela Cheia: Estude um cartão por vez com animação 3D ao virar, dicas, explicações e avaliação espaçada SM-2.
 - Analisador offline: Converta notas coladas ou ditadas em baralhos diretamente no aparelho sem gastar cota na nuvem.
 - Quizmaster Oral: Pratique respostas em voz alta com reconhecimento de fala e retorno em áudio.
-- Repetição espaçada (SM-2): Avalie cada cartão para revisar no momento certo antes de esquecer.
 - Match Blitz de 60 segundos: Treine velocidade de memorização offline usando seus próprios baralhos.
 - Widget na tela inicial: Revise um cartão pendente sempre que desbloquear o celular.
 - Modo offline e sincronização: Estude sem internet com cache local e salve seu progresso com conta Google.
-- Opções flexíveis de IA: Amplie o uso diário com o modo Eco Lite ou adicione sua própria chave Gemini API (BYOK) nas Configurações."
-it-IT,Italian,"ExamForge: Flashcard IA","Trasforma foto di lavagne e appunti in flashcard di ripasso attivo.","ExamForge aiuta gli studenti a trasformare lavagne, appunti scritti a mano, schemi e lezioni dettate in flashcard strutturate per il richiamo attivo.
+- Sem anúncios e IA flexível: Amplie o uso diário com Eco Lite ou use sua chave Gemini API (BYOK) protegida pelo Android Keystore."
+it-IT,Italian,"ExamForge: IA Senza Annunci","Trasforma appunti e foto in flashcard 3D con piano intelligente Review Now.","ExamForge aiuta gli studenti a trasformare lavagne, appunti scritti a mano, schemi e lezioni dettate in flashcard strutturate per il richiamo attivo, senza pubblicità.
 
 Funzioni principali:
 - Scanner CameraX: Fotografa formule, slide o quaderni per creare schede a scelta multipla, completamento e concetti con Gemini.
+- Pianificazione Review Now: Segnala automaticamente le carte da ripassare in base all'ultima data di revisione per dare priorità ai concetti chiave.
+- Sessione di studio 3D a schermo intero: Concentrati su una carta alla volta con animazione flip 3D, suggerimenti, spiegazioni e valutazione SM-2.
 - Parser offline: Converti appunti incollati o dettati in mazzi direttamente sul dispositivo senza usare la quota cloud.
 - Quizmaster Orale: Ripeti le risposte ad alta voce con riconoscimento vocale e lettura audio del feedback.
-- Ripetizione dilazionata (SM-2): Valuta ogni carta per pianificare i ripassi al momento giusto.
 - Match Blitz 60 secondi: Allena la velocità offline abbinando domande e risposte dei tuoi mazzi.
 - Widget schermata Home: Ripassa una flashcard in scadenza ogni volta che sblocchi il telefono.
 - Cache offline e sincronizzazione: Studia anche senza connessione grazie al database locale e sincronizza con Google.
-- Opzioni IA flessibili: Estendi la quota giornaliera con la modalità Eco Lite o collega la tua chiave Gemini API (BYOK) nelle Impostazioni."
-ru-RU,Russian,"ExamForge: ИИ-карточки","Превращайте фото доски и конспекты в карточки активного повторения.","ExamForge помогает студентам и школьникам превращать фото доски, рукописные конспекты, схемы из учебников и диктовку лекций в структурированные карточки для активного запоминания.
+- Senza annunci e IA flessibile: Estendi la quota con Eco Lite o collega la tua chiave Gemini API (BYOK) cifrata tramite Android Keystore."
+ru-RU,Russian,"ExamForge: ИИ Без Рекламы","Фото и конспекты в 3D-карточки с умным расписанием Review Now.","ExamForge помогает студентам и школьникам превращать фото доски, рукописные конспекты, схемы из учебников и диктовку лекций в структурированные карточки для активного запоминания без рекламы.
 
 Основные возможности:
 - Сканер CameraX: Фотографируйте формулы, слайды и записи, чтобы Gemini создавал карточки с тестами, пропусками и определениями.
+- Умное планирование Review Now: Автоматически отмечает карточки к повторению по дате последнего просмотра, чтобы вовремя закреплять материал.
+- Полноэкранный 3D-режим обучения: Изучайте по одной карточке с плавным 3D-переворотом, подсказками, пояснениями и оценкой SM-2.
 - Офлайн-парсер: Преобразуйте вставленный или продиктованный текст в колоды прямо на устройстве без расхода облачной квоты.
 - Устный экзаменатор: Отвечайте вслух с распознаванием речи и озвучиванием комментариев для глубокого усвоения.
-- Интервальное повторение (SM-2): Оценивайте сложность каждой карточки для своевременного повторения.
 - Блиц-игра 60 секунд: Тренируйте скорость запоминания офлайн на собственных колодах.
 - Виджет главного экрана: Повторяйте по одной карточке при каждой разблокировке смартфона.
 - Офлайн-кэш и синхронизация: Учитесь без сети благодаря локальному хранилищу и безопасно сохраняйте прогресс через Google.
-- Гибкие настройки ИИ: Экономьте дневной лимит в режиме Eco Lite или подключите собственный ключ Gemini API (BYOK) в настройках."
-ja-JP,Japanese,"ExamForge: AI暗記カード","板書写真や講義ノートをアクティブリコール単語帳に変換します。","ExamForgeは、ホワイトボードの写真、手書きノート、教科書の図表、講義の音声入力から構造化されたアクティブリコール単語帳を作成できる学習アプリです。
+- Без рекламы и гибкий ИИ: Экономьте лимит в режиме Eco Lite или подключите личный ключ Gemini API (BYOK) с защитой Android Keystore."
+ja-JP,Japanese,"ExamForge: 広告なしAI単語帳","ノートや写真を3D反転カード化。Review Nowで復習を自動管理。","ExamForgeは、ホワイトボードの写真、手書きノート、教科書の図表、講義の音声入力から構造化されたアクティブリコール単語帳を作成できる、完全広告なしの学習アプリです。
 
 主な機能：
 - CameraXノートスキャン：数式、スライド、手書きノートを撮影し、Geminiで選択問題・穴埋め・解説カードへ変換します。
+- Review Nowスマートスケジューリング：最終復習日に基づいて定着が必要なカードを自動抽出し、復習の優先順位を整理します。
+- フルスクリーン3D反転学習セッション：1枚ずつ集中できる全画面モードで、滑らかな3D反転アニメ・ヒント・解説・SM-2評価を提供します。
 - オフライン即時解析：貼り付けたメモや音声入力を端末内で直接デッキ化し、クラウド利用枠を節約できます。
 - 口頭クイズマスター：音声入力で回答し、読み上げフィードバックで実践的な記憶定着を図れます。
-- 間隔反復（SM-2）：理解度に応じて最適な復習タイミングを自動計算します。
 - 60秒マッチブリッツ：自分のデッキを使ってオフラインでスピード復習できるミニゲームを搭載。
 - ホーム画面ウィジェット：ロック解除のたびに復習予定カードを1枚チェックできます。
 - オフライン保存と同期：端末内データベースでオフライン学習でき、Googleログインで安全にバックアップできます。
-- 柔軟なAI設定：Eco Liteモードで利用枠を延ばしたり、設定からご自身のGemini APIキー（BYOK）を連携したりできます。"
-ko-KR,Korean,"ExamForge: AI 암기카드","칠판 사진과 강의 필기를 능동 회상 플래시카드로 바꾸세요.","ExamForge는 칠판 사진, 손글씨 노트, 교과서 도표 및 강의 받아쓰기 내용을 체계적인 능동 회상 플래시카드로 바꿔 주는 학습 앱입니다.
+- 広告なし・柔軟なAI設定：Eco Liteモードで利用枠を延ばしたり、Android Keystore保護下のGemini APIキー（BYOK）を連携できます。"
+ko-KR,Korean,"ExamForge: 광고없는 AI 암기","사진과 필기를 3D 플립 카드로 전환하고 Review Now로 복습하세요.","ExamForge는 칠판 사진, 손글씨 노트, 교과서 도표 및 강의 받아쓰기 내용을 체계적인 능동 회상 플래시카드로 바꿔 주는 광고 없는 학습 앱입니다.
 
 주요 기능:
 - CameraX 필기 스캐너: 수식, 슬라이드, 손글씨를 촬영하면 Gemini가 객관식, 빈칸 채우기, 개념 설명 카드로 정리합니다.
+- Review Now 스마트 일정 관리: 마지막 복습 날짜를 기준으로 복습이 필요한 카드를 자동 표시해 잊기 전에 다시 확인하게 해 줍니다.
+- 전체 화면 3D 플립 학습 세션: 한 번에 한 카드씩 부드러운 3D 뒤집기 애니메이션, 힌트, 해설, SM-2 기억 등급 평가를 제공합니다.
 - 오프라인 즉시 파서: 붙여넣거나 받아쓴 메모를 클라우드 한도 소모 없이 기기에서 바로 덱으로 변환합니다.
 - 구술 퀴즈마스터: 음성으로 답을 말하고 음성 피드백을 들으며 실전처럼 복습할 수 있습니다.
-- 간격 반복(SM-2): 기억 수준을 평가해 잊기 직전에 복습하도록 일정을 자동 조정합니다.
 - 60초 매치 블리츠: 내 학습 덱으로 즐기는 오프라인 타임어택 짝맞추기 훈련을 제공합니다.
 - 홈 화면 위젯: 휴대폰 잠금을 풀 때마다 복습 예정 카드 1장을 빠르게 확인하세요.
 - 오프라인 저장 및 동기화: 로컬 저장소로 오프라인 학습을 지원하며 Google 로그인으로 안전하게 백업합니다.
-- 유연한 AI 옵션: Eco Lite 모드로 일일 한도를 아끼거나 설정에서 개인 Gemini API 키(BYOK)를 연결할 수 있습니다."
-zh-CN,Chinese (Simplified),"ExamForge：AI 记忆卡","将白板照片和课堂笔记转化为结构化主动回忆记忆卡。","ExamForge 帮助学生将白板照片、手写笔记、教材图表和口述讲义快速整理为结构化主动回忆记忆卡。
+- 무광고 및 유연한 AI 옵션: Eco Lite 모드로 한도를 아끼거나 Android Keystore로 암호화된 개인 Gemini API 키(BYOK)를 연결하세요."
+zh-CN,Chinese (Simplified),"ExamForge：无广告 AI 记忆卡","将照片和笔记转化为 3D 翻转记忆卡，智能安排 Review Now 复习。","ExamForge 帮助学生将白板照片、手写笔记、教材图表和口述讲义快速整理为结构化主动回忆记忆卡，全程无广告干扰。
 
 核心学习功能：
 - CameraX 笔记扫描：拍摄公式、课件或手写页，由 Gemini 自动生成选择题、填空题和概念解析卡片。
+- Review Now 智能排程：根据每张卡片的上次复习日期自动标记待强化内容，确保及时巩固。
+- 全屏 3D 翻转学习模式：每次专注复习一张卡片，支持流畅 3D 翻转动画、提示、解析与 SM-2 记忆评级。
 - 本地离线解析器：无需消耗云端额度，直接在设备上将粘贴或听写的笔记转为学习卡组。
 - 口语考官模式：支持语音口述作答与语音朗读反馈，强化深度记忆提取。
-- 间隔重复算法（SM-2）：根据回忆熟练度动态安排下次复习时间。
 - 60 秒极速配对：使用自己的卡组离线进行限时配对训练，提升反应速度。
 - 桌面快速回忆小组件：每次解锁手机即可在主屏幕复习 1 张待学卡片。
 - 离线缓存与云端同步：本地数据库支持无网学习，登录 Google 账号即可安全备份进度。
-- 灵活的 AI 方案：支持 Eco Lite 省流模式，也可在设置中绑定您自己的 Gemini API 密钥（BYOK）。"
-zh-TW,Chinese (Traditional),"ExamForge：AI 記憶卡","將白板照片與課堂筆記轉化為結構化主動回憶記憶卡。","ExamForge 協助學生將白板照片、手寫筆記、課本圖表與口述內容快速整理為結構化主動回憶記憶卡。
+- 纯净无广告与灵活 AI：支持 Eco Lite 省流模式，也可在设置中绑定经 Android Keystore 加密的个人 Gemini API 密钥（BYOK）。"
+zh-TW,Chinese (Traditional),"ExamForge：無廣告 AI 記憶卡","將照片與筆記轉化為 3D 翻轉記憶卡，智慧排程 Review Now 複習。","ExamForge 協助學生將白板照片、手寫筆記、課本圖表與口述內容快速整理為結構化主動回憶記憶卡，全程零廣告干擾。
 
 核心學習功能：
 - CameraX 筆記掃描：拍攝公式、簡報或手寫筆記，由 Gemini 自動製作選擇題、填空題與概念解析卡片。
+- Review Now 智慧排程：依每張卡片的上次複習日期自動標記待強化內容，精準安排複習順序。
+- 全螢幕 3D 翻轉學習模式：一次專注一張卡片，支援流暢 3D 翻面動畫、提示、詳解與 SM-2 記憶評分。
 - 本機離線解析器：無需消耗雲端額度，直接在裝置上將貼上或口述的筆記轉為學習牌組。
 - 口語考官模式：支援語音作答與語音朗讀回饋，強化深度記憶檢索。
-- 間隔重複演算法（SM-2）：依回憶熟練度動態排程下次複習時間。
 - 60 秒極速配對：運用個人牌組進行離線限時配對練習，鍛鍊記憶速度。
 - 主畫面快速回憶小工具：每次解鎖手機就能在桌面複習 1 張到期卡片。
 - 離線快取與雲端同步：本機資料庫支援無網路複習，登入 Google 帳號即可安全備份進度。
-- 彈性 AI 設定：開啟 Eco Lite 節省額度，或在設定中連接您自己的 Gemini API 金鑰（BYOK）。"
-hi-IN,Hindi,"ExamForge: AI स्टडी कार्ड","व्हाइटबोर्ड फ़ोटो और लेक्चर नोट्स को एक्टिव-रिकॉल फ़्लैशकार्ड में बदलें।","ExamForge छात्रों को व्हाइटबोर्ड फ़ोटो, हस्तलिखित नोट्स, पुस्तक आरेखों और बोले गए लेक्चर को व्यवस्थित एक्टिव-रिकॉल फ़्लैशकार्ड में बदलने में मदद करता है।
+- 無廣告與彈性 AI 設定：開啟 Eco Lite 節省額度，或在設定中連接經 Android Keystore 加密的個人 Gemini API 金鑰（BYOK）。"
+hi-IN,Hindi,"ExamForge: बिना विज्ञापन AI","नोट्स और फ़ोटो को स्मार्ट Review Now शेड्यूल वाले 3D फ्लैशकार्ड में बदलें।","ExamForge छात्रों को व्हाइटबोर्ड फ़ोटो, हस्तलिखित नोट्स, पुस्तक आरेखों और बोले गए लेक्चर को बिना किसी विज्ञापन के व्यवस्थित एक्टिव-रिकॉल फ़्लैशकार्ड में बदलने में मदद करता है।
 
 मुख्य अध्ययन सुविधाएँ:
 - CameraX नोट स्कैनर: समीकरण, स्लाइड या कॉपी के पेज स्कैन करें और Gemini से बहुविकल्पीय, रिक्त-स्थान व अवधारणा कार्ड बनाएं।
+- Review Now स्मार्ट शेड्यूलिंग: प्रत्येक कार्ड की अंतिम दोहराव तिथि के आधार पर ज़रूरी कार्ड अपने आप फ़्लैग करता है।
+- फ़ुल-स्क्रीन 3D फ़्लिप स्टडी सेशन: एक समय में एक कार्ड पर ध्यान दें—स्मूद 3D फ़्लिप एनीमेशन, संकेत, व्याख्या और SM-2 रेटिंग के साथ।
 - ऑफ़लाइन पार्सर: क्लाउड कोटा खर्च किए बिना सीधे डिवाइस पर पेस्ट या डिक्टेट किए गए नोट्स से डेक बनाएं।
 - मौखिक क्विज़मास्टर: आवाज़ पहचान और टेक्स्ट-टू-स्पीच फ़ीडबैक के साथ बोलकर अभ्यास करें।
-- स्पेस्ड रिपीटिशन (SM-2): अपनी याददाश्त के अनुसार कार्ड रेट करें ताकि सही समय पर दोहराव हो सके।
 - 60-सेकंड मैच ब्लिट्ज़: अपने ही डेक पर ऑफ़लाइन तेज़ मिलान गेम के साथ याद करने की गति बढ़ाएँ।
 - होम स्क्रीन विजेट: फ़ोन अनलॉक करते ही होम स्क्रीन पर 1 शेष कार्ड दोहराएँ।
 - ऑफ़लाइन कैश और सिंक: लोकल स्टोरेज के साथ बिना इंटरनेट पढ़ें और Google साइन-इन से सुरक्षित बैकअप रखें।
-- लचीले AI विकल्प: Eco Lite मोड से दैनिक कोटा बचाएँ या सेटिंग्स में अपनी Gemini API कुंजी (BYOK) जोड़ें।"
-ar,Arabic,"ExamForge: بطاقات دراسة ذكية","حوّل صور السبورة وملاحظات المحاضرات إلى بطاقات استرجاع نشط.","يساعد ExamForge الطلاب على تحويل صور السبورات والملاحظات المكتوبة بخط اليد ورسوم الكتب وإملاء المحاضرات إلى بطاقات استرجاع نشط منظمة.
+- विज्ञापन-रहित और लचीले AI विकल्प: Eco Lite से कोटा बचाएँ या Android Keystore से सुरक्षित अपनी Gemini API कुंजी (BYOK) जोड़ें।"
+ar,Arabic,"ExamForge: بطاقات بلا إعلانات","حوّل الملاحظات والصور إلى بطاقات 3D بجدولة Review Now الذكية.","يساعد ExamForge الطلاب على تحويل صور السبورات والملاحظات المكتوبة بخط اليد ورسوم الكتب وإملاء المحاضرات إلى بطاقات استرجاع نشط منظمة دون أي إعلانات.
 
 المزايا الدراسية الأساسية:
 - ماسح CameraX: التقط المعادلات أو الشرائح أو الصفحات المكتوبة لتحويلها عبر Gemini إلى بطاقات اختيار من متعدد وإكمال فراغ وشرح مفاهيم.
+- جدولة Review Now الذكية: تمييز البطاقات المستحقة تلقائياً وفق تاريخ آخر مراجعة للتركيز على ما يحتاج إلى تثبيت أولاً.
+- جلسة دراسة 3D بملء الشاشة: تدرّب على بطاقة واحدة في كل مرة مع حركة قلب ثلاثية الأبعاد وتلميحات وشروحات وتقييم SM-2.
 - المحلل المحلي دون إنترنت: حوّل الملاحظات الملصقة أو المملاة إلى مجموعات دراسة مباشرة على جهازك دون استهلاك حصة السحابة.
 - المختبر الشفهي: تدرّب على الإجابة بصوت مسموع مع التعرف على الكلام وقراءة التعليقات صوتياً لتثبيت المعلومات.
-- التكرار المتباعد (SM-2): قيّم صعوبة كل بطاقة لجدولة المراجعة في التوقيت المناسب قبل النسيان.
 - تحدي المطابقة 60 ثانية: طوّر سرعة الاسترجاع بلعبة مطابقة سريعة دون إنترنت تعتمد على مجموعاتك الخاصة.
 - أداة الشاشة الرئيسية: راجع بطاقة مستحقة واحدة مباشرة من شاشتك الرئيسية عند فتح الهاتف.
 - حفظ محلي ومزامنة سحابية: ادرس دون اتصال بفضل قاعدة البيانات المحلية واحتفظ بنسخة احتياطية آمنة عبر حساب Google.
-- خيارات ذكاء اصطناعي مرنة: وسّع استخدامك اليومي بوضع Eco Lite أو اربط مفتاح Gemini API الخاص بك (BYOK) من الإعدادات."
-id,Indonesian,"ExamForge: Kartu Belajar AI","Ubah foto papan tulis dan catatan kuliah jadi flashcard active-recall.","ExamForge membantu pelajar mengubah foto papan tulis, catatan tulisan tangan, diagram buku, dan dikte kuliah menjadi flashcard active-recall yang terstruktur.
+- بلا إعلانات وخيارات AI مرنة: وسّع استخدامك بوضع Eco Lite أو اربط مفتاح Gemini API (BYOK) المشفر عبر Android Keystore."
+id,Indonesian,"ExamForge: AI Tanpa Iklan","Ubah foto dan catatan jadi flashcard flip 3D dengan jadwal pintar Review Now.","ExamForge membantu pelajar mengubah foto papan tulis, catatan tulisan tangan, diagram buku, dan dikte kuliah menjadi flashcard active-recall yang terstruktur tanpa iklan.
 
 Fitur Belajar Utama:
 - Pemindai CameraX: Potret rumus, slide, atau halaman catatan untuk diubah oleh Gemini menjadi kartu pilihan ganda, isian singkat, dan konsep.
+- Penjadwalan Pintar Review Now: Menandai kartu yang perlu diperkuat secara otomatis berdasarkan tanggal ulasan terakhirnya.
+- Sesi Belajar Flip 3D Layar Penuh: Fokus pada satu kartu setiap kali dengan animasi balik 3D halus, petunjuk, penjelasan, dan penilaian SM-2.
 - Parser Offline Instan: Ubah catatan yang ditempel atau didikte menjadi dek belajar langsung di perangkat tanpa memakai kuota cloud.
 - Kuis Lisan Quizmaster: Latih jawaban secara lisan dengan pengenalan suara dan umpan balik audio untuk memperkuat ingatan.
-- Spaced Repetition (SM-2): Nilai setiap kartu agar jadwal pengulangan muncul tepat sebelum terlupa.
 - Match Blitz 60 Detik: Latih kecepatan hafalan secara offline lewat permainan mencocokkan dari dek milikmu sendiri.
 - Widget Layar Beranda: Ulas satu kartu jatuh tempo setiap kali membuka kunci ponsel.
 - Cache Offline dan Sinkronisasi: Belajar stabil tanpa internet dengan penyimpanan lokal dan cadangkan progres lewat login Google.
-- Pilihan AI Fleksibel: Hemat kuota harian dengan mode Eco Lite atau sambungkan kunci Gemini API milikmu sendiri (BYOK) di Pengaturan."
-th,Thai,"ExamForge: แฟลชการ์ด AI","เปลี่ยนภาพกระดานและโน้ตเลกเชอร์ให้เป็นแฟลชการ์ดทบทวนแบบ Active Recall","ExamForge ช่วยให้นักเรียนนักศึกษาเปลี่ยนภาพกระดานไวท์บอร์ด ลายมือจดโน้ต แผนภาพจากหนังสือ และการพูดบันทึกเลกเชอร์ให้เป็นแฟลชการ์ดแบบ Active Recall อย่างเป็นระบบ
+- Bebas Iklan & AI Fleksibel: Hemat kuota harian dengan Eco Lite atau sambungkan kunci Gemini API (BYOK) terenkripsi Android Keystore."
+th,Thai,"ExamForge: การ์ด AI ไร้โฆษณา","เปลี่ยนภาพและโน้ตเป็นแฟลชการ์ดพลิก 3D พร้อมตาราง Review Now อัจฉริยะ","ExamForge ช่วยให้นักเรียนนักศึกษาเปลี่ยนภาพกระดานไวท์บอร์ด ลายมือจดโน้ต แผนภาพจากหนังสือ และการพูดบันทึกเลกเชอร์ให้เป็นแฟลชการ์ดแบบ Active Recall อย่างเป็นระบบ ไร้โฆษณารบกวน
 
 ฟีเจอร์การเรียนหลัก:
 - สแกนโน้ตด้วย CameraX: ถ่ายภาพสูตร สไลด์ หรือหน้ากระดาษ เพื่อให้ Gemini แปลงเป็นการ์ดปรนัย เติมคำ และอธิบายแนวคิด
+- ระบบจัดตาราง Review Now อัจฉริยะ: ทำเครื่องหมายการ์ดที่ควรทบทวนอัตโนมัติตามวันที่ทบทวนล่าสุดเพื่อเน้นจุดที่สำคัญก่อน
+- โหมดเรียนพลิกการ์ด 3D เต็มหน้าจอ: โฟกัสทีละใบพร้อมแอนิเมชันพลิกการ์ด 3D คำใบ้ คำอธิบาย และการให้คะแนนความจำ SM-2
 - ตัวแยกโน้ตออฟไลน์ทันที: แปลงข้อความที่วางหรือพูดบันทึกเป็นชุดการ์ดบนเครื่องได้ทันทีโดยไม่ใช้โควตาคลาวด์
 - ผู้คุมสอบปากเปล่า: ฝึกตอบคำถามด้วยเสียงพร้อมระบบอ่านคำแนะนำออกเสียงเพื่อเสริมความจำระยะยาว
-- การทบทวนเว้นระยะ (SM-2): ประเมินระดับความจำของการ์ดแต่ละใบเพื่อจัดตารางทบทวนอย่างเหมาะสม
 - เกมจับคู่ไว 60 วินาที: ฝึกความไวในการจำแบบออฟไลน์ด้วยชุดการ์ดของคุณเอง
 - วิดเจ็ตหน้าจอหลัก: ทบทวนการ์ดที่ครบกำหนด 1 ใบทุกครั้งที่ปลดล็อกโทรศัพท์
 - ใช้งานออฟไลน์และซิงก์ข้อมูล: ทบทวนได้แม้ไม่มีอินเทอร์เน็ตด้วยฐานข้อมูลในเครื่อง และสำรองข้อมูลผ่านบัญชี Google
-- ตัวเลือก AI ยืดหยุ่น: ประหยัดโควตารายวันด้วยโหมด Eco Lite หรือเชื่อมคีย์ Gemini API ของคุณเอง (BYOK) ในหน้าตั้งค่า"
-tr-TR,Turkish,"ExamForge: Yapay Zeka Kart","Tahta fotoğraflarını ve ders notlarını aktif hatırlama kartlarına çevirin.","ExamForge, öğrencilerin tahta fotoğraflarını, el yazısı notları, ders diyagramlarını ve dikte edilen dersleri yapılandırılmış aktif hatırlama kartlarına dönüştürmesine yardımcı olur.
+- ไร้โฆษณาและ AI ยืดหยุ่น: ประหยัดโควตาด้วยโหมด Eco Lite หรือเชื่อมคีย์ Gemini API (BYOK) ที่เข้ารหัสผ่าน Android Keystore"
+tr-TR,Turkish,"ExamForge: Reklamsız AI Kart","Notları ve fotoğrafları akıllı Review Now planlı 3D kartlara dönüştürün.","ExamForge, öğrencilerin tahta fotoğraflarını, el yazısı notları, ders diyagramlarını ve dikte edilen dersleri tamamen reklamsız, yapılandırılmış aktif hatırlama kartlarına dönüştürmesine yardımcı olur.
 
 Temel Çalışma Özellikleri:
 - CameraX Not Tarayıcı: Formülleri, slaytları veya defter sayfalarını çekerek Gemini ile çoktan seçmeli, boşluk doldurma ve kavram kartları oluşturun.
+- Akıllı Review Now Planlaması: Son tekrar tarihine göre pekiştirilmesi gereken kartları otomatik işaretler ve önceliklendirir.
+- Tam Ekran 3D Çevirmeli Çalışma Oturumu: Akıcı 3D kart çevirme animasyonu, ipuçları, açıklamalar ve SM-2 puanlamasıyla tek seferde tek karta odaklanın.
 - Çevrimdışı Ayrıştırıcı: Yapıştırılan veya dikte edilen notları bulut kotası harcamadan doğrudan cihazda desteye dönüştürün.
 - Sözlü Sınav Koçu: Ses tanıma ve sesli geri bildirimle cevaplarınızı yüksek sesle tekrarlayarak kalıcı öğrenme sağlayın.
-- Aralıklı Tekrar (SM-2): Her kartı zorluk derecesine göre işaretleyerek unutmadan önce tekrar planlayın.
 - 60 Saniye Eşleştirme Oyunu: Kendi destelerinizle çevrimdışı hızlı eşleştirme alıştırması yapın.
 - Ana Ekran Aracı: Telefon kilidini her açtığınızda bekleyen bir bilgi kartını hemen tekrar edin.
 - Çevrimdışı Önbellek ve Eşitleme: Yerel depolama ile internet olmadan çalışın ve Google hesabı ile güvenle yedekleyin.
-- Esnek Yapay Zeka Seçenekleri: Eco Lite modu ile günlük kotanızı koruyun veya Ayarlar bölümünden kendi Gemini API anahtarınızı (BYOK) ekleyin."
-pl-PL,Polish,"ExamForge: Fiszki z AI","Zamień zdjęcia tablic i notatki z wykładów w fiszki do nauki.","ExamForge pomaga uczniom i studentom zamieniać zdjęcia tablic, odręczne notatki, schematy z podręczników oraz dyktowane wykłady w uporządkowane fiszki aktywnego przypominania.
+- Reklamsız ve Esnek Yapay Zeka: Eco Lite ile kotanızı koruyun veya Android Keystore korumalı kendi Gemini API anahtarınızı (BYOK) ekleyin."
+pl-PL,Polish,"ExamForge: Fiszki Bez Reklam","Zamień zdjęcia i notatki w fiszki 3D z inteligentnym planem Review Now.","ExamForge pomaga uczniom i studentom zamieniać zdjęcia tablic, odręczne notatki, schematy z podręczników oraz dyktowane wykłady w uporządkowane fiszki aktywnego przypominania, całkowicie bez reklam.
 
 Najważniejsze funkcje:
 - Skaner notatek CameraX: Fotografuj wzory, slajdy i notatki, aby Gemini tworzył fiszki wielokrotnego wyboru, z lukami oraz pojęciowe.
+- Inteligentne planowanie Review Now: Automatycznie oznacza fiszki wymagające utrwalenia na podstawie daty ostatniej powtórki.
+- Pełnoekranowa sesja nauki 3D: Skupiaj się na jednej fiszce naraz dzięki płynnej animacji obrotu 3D, wskazówkom, wyjaśnieniom i ocenie SM-2.
 - Natychmiastowy parser offline: Zamieniaj wklejone lub podyktowane notatki w talie bezpośrednio na urządzeniu bez zużywania limitu w chmurze.
 - Egzaminator Ustny: Ćwicz odpowiedzi głosowo z rozpoznawaniem mowy i odczytem głosowym wskazówek.
-- Powtórki interwałowe (SM-2): Oceniaj trudność kart, aby wracały do powtórki w optymalnym momencie.
 - Gra Match Blitz 60s: Ćwicz szybkość zapamiętywania offline na bazie własnych talii.
 - Widżet ekranu głównego: Powtarzaj jedną zaległą fiszkę po każdym odblokowaniu telefonu.
-- Tryb offline i synchronizacja: Ucz się bez dostępu do sieci dzięki lokalnej bazie danych i twórz kopie zapasowe przez konto Google.
-- Elastyczne opcje AI: Wydłuż dzienny limit w trybie Eco Lite lub podłącz własny klucz Gemini API (BYOK) w Ustawieniach."
-nl-NL,Dutch,"ExamForge: AI-Flitskaarten","Zet whiteboardfoto's en collegenotities om in active-recall flitskaarten.","ExamForge helpt studenten om whiteboards, handgeschreven aantekeningen, diagrammen en gedicteerde colleges om te zetten in gestructureerde flitskaarten voor actief herhalen.
+- Tryb offline i synchronizacja: Ucz się bez dostępu do sieci dzięki lokalnej bazie danych i twórz kopie zapasowe przez Google.
+- Zero reklam i elastyczne AI: Wydłuż dzienny limit w Eco Lite lub użyj własnego klucza Gemini API (BYOK) chronionego przez Android Keystore."
+nl-NL,Dutch,"ExamForge: AI Zonder Reclame","Zet notities en foto's om in 3D-flitskaarten met slimme Review Now-planning.","ExamForge helpt studenten om whiteboards, handgeschreven aantekeningen, diagrammen en gedicteerde colleges om te zetten in gestructureerde flitskaarten voor actief herhalen, volledig reclamevrij.
 
 Belangrijkste functies:
 - CameraX-notitiescanner: Fotografeer formules, dia's of aantekeningen en laat Gemini meerkeuze-, invul- en begripskaarten maken.
+- Slimme Review Now-planning: Markeert automatisch kaarten die herhaling nodig hebben op basis van de laatste oefendatum.
+- Schermvullende 3D-studiesessie: Oefen één kaart per keer met vloeiende 3D-omdraai-animatie, hints, uitleg en SM-2-beoordeling.
 - Directe offline parser: Zet geplakte of gedicteerde notities direct op je apparaat om in sets zonder cloudlimiet te gebruiken.
 - Mondelinge Quizmaster: Oefen antwoorden hardop met spraakherkenning en voorgelezen feedback.
-- Gespreide herhaling (SM-2): Beoordeel kaarten zodat herhalingen op het juiste moment terugkeren.
 - 60-seconden Match Blitz: Train je reactiesnelheid offline met een koppelspel op basis van je eigen sets.
 - Startscherm-widget: Herhaal één geplande kaart telkens wanneer je je telefoon ontgrendelt.
 - Offline opslag en synchronisatie: Studeer betrouwbaar zonder internet dankzij lokale opslag en maak een back-up via Google.
-- Flexibele AI-instellingen: Spaar je daglimiet met de Eco Lite-modus of koppel je eigen Gemini API-sleutel (BYOK) in Instellingen."
-fil,Filipino,"ExamForge: AI Flashcards","Gawing active-recall flashcards ang mga larawan ng whiteboard at tala.","Tinutulungan ng ExamForge ang mga mag-aaral na gawing organisadong active-recall flashcards ang mga larawan ng whiteboard, sulat-kamay na tala, diagram sa aklat, at idiniktang lektyur.
+- Reclamevrij en flexibele AI: Spaar je daglimiet met Eco Lite of koppel je eigen Gemini API-sleutel (BYOK) versleuteld via Android Keystore."
+fil,Filipino,"ExamForge: AI Walang Ads","Gawing 3D flip flashcards ang mga tala at larawan na may Review Now schedule.","Tinutulungan ng ExamForge ang mga mag-aaral na gawing organisadong active-recall flashcards ang mga larawan ng whiteboard, sulat-kamay na tala, diagram sa aklat, at idiniktang lektyur nang walang anumang ads.
 
 Mga Pangunahing Tampok:
 - CameraX Note Scanner: Kunan ang mga formula, slide, o sulat-kamay upang gawing multiple-choice, fill-in-the-blank, at concept flashcards gamit ang Gemini.
+- Review Now Smart Scheduling: Awtomatikong minamarkahan ang mga card na kailangang i-reinforce batay sa petsa ng huling pagrepaso.
+- Full-Screen 3D Flip Study Session: Magpokus sa isang card bawat pagkakataon gamit ang 3D flip animation, mga hint, paliwanag, at SM-2 recall grading.
 - Instant Offline Parser: Gawing study deck nang direkta sa iyong device ang mga nai-paste o naidiktang tala nang hindi gumagamit ng cloud quota.
 - Pasalitang Quizmaster: Magsanay sa pagsagot nang malakas gamit ang voice recognition at Text-to-Speech feedback para mas tumibay ang memorya.
-- Spaced Repetition (SM-2): Markahan ang bawat card upang maipakita uli sa tamang oras bago makalimutan.
 - 60-Second Match Blitz: Pabilisin ang pag-alala gamit ang offline timed matching game mula sa sarili mong mga deck.
 - Home Screen Recall Widget: Magrepaso ng isang nakatakdang flashcard sa home screen sa tuwing ia-unlock ang telepono.
 - Offline Cache at Cloud Sync: Mag-aral kahit walang internet gamit ang lokal na imbakan at mag-backup nang ligtas gamit ang Google Sign-In.
-- Flexible na Opsyon sa AI: Pahabain ang pang-araw-araw na quota gamit ang Eco Lite mode o ikonekta ang sarili mong Gemini API key (BYOK) sa Mga Setting."
+- Walang Ads at Flexible na AI: Pahabain ang pang-araw-araw na quota gamit ang Eco Lite o ikonekta ang sarili mong Gemini API key (BYOK) na naka-encrypt sa Android Keystore."

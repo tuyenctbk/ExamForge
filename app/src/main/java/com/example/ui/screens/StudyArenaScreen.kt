@@ -1,7 +1,18 @@
 package com.example.ui.screens
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -41,9 +52,13 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -127,8 +142,12 @@ fun StudyArenaScreen(
                     .widthIn(max = 680.dp)
                     .padding(horizontal = 20.dp, vertical = 8.dp)
             ) {
+                val animatedProgress by animateFloatAsState(
+                    targetValue = if (session.isFinished) 1f else progress,
+                    label = "study_arena_progress"
+                )
                 LinearProgressIndicator(
-                    progress = { if (session.isFinished) 1f else progress },
+                    progress = { animatedProgress },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(6.dp)
@@ -148,64 +167,74 @@ fun StudyArenaScreen(
                         onDone = onBack
                     )
                 } else {
-                    Column(
-                        modifier = Modifier
-                            .weight(1f)
-                            .verticalScroll(rememberScrollState()),
-                        verticalArrangement = Arrangement.spacedBy(14.dp)
-                    ) {
-                        FlashcardPromptCard(
-                            card = card,
-                            hintShown = session.hintShown,
-                            onToggleHint = onToggleHint
-                        )
+                    AnimatedContent(
+                        targetState = card,
+                        transitionSpec = {
+                            (slideInHorizontally { it / 3 } + fadeIn()) togetherWith
+                                (slideOutHorizontally { -it / 3 } + fadeOut())
+                        },
+                        modifier = Modifier.weight(1f),
+                        label = "study_arena_card_transition"
+                    ) { activeCard ->
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .verticalScroll(rememberScrollState()),
+                            verticalArrangement = Arrangement.spacedBy(14.dp)
+                        ) {
+                            FlashcardPromptCard(
+                                card = activeCard,
+                                hintShown = session.hintShown,
+                                onToggleHint = onToggleHint
+                            )
 
-                        when (card.cardType) {
-                            CardType.MULTIPLE_CHOICE -> {
-                                McqInteractionBlock(
-                                    card = card,
-                                    selectedIndex = session.selectedMcqOption,
-                                    onSelect = onSelectMcq
-                                )
-                            }
+                            when (activeCard.cardType) {
+                                CardType.MULTIPLE_CHOICE -> {
+                                    McqInteractionBlock(
+                                        card = activeCard,
+                                        selectedIndex = session.selectedMcqOption,
+                                        onSelect = onSelectMcq
+                                    )
+                                }
 
-                            CardType.FILL_IN_BLANK -> {
-                                ClozeInteractionBlock(
-                                    card = card,
-                                    input = session.clozeInput,
-                                    checked = session.clozeChecked,
-                                    onInputChange = onUpdateCloze,
-                                    onCheck = onCheckCloze
-                                )
-                            }
+                                CardType.FILL_IN_BLANK -> {
+                                    ClozeInteractionBlock(
+                                        card = activeCard,
+                                        input = session.clozeInput,
+                                        checked = session.clozeChecked,
+                                        onInputChange = onUpdateCloze,
+                                        onCheck = onCheckCloze
+                                    )
+                                }
 
-                            CardType.CONCEPT_EXPLAIN -> {
-                                if (!session.revealed) {
-                                    Button(
-                                        onClick = onReveal,
-                                        shape = RoundedCornerShape(16.dp),
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .height(54.dp)
-                                            .testTag("reveal_answer_button")
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Default.Visibility,
-                                            contentDescription = null,
-                                            modifier = Modifier.size(18.dp)
-                                        )
-                                        Spacer(modifier = Modifier.width(8.dp))
-                                        Text(
-                                            text = stringResource(id = R.string.study_arena_reveal_answer),
-                                            fontWeight = FontWeight.Bold
-                                        )
+                                CardType.CONCEPT_EXPLAIN -> {
+                                    if (!session.revealed) {
+                                        Button(
+                                            onClick = onReveal,
+                                            shape = RoundedCornerShape(16.dp),
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .height(54.dp)
+                                                .testTag("reveal_answer_button")
+                                        ) {
+                                            Icon(
+                                                imageVector = Icons.Default.Visibility,
+                                                contentDescription = null,
+                                                modifier = Modifier.size(18.dp)
+                                            )
+                                            Spacer(modifier = Modifier.width(8.dp))
+                                            Text(
+                                                text = stringResource(id = R.string.study_arena_reveal_answer),
+                                                fontWeight = FontWeight.Bold
+                                            )
+                                        }
                                     }
                                 }
                             }
-                        }
 
-                        AnimatedVisibility(visible = session.revealed) {
-                            AnswerExplanationPanel(card = card)
+                            AnimatedVisibility(visible = session.revealed) {
+                                AnswerExplanationPanel(card = activeCard)
+                            }
                         }
                     }
 
@@ -362,16 +391,22 @@ private fun McqInteractionBlock(
             val isCorrectOption = idx == card.correctOptionIndex
             val isPickedWrong = answered && selectedIndex == idx && !isCorrectOption
 
-            val bg = when {
-                answered && isCorrectOption -> MaterialTheme.colorScheme.secondaryContainer
-                isPickedWrong -> MaterialTheme.colorScheme.errorContainer
-                else -> MaterialTheme.colorScheme.surface
-            }
-            val border = when {
-                answered && isCorrectOption -> MaterialTheme.colorScheme.secondary
-                isPickedWrong -> MaterialTheme.colorScheme.error
-                else -> MaterialTheme.colorScheme.outlineVariant
-            }
+            val bg by animateColorAsState(
+                targetValue = when {
+                    answered && isCorrectOption -> MaterialTheme.colorScheme.secondaryContainer
+                    isPickedWrong -> MaterialTheme.colorScheme.errorContainer
+                    else -> MaterialTheme.colorScheme.surface
+                },
+                label = "mcq_option_bg_$idx"
+            )
+            val border by animateColorAsState(
+                targetValue = when {
+                    answered && isCorrectOption -> MaterialTheme.colorScheme.secondary
+                    isPickedWrong -> MaterialTheme.colorScheme.error
+                    else -> MaterialTheme.colorScheme.outlineVariant
+                },
+                label = "mcq_option_border_$idx"
+            )
             Surface(
                 color = bg,
                 shape = RoundedCornerShape(16.dp),
@@ -512,6 +547,16 @@ private fun StudyCompleteSummary(
             .fillMaxWidth()
             .padding(top = 24.dp)
     ) {
+        val trophyScale = remember { Animatable(0.6f) }
+        LaunchedEffect(Unit) {
+            trophyScale.animateTo(
+                targetValue = 1f,
+                animationSpec = spring(
+                    dampingRatio = Spring.DampingRatioMediumBouncy,
+                    stiffness = Spring.StiffnessLow
+                )
+            )
+        }
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(28.dp)
@@ -520,7 +565,9 @@ private fun StudyCompleteSummary(
                 imageVector = Icons.Default.EmojiEvents,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(56.dp)
+                modifier = Modifier
+                    .size(56.dp)
+                    .scale(trophyScale.value)
             )
             Spacer(modifier = Modifier.height(14.dp))
             Text(

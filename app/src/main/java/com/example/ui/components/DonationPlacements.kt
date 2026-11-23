@@ -31,8 +31,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.R
 
 /**
  * TopAppBar action:
@@ -60,13 +62,13 @@ fun TopBarSupporterAction(
             ) {
                 Icon(
                     imageVector = Icons.Default.Verified,
-                    contentDescription = "Active Supporter",
+                    contentDescription = stringResource(id = R.string.support_dev_active_supporter),
                     tint = MaterialTheme.colorScheme.secondary,
                     modifier = Modifier.size(16.dp)
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = "Supporter",
+                    text = stringResource(id = R.string.support_dev_active_badge_short),
                     style = MaterialTheme.typography.labelMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSecondaryContainer
@@ -80,7 +82,7 @@ fun TopBarSupporterAction(
         ) {
             Icon(
                 imageVector = Icons.Default.LocalCafe,
-                contentDescription = "Support ExamForge development",
+                contentDescription = stringResource(id = R.string.support_dev_cd_support_app),
                 tint = MaterialTheme.colorScheme.primary
             )
         }
@@ -119,13 +121,13 @@ fun HomeDonationCompactBanner(
             Spacer(modifier = Modifier.width(10.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = "Finding ExamForge helpful?",
+                    text = stringResource(id = R.string.support_dev_banner_title),
                     style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
-                    text = "$completedTasksCount study milestones completed · Ad-free indie app.",
+                    text = stringResource(id = R.string.support_dev_banner_subtitle, completedTasksCount),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -137,7 +139,10 @@ fun HomeDonationCompactBanner(
                 contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp),
                 modifier = Modifier.testTag("home_donation_banner_support_btn")
             ) {
-                Text("Support", style = MaterialTheme.typography.labelMedium)
+                Text(
+                    text = stringResource(id = R.string.support_dev_banner_cta),
+                    style = MaterialTheme.typography.labelMedium
+                )
             }
             IconButton(
                 onClick = onDismiss,
@@ -147,7 +152,7 @@ fun HomeDonationCompactBanner(
             ) {
                 Icon(
                     imageVector = Icons.Default.Close,
-                    contentDescription = "Dismiss support banner for 14 days",
+                    contentDescription = stringResource(id = R.string.support_dev_cd_dismiss_banner),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.size(18.dp)
                 )
@@ -193,7 +198,7 @@ fun PostOperationSupportCard(
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
-                    text = "Buy the dev a coffee if ExamForge saved your study time.",
+                    text = stringResource(id = R.string.support_dev_postop_desc),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -203,7 +208,10 @@ fun PostOperationSupportCard(
                 contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
                 modifier = Modifier.testTag("post_op_support_open_btn")
             ) {
-                Text("Tip Jar", fontWeight = FontWeight.Bold)
+                Text(
+                    text = stringResource(id = R.string.support_dev_postop_cta),
+                    fontWeight = FontWeight.Bold
+                )
             }
             IconButton(
                 onClick = onDismiss,
@@ -213,7 +221,7 @@ fun PostOperationSupportCard(
             ) {
                 Icon(
                     imageVector = Icons.Default.Close,
-                    contentDescription = "Dismiss tip suggestion",
+                    contentDescription = stringResource(id = R.string.support_dev_cd_dismiss_tip),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.size(16.dp)
                 )
@@ -265,16 +273,16 @@ fun SettingsSupportDevelopmentCard(
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = if (isActiveSupporter) {
-                            "Support Development · Active Supporter"
+                            "${stringResource(id = R.string.support_dev_title)} · ${stringResource(id = R.string.support_dev_active_supporter)}"
                         } else {
-                            "Support Development"
+                            stringResource(id = R.string.support_dev_title)
                         },
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
                     Text(
-                        text = "100% offline & ad-free. Support via Google Play In-App Purchase, PayPal QR, or Ko-fi.",
+                        text = stringResource(id = R.string.support_dev_settings_desc),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -296,7 +304,11 @@ fun SettingsSupportDevelopmentCard(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = if (isActiveSupporter) "Open Support Development" else "Support Development",
+                    text = if (isActiveSupporter) {
+                        stringResource(id = R.string.support_dev_settings_open_btn)
+                    } else {
+                        stringResource(id = R.string.support_dev_title)
+                    },
                     fontWeight = FontWeight.Bold
                 )
             }

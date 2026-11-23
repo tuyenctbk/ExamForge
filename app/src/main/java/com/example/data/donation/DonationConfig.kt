@@ -124,7 +124,7 @@ fun openUrlWithClipboardFallback(
         copyTextToClipboard(context, clipLabel, url)
         Toast.makeText(
             context,
-            "No browser app found. Link copied to clipboard!",
+            context.getString(com.example.R.string.support_dev_no_browser_copied),
             Toast.LENGTH_LONG
         ).show()
         false
@@ -149,6 +149,10 @@ fun shareDonationLink(context: Context, url: String, chooserTitle: String) {
         context.startActivity(chooser)
     }.onFailure {
         copyTextToClipboard(context, chooserTitle, url)
-        Toast.makeText(context, "Link copied to clipboard.", Toast.LENGTH_SHORT).show()
+        Toast.makeText(
+            context,
+            context.getString(com.example.R.string.support_dev_link_copied_clipboard),
+            Toast.LENGTH_SHORT
+        ).show()
     }
 }
