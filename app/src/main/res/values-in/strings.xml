@@ -1,0 +1,174 @@
+<resources>
+    <!-- App Identity & Home Widget -->
+    <string name="app_name">ExamForge</string>
+    <string name="widget_label">ExamForge Ingat Cepat</string>
+    <string name="widget_description">Latih 1 kartu flashcard active-recall di layar beranda setiap kali membuka kunci ponsel.</string>
+    <string name="widget_header_default">EXAMFORGE</string>
+    <string name="widget_due_default">0 jatuh tempo</string>
+    <string name="widget_empty_question">Foto papan tulis atau catatan kuliah di ExamForge untuk membuka flashcard harian di layar beranda.</string>
+    <string name="widget_reveal_answer">Lihat Jawaban</string>
+    <string name="widget_next">Berikutnya</string>
+    <string name="widget_again">Ulangi</string>
+    <string name="widget_got_it">Paham</string>
+
+    <!-- Auth & Navigation -->
+    <string name="sign_in_google">Masuk dengan Google</string>
+    <string name="sign_out">Keluar</string>
+    <string name="tab_decks">Dek</string>
+    <string name="tab_forge">Buat</string>
+    <string name="tab_quizmaster">Kuis Lisan</string>
+    <string name="tab_settings">Pengaturan</string>
+    <string name="auth_headline">Ubah catatan belajar jadi hafalan kuat</string>
+    <string name="auth_subtitle">Pindai papan tulis, latih hafalan lisan, dan sinkronkan flashcard offline di semua perangkat.</string>
+    <string name="auth_sync_note">Masuk dengan Google untuk mencadangkan dek dan progres belajar dengan aman.</string>
+
+    <!-- Accessibility Content Descriptions -->
+    <string name="cd_app_logo">Emblem ExamForge</string>
+    <string name="cd_hero_banner">Meja belajar yang mengubah catatan menjadi kartu bercahaya</string>
+    <string name="cd_empty_illustration">Kamera memindai catatan fisika papan tulis menjadi flashcard</string>
+    <string name="cd_toggle_theme">Ganti tema gelap atau terang</string>
+    <string name="cd_navigate_back">Kembali</string>
+    <string name="cd_snap_photo">Foto papan tulis atau catatan dengan kamera</string>
+    <string name="cd_pick_gallery">Pilih foto catatan dari galeri</string>
+    <string name="cd_voice_mic">Ucapkan jawaban dengan suara</string>
+    <string name="cd_speak_toggle">Aktifkan atau nonaktifkan suara baca</string>
+    <string name="cd_camera_close">Tutup kamera</string>
+    <string name="cd_camera_flash">Ganti mode lampu kilat</string>
+    <string name="cd_camera_torch">Nyalakan atau matikan senter</string>
+    <string name="cd_camera_switch">Ganti lensa kamera</string>
+    <string name="cd_camera_shutter">Ambil foto catatan</string>
+    <string name="cd_flashcard_camera_fab">Ambil foto catatan untuk membuat flashcard</string>
+    <string name="cd_flashcard_add_manual">Tambah flashcard secara manual</string>
+    <string name="cd_flashcard_edit">Edit flashcard</string>
+    <string name="cd_flashcard_delete">Hapus flashcard</string>
+
+    <!-- Camera & Saved Flashcards -->
+    <string name="camera_capture_title">Pindai Catatan Belajar</string>
+    <string name="camera_frame_hint">Sejajarkan papan tulis, rumus, atau catatan tangan di dalam bingkai</string>
+    <string name="camera_permission_title">Izin Kamera Diperlukan</string>
+    <string name="camera_permission_rationale">ExamForge memerlukan kamera untuk memindai papan tulis, diagram buku, dan catatan tangan agar dianalisis Gemini menjadi flashcard.</string>
+    <string name="camera_grant_permission">Aktifkan Kamera</string>
+    <string name="camera_retake">Ambil Ulang</string>
+    <string name="camera_analyze_now">Analisis dengan Gemini</string>
+    <string name="camera_add_notes">Tambah Catatan &amp; Opsi</string>
+    <string name="flashcards_screen_title">Flashcard Tersimpan</string>
+    <string name="flashcards_fab_scan">Pindai Catatan</string>
+    <string name="flashcards_search_placeholder">Cari pertanyaan atau jawaban…</string>
+    <string name="flashcards_empty_title">Belum ada flashcard tersimpan</string>
+    <string name="flashcards_empty_body">Ketuk Pindai Catatan untuk memotret halaman tulisan tangan, rumus, atau slide — Gemini menyusunnya otomatis menjadi kartu.</string>
+
+    <!-- Decks Hub & Study Arena -->
+    <string name="decks_all_filter">Semua</string>
+    <string name="decks_due_summary">%1$d perlu diulas</string>
+    <string name="decks_study_all_due">Ulas Kartu Jatuh Tempo</string>
+    <string name="decks_match_blitz_button">Cocok Cepat 60d</string>
+    <string name="decks_best_score">Terbaik: %1$d</string>
+    <string name="decks_empty_title">Buat dek belajar pertamamu</string>
+    <string name="decks_empty_subtitle">Foto papan tulis, diktekan kuliah, atau tempel catatan untuk membuat kartu active-recall.</string>
+    <string name="decks_new_deck">Dek Baru</string>
+    <string name="decks_saved_cards">Semua Kartu</string>
+    <string name="study_arena_complete_title">Sesi Selesai</string>
+    <string name="study_arena_reviewed_summary">%1$d kartu diulas · %2$d dikuasai</string>
+    <string name="study_arena_back_to_decks">Kembali ke Dek</string>
+    <string name="study_arena_show_hint">Lihat Petunjuk</string>
+    <string name="study_arena_reveal_answer">Lihat Jawaban</string>
+    <string name="study_rating_again">Ulangi</string>
+    <string name="study_rating_hard">Sulit</string>
+    <string name="study_rating_good">Baik</string>
+    <string name="study_rating_easy">Mudah</string>
+
+    <!-- Snapshot Forge & Lecture Dictation -->
+    <string name="forge_title">Studio Snapshot</string>
+    <string name="forge_subtitle">Foto rumus, unggah slide, atau diktekan kuliah — Gemini atau Parser Offline mengubahnya menjadi dek latihan.</string>
+    <string name="forge_step_capture">1. Foto atau Unggah Materi Belajar</string>
+    <string name="forge_step_notes">2. Audio Kuliah, Catatan &amp; Opsi</string>
+    <string name="forge_camerax_scan">Pindai CameraX</string>
+    <string name="forge_gallery">Galeri</string>
+    <string name="forge_dictate_start">Dikte (Rp0)</string>
+    <string name="forge_dictate_stop">Stop Mikrofon</string>
+    <string name="forge_notes_label">Tempel atau diktekan catatan kuliah, Q:/A:, atau Istilah: Definisi</string>
+    <string name="forge_subject_label">Topik Pelajaran (opsional)</string>
+    <string name="forge_cards_count">Kartu:</string>
+    <string name="forge_generate_gemini">Buat Flashcard dengan Gemini</string>
+    <string name="forge_generate_eco_lite">Buat dengan Eco Lite AI</string>
+    <string name="forge_generate_offline">Buat Kartu Offline (Rp0)</string>
+    <string name="forge_instant_offline_btn">Parser Offline Instan (Rp0 · Hemat Kuota AI)</string>
+    <string name="forge_open_deck">Buka Dek</string>
+    <string name="forge_scan_another">Pindai Lagi</string>
+
+    <!-- Oral Quizmaster -->
+    <string name="quizmaster_title">Kuis Lisan</string>
+    <string name="quizmaster_subtitle">Ucapkan jawaban atau mengobrol dengan Gemini</string>
+    <string name="quizmaster_ready_title">Siap latihan active-recall?</string>
+    <string name="quizmaster_ready_body">Gemini menanyakan satu soal penting dari dekmu, menilai penjelasan lisan atau ketikanmu, dan mendalami bagian yang lemah.</string>
+    <string name="quizmaster_start_button">Mulai Sesi Kuis Lisan</string>
+    <string name="quizmaster_hint_chip">Petunjuk</string>
+    <string name="quizmaster_next_chip">Soal Berikutnya</string>
+    <string name="quizmaster_input_placeholder">Ucapkan atau ketik jawabanmu…</string>
+    <string name="quizmaster_empty_title">Belum ada dek untuk latihan lisan</string>
+    <string name="quizmaster_go_to_forge">Ke Studio Buat</string>
+
+    <!-- Match Blitz Mini-Game -->
+    <string name="match_blitz_title">Cocok Cepat 60 Detik</string>
+    <string name="match_blitz_start">Mulai 60d Blitz</string>
+    <string name="match_blitz_play_again">Main Lagi</string>
+    <string name="match_blitz_score_label">Skor: %1$d</string>
+
+    <!-- Settings, AI Plan & Quota Recovery -->
+    <string name="settings_title">Pengaturan &amp; Fitur Belajar</string>
+    <string name="settings_subtitle">Atur Mode Gelap malam hari, paket penggunaan AI, cache offline, dan widget layar beranda.</string>
+    <string name="settings_appearance_title">Tampilan &amp; Mode Belajar Malam</string>
+    <string name="settings_appearance_desc">Obsidian Dark mengurangi silau layar saat belajar larut malam.</string>
+    <string name="settings_oral_title">Baca Otomatis Kuis Lisan</string>
+    <string name="settings_oral_desc">Bacakan pertanyaan dan masukan kuis dengan Text-to-Speech.</string>
+    <string name="settings_widget_title">Widget Ingat Cepat Layar Beranda</string>
+    <string name="settings_widget_desc">Menampilkan 1 flashcard jatuh tempo setiap kali membuka kunci ponsel.</string>
+    <string name="settings_pin_widget">Tambah Widget Interaktif ke Layar Beranda</string>
+    <string name="settings_sync_now">Sinkronkan Ulasan Tertunda</string>
+    <string name="ai_plan_title">Paket AI &amp; Kunci BYOK</string>
+    <string name="ai_plan_eco_lite_title">Mode Eco Lite AI (Hemat Kuota 3×)</string>
+    <string name="ai_plan_offline_title">Utamakan Parser Offline Instan</string>
+    <string name="ai_plan_claim_grace">Klaim +3 Kredit Bonus Harian</string>
+    <string name="ai_plan_byok_title">Gunakan Kunci API Gemini Sendiri (BYOK)</string>
+    <string name="ai_plan_test_save">Uji &amp; Simpan</string>
+    <string name="ai_plan_get_key">Dapatkan Kunci</string>
+    <string name="ai_plan_remove_key">Hapus</string>
+
+    <!-- Smart Auto-Popups: Update, Rate App, Share App -->
+    <string name="popup_update_title">Pembaruan Tersedia</string>
+    <string name="popup_update_body">Versi baru ExamForge (%1$s) telah hadir dengan sesi belajar lebih lancar dan berbagai peningkatan.</string>
+    <string name="popup_update_primary">Perbarui Sekarang</string>
+    <string name="popup_update_later">Ingatkan Nanti</string>
+    <string name="popup_update_skip">Lewati Versi Ini</string>
+
+    <string name="popup_rate_title">Suka dengan ExamForge?</string>
+    <string name="popup_rate_body">Ritme belajarmu luar biasa! Mau menulis ulasan jujur di Google Play untuk membantu pelajar lain menemukan ExamForge?</string>
+    <string name="popup_rate_primary">Nilai di Google Play</string>
+    <string name="popup_rate_later">Nanti Saja</string>
+    <string name="popup_rate_never">Jangan Tanya Lagi</string>
+
+    <string name="popup_share_title">Bagikan ExamForge ke Teman Belajar</string>
+    <string name="popup_share_body">Pencapaian belajar yang hebat! Ajak teman kelasmu mengubah catatan papan tulis jadi flashcard active-recall.</string>
+    <string name="popup_share_primary">Bagikan Aplikasi</string>
+    <string name="popup_share_later">Tidak Sekarang</string>
+    <string name="popup_share_never">Jangan Tanya Lagi</string>
+
+    <string name="share_app_chooser_title">Bagikan ExamForge</string>
+    <string name="share_app_message">Aku pakai ExamForge untuk mengubah foto papan tulis dan catatan kuliah jadi flashcard active-recall dan kuis cocok cepat 60 detik. Coba deh: %1$s</string>
+
+    <!-- Settings: Community, Updates, Privacy & Event Telemetry -->
+    <string name="settings_community_title">Dukungan, Pembaruan &amp; Privasi</string>
+    <string name="settings_community_subtitle">Versi %1$s · Pengingat cerdas tanpa gangguan &amp; log aktivitas lokal transparan</string>
+    <string name="settings_check_update">Cek Pembaruan</string>
+    <string name="settings_rate_app">Nilai Aplikasi</string>
+    <string name="settings_share_app">Bagikan</string>
+    <string name="settings_privacy_policy">Kebijakan Privasi</string>
+    <string name="settings_telemetry_toggle_show">Tampilkan Log Aktivitas (%1$d)</string>
+    <string name="settings_telemetry_toggle_hide">Sembunyikan Log Aktivitas</string>
+    <string name="settings_telemetry_summary">Sesi: %1$d · Hari Aktif: %2$d · Skor Keterlibatan: %3$d</string>
+    <string name="settings_telemetry_guardrails">Aturan pop-up: Tidak saat mulai · Maks 1/sesi · Jeda 72 jam · Hening 24 jam pasca error</string>
+    <string name="settings_update_up_to_date">Anda sudah menggunakan versi terbaru (%1$s).</string>
+    <string name="privacy_policy_title">Kebijakan Privasi ExamForge</string>
+    <string name="common_close">Tutup</string>
+    <string name="common_cancel">Batal</string>
+</resources>

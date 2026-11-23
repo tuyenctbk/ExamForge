@@ -1,0 +1,174 @@
+<resources>
+    <!-- App Identity & Home Widget -->
+    <string name="app_name">ExamForge</string>
+    <string name="widget_label">ExamForge: быстрое повторение</string>
+    <string name="widget_description">Повторяйте по 1 карточке активного вспоминания прямо на главном экране при каждой разблокировке.</string>
+    <string name="widget_header_default">EXAMFORGE</string>
+    <string name="widget_due_default">К повтору: 0</string>
+    <string name="widget_empty_question">Сфотографируйте доску или конспект в ExamForge, чтобы открыть ежедневные карточки на главном экране.</string>
+    <string name="widget_reveal_answer">Показать ответ</string>
+    <string name="widget_next">Далее</string>
+    <string name="widget_again">Снова</string>
+    <string name="widget_got_it">Помню</string>
+
+    <!-- Auth & Navigation -->
+    <string name="sign_in_google">Войти через Google</string>
+    <string name="sign_out">Выйти</string>
+    <string name="tab_decks">Колоды</string>
+    <string name="tab_forge">Создать</string>
+    <string name="tab_quizmaster">Экзаменатор</string>
+    <string name="tab_settings">Настройки</string>
+    <string name="auth_headline">Превращайте конспекты в прочные знания</string>
+    <string name="auth_subtitle">Сканируйте доски, тренируйте устные ответы и синхронизируйте карточки офлайн на всех устройствах.</string>
+    <string name="auth_sync_note">Войдите через Google для надежного резервного копирования колод и прогресса.</string>
+
+    <!-- Accessibility Content Descriptions -->
+    <string name="cd_app_logo">Эмблема ExamForge</string>
+    <string name="cd_hero_banner">Учебный стол, превращающий конспекты в светящиеся карточки</string>
+    <string name="cd_empty_illustration">Камера сканирует записи по физике на доске в карточки</string>
+    <string name="cd_toggle_theme">Переключить темную или светлую тему</string>
+    <string name="cd_navigate_back">Назад</string>
+    <string name="cd_snap_photo">Сфотографировать доску или конспект</string>
+    <string name="cd_pick_gallery">Выбрать фото конспекта из галереи</string>
+    <string name="cd_voice_mic">Произнести ответ вслух</string>
+    <string name="cd_speak_toggle">Переключить озвучивание</string>
+    <string name="cd_camera_close">Закрыть камеру</string>
+    <string name="cd_camera_flash">Переключить режим вспышки</string>
+    <string name="cd_camera_torch">Включить или выключить фонарик</string>
+    <string name="cd_camera_switch">Переключить камеру</string>
+    <string name="cd_camera_shutter">Сделать снимок конспекта</string>
+    <string name="cd_flashcard_camera_fab">Сфотографировать конспект для создания карточек</string>
+    <string name="cd_flashcard_add_manual">Добавить карточку вручную</string>
+    <string name="cd_flashcard_edit">Редактировать карточку</string>
+    <string name="cd_flashcard_delete">Удалить карточку</string>
+
+    <!-- Camera & Saved Flashcards -->
+    <string name="camera_capture_title">Сканировать конспект</string>
+    <string name="camera_frame_hint">Поместите доску, формулы или рукописный текст в рамку</string>
+    <string name="camera_permission_title">Требуется доступ к камере</string>
+    <string name="camera_permission_rationale">ExamForge использует камеру для сканирования досок, схем из учебников и конспектов для анализа в Gemini.</string>
+    <string name="camera_grant_permission">Включить камеру</string>
+    <string name="camera_retake">Переснять</string>
+    <string name="camera_analyze_now">Анализировать в Gemini</string>
+    <string name="camera_add_notes">Добавить заметки и опции</string>
+    <string name="flashcards_screen_title">Сохраненные карточки</string>
+    <string name="flashcards_fab_scan">Сканировать</string>
+    <string name="flashcards_search_placeholder">Поиск по вопросам и ответам…</string>
+    <string name="flashcards_empty_title">Пока нет сохраненных карточек</string>
+    <string name="flashcards_empty_body">Нажмите «Сканировать», чтобы сфотографировать конспект, формулы или слайды — Gemini автоматически создаст карточки.</string>
+
+    <!-- Decks Hub & Study Arena -->
+    <string name="decks_all_filter">Все</string>
+    <string name="decks_due_summary">К повтору: %1$d</string>
+    <string name="decks_study_all_due">Повторить карточки</string>
+    <string name="decks_match_blitz_button">Блиц 60 с</string>
+    <string name="decks_best_score">Рекорд: %1$d</string>
+    <string name="decks_empty_title">Создайте первую колоду</string>
+    <string name="decks_empty_subtitle">Сфотографируйте доску, продиктуйте лекцию или вставьте текст для создания карточек.</string>
+    <string name="decks_new_deck">Новая колода</string>
+    <string name="decks_saved_cards">Все карточки</string>
+    <string name="study_arena_complete_title">Сессия завершена</string>
+    <string name="study_arena_reviewed_summary">Повторено: %1$d · Освоено: %2$d</string>
+    <string name="study_arena_back_to_decks">К колодам</string>
+    <string name="study_arena_show_hint">Подсказка</string>
+    <string name="study_arena_reveal_answer">Показать ответ</string>
+    <string name="study_rating_again">Снова</string>
+    <string name="study_rating_hard">Трудно</string>
+    <string name="study_rating_good">Хорошо</string>
+    <string name="study_rating_easy">Легко</string>
+
+    <!-- Snapshot Forge & Lecture Dictation -->
+    <string name="forge_title">Кузница снимков</string>
+    <string name="forge_subtitle">Сфотографируйте формулы, загрузите слайды или продиктуйте лекцию — Gemini или офлайн-парсер создаст колоду.</string>
+    <string name="forge_step_capture">1. Сделайте фото или выберите материал</string>
+    <string name="forge_step_notes">2. Аудио лекции, заметки и параметры</string>
+    <string name="forge_camerax_scan">Скан CameraX</string>
+    <string name="forge_gallery">Галерея</string>
+    <string name="forge_dictate_start">Диктовка (0 ₽)</string>
+    <string name="forge_dictate_stop">Стоп микрофон</string>
+    <string name="forge_notes_label">Вставьте или продиктуйте конспект, В:/О: или Термин: Определение</string>
+    <string name="forge_subject_label">Предмет (необязательно)</string>
+    <string name="forge_cards_count">Карточек:</string>
+    <string name="forge_generate_gemini">Создать карточки в Gemini</string>
+    <string name="forge_generate_eco_lite">Создать в Eco Lite ИИ</string>
+    <string name="forge_generate_offline">Создать офлайн (0 ₽)</string>
+    <string name="forge_instant_offline_btn">Офлайн-парсер (0 ₽ · экономит квоту ИИ)</string>
+    <string name="forge_open_deck">Открыть колоду</string>
+    <string name="forge_scan_another">Сканировать еще</string>
+
+    <!-- Oral Quizmaster -->
+    <string name="quizmaster_title">Устный экзаменатор</string>
+    <string name="quizmaster_subtitle">Отвечайте вслух или общайтесь с Gemini</string>
+    <string name="quizmaster_ready_title">Готовы к устной проверке знаний?</string>
+    <string name="quizmaster_ready_body">Gemini задает по одному важному вопросу из вашей колоды, оценивает устный или текстовый ответ и проверяет слабые места.</string>
+    <string name="quizmaster_start_button">Начать устный экзамен</string>
+    <string name="quizmaster_hint_chip">Подсказка</string>
+    <string name="quizmaster_next_chip">Следующий вопрос</string>
+    <string name="quizmaster_input_placeholder">Произнесите или введите ответ…</string>
+    <string name="quizmaster_empty_title">Нет колод для устной практики</string>
+    <string name="quizmaster_go_to_forge">Перейти к созданию</string>
+
+    <!-- Match Blitz Mini-Game -->
+    <string name="match_blitz_title">Блиц на соответствия (60 с)</string>
+    <string name="match_blitz_start">Начать блиц 60 с</string>
+    <string name="match_blitz_play_again">Играть снова</string>
+    <string name="match_blitz_score_label">Счет: %1$d</string>
+
+    <!-- Settings, AI Plan & Quota Recovery -->
+    <string name="settings_title">Настройки и бонусы</string>
+    <string name="settings_subtitle">Настройте ночную тему, план ИИ, офлайн-кэш и виджет на главном экране.</string>
+    <string name="settings_appearance_title">Оформление и ночной режим</string>
+    <string name="settings_appearance_desc">Темная тема Obsidian снижает нагрузку на глаза при ночной подготовке.</string>
+    <string name="settings_oral_title">Автоозвучивание экзаменатора</string>
+    <string name="settings_oral_desc">Зачитывать вопросы и отзывы вслух с помощью синтеза речи.</string>
+    <string name="settings_widget_title">Виджет повторения на главном экране</string>
+    <string name="settings_widget_desc">Показывает 1 карточку для повторения при каждой разблокировке телефона.</string>
+    <string name="settings_pin_widget">Добавить интерактивный виджет на экран</string>
+    <string name="settings_sync_now">Синхронизировать повторения</string>
+    <string name="ai_plan_title">План ИИ и свой ключ BYOK</string>
+    <string name="ai_plan_eco_lite_title">Режим Eco Lite ИИ (квота ×3)</string>
+    <string name="ai_plan_offline_title">Предпочитать офлайн-парсер</string>
+    <string name="ai_plan_claim_grace">Получить +3 бонусных кредита на сегодня</string>
+    <string name="ai_plan_byok_title">Использовать свой ключ Gemini API (BYOK)</string>
+    <string name="ai_plan_test_save">Проверить и сохранить</string>
+    <string name="ai_plan_get_key">Получить ключ</string>
+    <string name="ai_plan_remove_key">Удалить</string>
+
+    <!-- Smart Auto-Popups: Update, Rate App, Share App -->
+    <string name="popup_update_title">Доступно обновление</string>
+    <string name="popup_update_body">Вышла новая версия ExamForge (%1$s) с улучшениями и более плавной работой.</string>
+    <string name="popup_update_primary">Обновить</string>
+    <string name="popup_update_later">Напомнить позже</string>
+    <string name="popup_update_skip">Пропустить эту версию</string>
+
+    <string name="popup_rate_title">Нравится ExamForge?</string>
+    <string name="popup_rate_body">Отличный учебный ритм! Хотите оставить честный отзыв в Google Play, чтобы помочь другим студентам найти ExamForge?</string>
+    <string name="popup_rate_primary">Оценить в Google Play</string>
+    <string name="popup_rate_later">Позже</string>
+    <string name="popup_rate_never">Больше не спрашивать</string>
+
+    <string name="popup_share_title">Поделитесь ExamForge с друзьями</string>
+    <string name="popup_share_body">Отличный прогресс в учебе! Пригласите одногруппников превращать конспекты в карточки активного повторения.</string>
+    <string name="popup_share_primary">Поделиться приложением</string>
+    <string name="popup_share_later">Не сейчас</string>
+    <string name="popup_share_never">Больше не спрашивать</string>
+
+    <string name="share_app_chooser_title">Поделиться ExamForge</string>
+    <string name="share_app_message">Я использую ExamForge, чтобы превращать фото доски и конспекты в карточки активного повторения и 60-секундный блиц. Попробуй: %1$s</string>
+
+    <!-- Settings: Community, Updates, Privacy & Event Telemetry -->
+    <string name="settings_community_title">Поддержка, обновления и конфиденциальность</string>
+    <string name="settings_community_subtitle">Версия %1$s · Умные ненавязчивые напоминания и локальный журнал событий</string>
+    <string name="settings_check_update">Обновления</string>
+    <string name="settings_rate_app">Оценить</string>
+    <string name="settings_share_app">Поделиться</string>
+    <string name="settings_privacy_policy">Конфиденциальность</string>
+    <string name="settings_telemetry_toggle_show">Показать журнал событий (%1$d)</string>
+    <string name="settings_telemetry_toggle_hide">Скрыть журнал событий</string>
+    <string name="settings_telemetry_summary">Сессии: %1$d · Активные дни: %2$d · Баллы вовлечения: %3$d</string>
+    <string name="settings_telemetry_guardrails">Ограничения окон: никогда при запуске · макс. 1/сессия · пауза 72 ч · 24 ч без ошибок</string>
+    <string name="settings_update_up_to_date">Установлена последняя версия (%1$s).</string>
+    <string name="privacy_policy_title">Политика конфиденциальности ExamForge</string>
+    <string name="common_close">Закрыть</string>
+    <string name="common_cancel">Отмена</string>
+</resources>

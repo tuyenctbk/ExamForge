@@ -1,0 +1,174 @@
+<resources>
+    <!-- App Identity & Home Widget -->
+    <string name="app_name">ExamForge</string>
+    <string name="widget_label">ExamForge Hızlı Tekrar</string>
+    <string name="widget_description">Telefonunuzun kilidini her açtığınızda ana ekranınızda 1 aktif hatırlama kartı çalışın.</string>
+    <string name="widget_header_default">EXAMFORGE</string>
+    <string name="widget_due_default">0 bekliyor</string>
+    <string name="widget_empty_question">Günlük ana ekran kartlarını açmak için ExamForge\'da bir tahta veya ders notu fotoğraflayın.</string>
+    <string name="widget_reveal_answer">Cevabı Göster</string>
+    <string name="widget_next">Sonraki</string>
+    <string name="widget_again">Tekrar</string>
+    <string name="widget_got_it">Biliyorum</string>
+
+    <!-- Auth & Navigation -->
+    <string name="sign_in_google">Google ile Giriş Yap</string>
+    <string name="sign_out">Çıkış Yap</string>
+    <string name="tab_decks">Desteler</string>
+    <string name="tab_forge">Oluştur</string>
+    <string name="tab_quizmaster">Sözlü Sınav</string>
+    <string name="tab_settings">Ayarlar</string>
+    <string name="auth_headline">Ders notlarını kalıcı bilgiye dönüştürün</string>
+    <string name="auth_subtitle">Tahtaları tarayın, sözlü tekrar yapın ve kartları tüm cihazlarda çevrimdışı senkronize edin.</string>
+    <string name="auth_sync_note">Destelerinizi ve çalışma ilerlemenizi güvenle yedeklemek için Google ile giriş yapın.</string>
+
+    <!-- Accessibility Content Descriptions -->
+    <string name="cd_app_logo">ExamForge amblemi</string>
+    <string name="cd_hero_banner">Notları parlayan bilgi kartlarına dönüştüren çalışma masası</string>
+    <string name="cd_empty_illustration">Tahtadaki fizik notlarını karta dönüştüren kamera</string>
+    <string name="cd_toggle_theme">Koyu veya açık temayı değiştir</string>
+    <string name="cd_navigate_back">Geri git</string>
+    <string name="cd_snap_photo">Kamera ile tahta veya not çek</string>
+    <string name="cd_pick_gallery">Galeriden not fotoğrafı seç</string>
+    <string name="cd_voice_mic">Cevabı sesli söyle</string>
+    <string name="cd_speak_toggle">Sesli okumayı aç veya kapat</string>
+    <string name="cd_camera_close">Kamerayı kapat</string>
+    <string name="cd_camera_flash">Flaş modunu değiştir</string>
+    <string name="cd_camera_torch">El fenerini aç veya kapat</string>
+    <string name="cd_camera_switch">Kamera lensini değiştir</string>
+    <string name="cd_camera_shutter">Not fotoğrafı çek</string>
+    <string name="cd_flashcard_camera_fab">Bilgi kartı oluşturmak için kamera ile not çek</string>
+    <string name="cd_flashcard_add_manual">Manuel bilgi kartı ekle</string>
+    <string name="cd_flashcard_edit">Kartı düzenle</string>
+    <string name="cd_flashcard_delete">Kartı sil</string>
+
+    <!-- Camera & Saved Flashcards -->
+    <string name="camera_capture_title">Ders Notlarını Tara</string>
+    <string name="camera_frame_hint">Tahtayı, formülleri veya el yazısı notları çerçeve içine hizalayın</string>
+    <string name="camera_permission_title">Kamera İzni Gerekli</string>
+    <string name="camera_permission_rationale">ExamForge, tahta, kitap diyagramı ve el yazısı notları Gemini kart analizine göndermek için kameranızı kullanır.</string>
+    <string name="camera_grant_permission">Kamerayı Etkinleştir</string>
+    <string name="camera_retake">Yeniden Çek</string>
+    <string name="camera_analyze_now">Gemini ile Analiz Et</string>
+    <string name="camera_add_notes">Not ve Seçenek Ekle</string>
+    <string name="flashcards_screen_title">Kayıtlı Kartlar</string>
+    <string name="flashcards_fab_scan">Not Tara</string>
+    <string name="flashcards_search_placeholder">Soru veya cevap ara…</string>
+    <string name="flashcards_empty_title">Henüz kayıtlı bilgi kartı yok</string>
+    <string name="flashcards_empty_body">El yazısı sayfaları, formülleri veya slaytları çekmek için Not Tara\'ya dokunun — Gemini otomatik olarak kartlara dönüştürür.</string>
+
+    <!-- Decks Hub & Study Arena -->
+    <string name="decks_all_filter">Tümü</string>
+    <string name="decks_due_summary">%1$d tekrar bekliyor</string>
+    <string name="decks_study_all_due">Bekleyen Kartları Çalış</string>
+    <string name="decks_match_blitz_button">60s Eşleştirme</string>
+    <string name="decks_best_score">En İyi: %1$d</string>
+    <string name="decks_empty_title">İlk çalışma desteni oluştur</string>
+    <string name="decks_empty_subtitle">Aktif hatırlama kartları üretmek için tahta fotoğrafı çekin, ders dikte edin veya not yapıştırın.</string>
+    <string name="decks_new_deck">Yeni Deste</string>
+    <string name="decks_saved_cards">Tüm Kartlar</string>
+    <string name="study_arena_complete_title">Oturum Tamamlandı</string>
+    <string name="study_arena_reviewed_summary">%1$d kart tekrar edildi · %2$d öğrenildi</string>
+    <string name="study_arena_back_to_decks">Destelere Dön</string>
+    <string name="study_arena_show_hint">İpucu Göster</string>
+    <string name="study_arena_reveal_answer">Cevabı Göster</string>
+    <string name="study_rating_again">Tekrar</string>
+    <string name="study_rating_hard">Zor</string>
+    <string name="study_rating_good">İyi</string>
+    <string name="study_rating_easy">Kolay</string>
+
+    <!-- Snapshot Forge & Lecture Dictation -->
+    <string name="forge_title">Anlık Kart Atölyesi</string>
+    <string name="forge_subtitle">Formülleri çekin, slayt yükleyin veya ders dikte edin — Gemini ya da Çevrimdışı Ayrıştırıcı anında deste oluştursun.</string>
+    <string name="forge_step_capture">1. Çalışma Materyali Çek veya Yükle</string>
+    <string name="forge_step_notes">2. Ders Sesi, Notlar ve Seçenekler</string>
+    <string name="forge_camerax_scan">CameraX Tara</string>
+    <string name="forge_gallery">Galeri</string>
+    <string name="forge_dictate_start">Dikte Et (₺0)</string>
+    <string name="forge_dictate_stop">Mikrofonu Durdur</string>
+    <string name="forge_notes_label">Ders notları, S:/C: veya Terim: Tanım yapıştırın ya da dikte edin</string>
+    <string name="forge_subject_label">Konu İpucu (isteğe bağlı)</string>
+    <string name="forge_cards_count">Kartlar:</string>
+    <string name="forge_generate_gemini">Gemini ile Kart Oluştur</string>
+    <string name="forge_generate_eco_lite">Eco Lite AI ile Oluştur</string>
+    <string name="forge_generate_offline">Çevrimdışı Kart Oluştur (₺0)</string>
+    <string name="forge_instant_offline_btn">Anlık Çevrimdışı Ayrıştırıcı (₺0 · AI Kotasını Korur)</string>
+    <string name="forge_open_deck">Desteyi Aç</string>
+    <string name="forge_scan_another">Başka Tara</string>
+
+    <!-- Oral Quizmaster -->
+    <string name="quizmaster_title">Sözlü Sınav Koçu</string>
+    <string name="quizmaster_subtitle">Cevapları sesli söyleyin veya Gemini ile sohbet edin</string>
+    <string name="quizmaster_ready_title">Aktif hatırlama pratiğine hazır mısınız?</string>
+    <string name="quizmaster_ready_body">Gemini destenizden tek tek yüksek verimli sorular sorar, sesli veya yazılı açıklamanızı değerlendirip eksik noktaları güçlendirir.</string>
+    <string name="quizmaster_start_button">Sözlü Sınavı Başlat</string>
+    <string name="quizmaster_hint_chip">İpucu</string>
+    <string name="quizmaster_next_chip">Sonraki Soru</string>
+    <string name="quizmaster_input_placeholder">Cevabınızı söyleyin veya yazın…</string>
+    <string name="quizmaster_empty_title">Sözlü pratik için hazır deste yok</string>
+    <string name="quizmaster_go_to_forge">Oluştur\'a Git</string>
+
+    <!-- Match Blitz Mini-Game -->
+    <string name="match_blitz_title">60s Hızlı Eşleştirme</string>
+    <string name="match_blitz_start">60s Oyunu Başlat</string>
+    <string name="match_blitz_play_again">Tekrar Oyna</string>
+    <string name="match_blitz_score_label">Puan: %1$d</string>
+
+    <!-- Settings, AI Plan & Quota Recovery -->
+    <string name="settings_title">Ayarlar ve Çalışma Araçları</string>
+    <string name="settings_subtitle">Gece Koyu Modu, AI kullanım planı, çevrimdışı önbellek ve ana ekran aracını özelleştirin.</string>
+    <string name="settings_appearance_title">Görünüm ve Gece Çalışma Modu</string>
+    <string name="settings_appearance_desc">Obsidian Koyu tema gece geç saatlerdeki çalışma sırasında parlamayı azaltır.</string>
+    <string name="settings_oral_title">Sözlü Sınav Otomatik Okuma</string>
+    <string name="settings_oral_desc">Soru ve geri bildirimleri Metinden Sese ile sesli okuyun.</string>
+    <string name="settings_widget_title">Kilit Açılışında Tekrar Aracı</string>
+    <string name="settings_widget_desc">Telefonu her açtığınızda ana ekranda 1 bekleyen bilgi kartı gösterir.</string>
+    <string name="settings_pin_widget">Etkileşimli Aracı Ana Ekrana Ekle</string>
+    <string name="settings_sync_now">Bekleyen Tekrarları Eşitle</string>
+    <string name="ai_plan_title">AI Kullanım Planı ve BYOK Anahtarı</string>
+    <string name="ai_plan_eco_lite_title">Eco Lite AI Modu (3× Kota Tasarrufu)</string>
+    <string name="ai_plan_offline_title">Çevrimdışı Anlık Ayrıştırıcıyı Tercih Et</string>
+    <string name="ai_plan_claim_grace">Bugün için +3 Ek Kredi Al</string>
+    <string name="ai_plan_byok_title">Kendi Gemini API Anahtarını Kullan (BYOK)</string>
+    <string name="ai_plan_test_save">Test Et ve Kaydet</string>
+    <string name="ai_plan_get_key">Anahtar Al</string>
+    <string name="ai_plan_remove_key">Kaldır</string>
+
+    <!-- Smart Auto-Popups: Update, Rate App, Share App -->
+    <string name="popup_update_title">Güncelleme Mevcut</string>
+    <string name="popup_update_body">Daha akıcı çalışma oturumları ve iyileştirmeler içeren yeni ExamForge (%1$s) sürümü hazır.</string>
+    <string name="popup_update_primary">Şimdi Güncelle</string>
+    <string name="popup_update_later">Sonra Hatırlat</string>
+    <string name="popup_update_skip">Bu Sürümü Atla</string>
+
+    <string name="popup_rate_title">ExamForge\'dan memnun musunuz?</string>
+    <string name="popup_rate_body">Harika bir çalışma temposu yakaladınız! Diğer öğrencilerin ExamForge\'u keşfetmesi için Google Play\'de dürüst bir değerlendirme bırakmak ister misiniz?</string>
+    <string name="popup_rate_primary">Google Play\'de Değerlendir</string>
+    <string name="popup_rate_later">Belki Sonra</string>
+    <string name="popup_rate_never">Bir Daha Sorma</string>
+
+    <string name="popup_share_title">ExamForge\'u Arkadaşlarınla Paylaş</string>
+    <string name="popup_share_body">Harika çalışma başarısı! Sınıf arkadaşlarını da tahta notlarını aktif hatırlama kartlarına dönüştürmeye davet et.</string>
+    <string name="popup_share_primary">Uygulamayı Paylaş</string>
+    <string name="popup_share_later">Şimdi Değil</string>
+    <string name="popup_share_never">Bir Daha Sorma</string>
+
+    <string name="share_app_chooser_title">ExamForge\'u Paylaş</string>
+    <string name="share_app_message">Tahta fotoğraflarını ve ders notlarını aktif hatırlama kartlarına ve 60 saniyelik eşleştirme alıştırmalarına dönüştürmek için ExamForge kullanıyorum: %1$s</string>
+
+    <!-- Settings: Community, Updates, Privacy & Event Telemetry -->
+    <string name="settings_community_title">Destek, Güncellemeler ve Gizlilik</string>
+    <string name="settings_community_subtitle">Sürüm %1$s · Rahatsız etmeyen akıllı hatırlatıcılar ve şeffaf yerel olay günlüğü</string>
+    <string name="settings_check_update">Güncelleme Kontrolü</string>
+    <string name="settings_rate_app">Değerlendir</string>
+    <string name="settings_share_app">Paylaş</string>
+    <string name="settings_privacy_policy">Gizlilik Politikası</string>
+    <string name="settings_telemetry_toggle_show">Olay Günlüğünü Göster (%1$d)</string>
+    <string name="settings_telemetry_toggle_hide">Olay Günlüğünü Gizle</string>
+    <string name="settings_telemetry_summary">Oturum: %1$d · Aktif Gün: %2$d · Etkileşim Puanı: %3$d</string>
+    <string name="settings_telemetry_guardrails">Açılır pencere kuralları: Başlangıçta asla · Oturum başı maks 1 · 72s bekleme · Hata sonrası 24s ara</string>
+    <string name="settings_update_up_to_date">En güncel sürümü kullanıyorsunuz (%1$s).</string>
+    <string name="privacy_policy_title">ExamForge Gizlilik Politikası</string>
+    <string name="common_close">Kapat</string>
+    <string name="common_cancel">İptal</string>
+</resources>

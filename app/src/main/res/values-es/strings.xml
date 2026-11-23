@@ -1,0 +1,163 @@
+<resources>
+    <string name="app_name">ExamForge</string>
+    <string name="widget_label">ExamForge Repaso Rápido</string>
+    <string name="widget_description">Practica 1 tarjeta de recuerdo activo en tu pantalla de inicio cada vez que desbloquees el teléfono.</string>
+    <string name="widget_header_default">EXAMFORGE</string>
+    <string name="widget_due_default">0 pendientes</string>
+    <string name="widget_empty_question">Fotografía una pizarra o apunte en ExamForge para activar tus tarjetas diarias en la pantalla de inicio.</string>
+    <string name="widget_reveal_answer">Ver respuesta</string>
+    <string name="widget_next">Siguiente</string>
+    <string name="widget_again">Repetir</string>
+    <string name="widget_got_it">Lo sé</string>
+
+    <string name="sign_in_google">Iniciar sesión con Google</string>
+    <string name="sign_out">Cerrar sesión</string>
+    <string name="tab_decks">Mazos</string>
+    <string name="tab_forge">Crear</string>
+    <string name="tab_quizmaster">Tutor Oral</string>
+    <string name="tab_settings">Ajustes</string>
+    <string name="auth_headline">Convierte tus apuntes en dominio de examen</string>
+    <string name="auth_subtitle">Escanea pizarras, practica recuerdo oral y sincroniza tarjetas sin conexión en todos tus dispositivos.</string>
+    <string name="auth_sync_note">Inicia sesión con Google para respaldar tus mazos y tu progreso de estudio.</string>
+
+    <string name="cd_app_logo">Emblema de ExamForge</string>
+    <string name="cd_hero_banner">Escritorio de estudio transformando apuntes en tarjetas</string>
+    <string name="cd_empty_illustration">Cámara enfocando apuntes de pizarra para crear tarjetas</string>
+    <string name="cd_toggle_theme">Cambiar tema oscuro o claro</string>
+    <string name="cd_navigate_back">Volver</string>
+    <string name="cd_snap_photo">Capturar pizarra o apuntes con la cámara</string>
+    <string name="cd_pick_gallery">Elegir foto de apuntes de la galería</string>
+    <string name="cd_voice_mic">Responder en voz alta</string>
+    <string name="cd_speak_toggle">Activar o desactivar lectura en voz alta</string>
+    <string name="cd_camera_close">Cerrar cámara</string>
+    <string name="cd_camera_flash">Cambiar modo de flash</string>
+    <string name="cd_camera_torch">Activar o desactivar linterna</string>
+    <string name="cd_camera_switch">Cambiar lente de cámara</string>
+    <string name="cd_camera_shutter">Tomar foto de apuntes</string>
+    <string name="cd_flashcard_camera_fab">Fotografiar apuntes para crear tarjetas</string>
+    <string name="cd_flashcard_add_manual">Añadir tarjeta manualmente</string>
+    <string name="cd_flashcard_edit">Editar tarjeta</string>
+    <string name="cd_flashcard_delete">Eliminar tarjeta</string>
+
+    <string name="camera_capture_title">Escanear apuntes</string>
+    <string name="camera_frame_hint">Encuadra la pizarra, ecuaciones o notas escritas a mano</string>
+    <string name="camera_permission_title">Se necesita acceso a la cámara</string>
+    <string name="camera_permission_rationale">ExamForge usa la cámara para escanear pizarras, diagramas y notas escritas a mano y generar tarjetas.</string>
+    <string name="camera_grant_permission">Activar cámara</string>
+    <string name="camera_retake">Repetir foto</string>
+    <string name="camera_analyze_now">Analizar con Gemini</string>
+    <string name="camera_add_notes">Adjuntar y editar opciones</string>
+    <string name="flashcards_screen_title">Tarjetas guardadas</string>
+    <string name="flashcards_fab_scan">Escanear notas</string>
+    <string name="flashcards_search_placeholder">Buscar preguntas o respuestas…</string>
+    <string name="flashcards_empty_title">Aún no hay tarjetas guardadas</string>
+    <string name="flashcards_empty_body">Toca Escanear notas para fotografiar páginas, fórmulas o diapositivas y convertirlas en tarjetas.</string>
+
+    <string name="decks_all_filter">Todos</string>
+    <string name="decks_due_summary">%1$d para repasar</string>
+    <string name="decks_study_all_due">Repasar pendientes</string>
+    <string name="decks_match_blitz_button">Reto Emparejar 60s</string>
+    <string name="decks_best_score">Récord: %1$d</string>
+    <string name="decks_empty_title">Crea tu primer mazo de estudio</string>
+    <string name="decks_empty_subtitle">Fotografía una pizarra, dicta una clase o pega tus notas para crear tarjetas de recuerdo activo.</string>
+    <string name="decks_new_deck">Nuevo mazo</string>
+    <string name="decks_saved_cards">Todas las tarjetas</string>
+    <string name="study_arena_complete_title">Sesión completada</string>
+    <string name="study_arena_reviewed_summary">%1$d tarjetas repasadas · %2$d dominadas</string>
+    <string name="study_arena_back_to_decks">Volver a Mazos</string>
+    <string name="study_arena_show_hint">Ver pista</string>
+    <string name="study_arena_reveal_answer">Mostrar respuesta</string>
+    <string name="study_rating_again">Otra vez</string>
+    <string name="study_rating_hard">Difícil</string>
+    <string name="study_rating_good">Bien</string>
+    <string name="study_rating_easy">Fácil</string>
+
+    <string name="forge_title">Forja de Apuntes</string>
+    <string name="forge_subtitle">Captura ecuaciones, sube diapositivas o dicta una clase — Gemini o nuestro analizador sin conexión crean mazos al instante.</string>
+    <string name="forge_step_capture">1. Fotografía o sube material</string>
+    <string name="forge_step_notes">2. Audio de clase, notas y opciones</string>
+    <string name="forge_camerax_scan">Escanear</string>
+    <string name="forge_gallery">Galería</string>
+    <string name="forge_dictate_start">Dictar ($0)</string>
+    <string name="forge_dictate_stop">Detener mic</string>
+    <string name="forge_notes_label">Pega o dicta apuntes, Q:/A: o Término: Definición</string>
+    <string name="forge_subject_label">Materia (opcional)</string>
+    <string name="forge_cards_count">Tarjetas:</string>
+    <string name="forge_generate_gemini">Crear tarjetas con Gemini</string>
+    <string name="forge_generate_eco_lite">Crear con Eco Lite AI</string>
+    <string name="forge_generate_offline">Crear sin conexión ($0)</string>
+    <string name="forge_instant_offline_btn">Analizador sin conexión ($0 · Ahorra cuota)</string>
+    <string name="forge_open_deck">Abrir mazo</string>
+    <string name="forge_scan_another">Escanear otro</string>
+
+    <string name="quizmaster_title">Tutor Oral</string>
+    <string name="quizmaster_subtitle">Recita tus respuestas en voz alta o chatea con Gemini</string>
+    <string name="quizmaster_ready_title">¿Listo para practicar recuerdo activo?</string>
+    <string name="quizmaster_ready_body">Gemini hace una pregunta clave a la vez de tu mazo, evalúa tu explicación oral o escrita y refuerza puntos débiles.</string>
+    <string name="quizmaster_start_button">Iniciar sesión oral</string>
+    <string name="quizmaster_hint_chip">Pista</string>
+    <string name="quizmaster_next_chip">Siguiente pregunta</string>
+    <string name="quizmaster_input_placeholder">Recita o escribe tu respuesta…</string>
+    <string name="quizmaster_empty_title">Sin mazos listos para práctica oral</string>
+    <string name="quizmaster_go_to_forge">Ir a Crear</string>
+
+    <string name="match_blitz_title">Reto Emparejar 60s</string>
+    <string name="match_blitz_start">Iniciar 60s</string>
+    <string name="match_blitz_play_again">Jugar de nuevo</string>
+    <string name="match_blitz_score_label">Puntuación: %1$d</string>
+
+    <string name="settings_title">Ajustes y Herramientas</string>
+    <string name="settings_subtitle">Configura el modo oscuro nocturno, plan de IA, caché sin conexión y widget de inicio.</string>
+    <string name="settings_appearance_title">Apariencia y Modo Nocturno</string>
+    <string name="settings_appearance_desc">Obsidian Dark reduce el deslumbramiento durante sesiones de estudio nocturnas.</string>
+    <string name="settings_oral_title">Lectura automática del Tutor Oral</string>
+    <string name="settings_oral_desc">Lee en voz alta las preguntas y comentarios del tutor mediante síntesis de voz.</string>
+    <string name="settings_widget_title">Widget de repaso en inicio</string>
+    <string name="settings_widget_desc">Muestra 1 tarjeta pendiente en tu pantalla de inicio cada vez que desbloquees el teléfono.</string>
+    <string name="settings_pin_widget">Añadir widget a la pantalla de inicio</string>
+    <string name="settings_sync_now">Sincronizar repasos pendientes</string>
+    <string name="ai_plan_title">Plan de IA y Clave BYOK</string>
+    <string name="ai_plan_eco_lite_title">Modo Eco Lite AI (3× más cuota)</string>
+    <string name="ai_plan_offline_title">Preferir analizador sin conexión</string>
+    <string name="ai_plan_claim_grace">Reclamar +3 créditos diarios de gracia</string>
+    <string name="ai_plan_byok_title">Usa tu propia clave API de Gemini (BYOK)</string>
+    <string name="ai_plan_test_save">Probar y guardar</string>
+    <string name="ai_plan_get_key">Obtener clave</string>
+    <string name="ai_plan_remove_key">Quitar</string>
+
+    <string name="popup_update_title">Actualización disponible</string>
+    <string name="popup_update_body">Hay una versión más reciente de ExamForge (%1$s) con mejoras de estudio y rendimiento.</string>
+    <string name="popup_update_primary">Actualizar ahora</string>
+    <string name="popup_update_later">Recordarme luego</string>
+    <string name="popup_update_skip">Omitir esta versión</string>
+
+    <string name="popup_rate_title">¿Te está ayudando ExamForge?</string>
+    <string name="popup_rate_body">¡Llevas un gran ritmo de estudio! ¿Te gustaría dejar una reseña honesta en Google Play para ayudar a otros estudiantes?</string>
+    <string name="popup_rate_primary">Calificar en Google Play</string>
+    <string name="popup_rate_later">Más tarde</string>
+    <string name="popup_rate_never">No volver a preguntar</string>
+
+    <string name="popup_share_title">Comparte ExamForge con compañeros</string>
+    <string name="popup_share_body">¡Gran avance de estudio! Invita a tus compañeros a transformar apuntes en tarjetas de recuerdo activo.</string>
+    <string name="popup_share_primary">Compartir app</string>
+    <string name="popup_share_later">Ahora no</string>
+    <string name="popup_share_never">No volver a preguntar</string>
+
+    <string name="share_app_chooser_title">Compartir ExamForge</string>
+    <string name="share_app_message">Estoy usando ExamForge para convertir fotos de pizarras y apuntes en tarjetas de estudio y retos de 60 segundos. Pruébala aquí: %1$s</string>
+
+    <string name="settings_community_title">Soporte, Actualizaciones y Privacidad</string>
+    <string name="settings_community_subtitle">Versión %1$s · Avisos inteligentes no intrusivos y registro local de eventos</string>
+    <string name="settings_check_update">Buscar mejoras</string>
+    <string name="settings_rate_app">Calificar</string>
+    <string name="settings_share_app">Compartir</string>
+    <string name="settings_privacy_policy">Privacidad</string>
+    <string name="settings_telemetry_toggle_show">Ver registro de eventos (%1$d)</string>
+    <string name="settings_telemetry_toggle_hide">Ocultar registro</string>
+    <string name="settings_telemetry_summary">Sesiones: %1$d · Días activos: %2$d · Puntuación: %3$d</string>
+    <string name="settings_telemetry_guardrails">Protección anti-molestias: Nunca al iniciar · Máx 1/sesión · Espera global 72h · Pausa 24h tras errores</string>
+    <string name="settings_update_up_to_date">Ya tienes la última versión (%1$s).</string>
+    <string name="privacy_policy_title">Política de Privacidad de ExamForge</string>
+    <string name="common_close">Cerrar</string>
+    <string name="common_cancel">Cancelar</string>
+</resources>

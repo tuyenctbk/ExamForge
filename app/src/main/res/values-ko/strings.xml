@@ -1,0 +1,174 @@
+<resources>
+    <!-- App Identity & Home Widget -->
+    <string name="app_name">ExamForge</string>
+    <string name="widget_label">ExamForge 빠른 복습</string>
+    <string name="widget_description">휴대폰 잠금을 해제할 때마다 홈 화면에서 능동 회상 플래시카드 1장을 바로 복습하세요.</string>
+    <string name="widget_header_default">EXAMFORGE</string>
+    <string name="widget_due_default">복습 예정 0</string>
+    <string name="widget_empty_question">ExamForge에서 칠판이나 강의 필기를 촬영하면 매일 홈 화면 플래시카드가 열립니다.</string>
+    <string name="widget_reveal_answer">정답 보기</string>
+    <string name="widget_next">다음</string>
+    <string name="widget_again">다시</string>
+    <string name="widget_got_it">알겠음</string>
+
+    <!-- Auth & Navigation -->
+    <string name="sign_in_google">Google로 로그인</string>
+    <string name="sign_out">로그아웃</string>
+    <string name="tab_decks">덱</string>
+    <string name="tab_forge">생성</string>
+    <string name="tab_quizmaster">구술 퀴즈</string>
+    <string name="tab_settings">설정</string>
+    <string name="auth_headline">필기 노트를 완벽한 암기로 바꾸세요</string>
+    <string name="auth_subtitle">화이트보드를 스캔하고 구술 복습을 연습하며 오프라인 지원으로 기기 간 동기화하세요.</string>
+    <string name="auth_sync_note">Google로 로그인하여 덱과 학습 진행 상황을 안전하게 백업하세요.</string>
+
+    <!-- Accessibility Content Descriptions -->
+    <string name="cd_app_logo">ExamForge 엠블럼</string>
+    <string name="cd_hero_banner">필기가 빛나는 플래시카드로 바뀌는 책상</string>
+    <string name="cd_empty_illustration">칠판 물리 필기를 플래시카드로 스캔하는 카메라</string>
+    <string name="cd_toggle_theme">다크 또는 라이트 테마 전환</string>
+    <string name="cd_navigate_back">뒤로 이동</string>
+    <string name="cd_snap_photo">카메라로 칠판이나 필기 촬영</string>
+    <string name="cd_pick_gallery">갤러리에서 필기 사진 선택</string>
+    <string name="cd_voice_mic">소리 내어 답하기</string>
+    <string name="cd_speak_toggle">음성 읽기 전환</string>
+    <string name="cd_camera_close">카메라 닫기</string>
+    <string name="cd_camera_flash">플래시 모드 전환</string>
+    <string name="cd_camera_torch">손전등 전환</string>
+    <string name="cd_camera_switch">카메라 렌즈 전환</string>
+    <string name="cd_camera_shutter">필기 사진 촬영</string>
+    <string name="cd_flashcard_camera_fab">카메라로 필기를 찍어 플래시카드 만들기</string>
+    <string name="cd_flashcard_add_manual">플래시카드 직접 추가</string>
+    <string name="cd_flashcard_edit">플래시카드 편집</string>
+    <string name="cd_flashcard_delete">플래시카드 삭제</string>
+
+    <!-- Camera & Saved Flashcards -->
+    <string name="camera_capture_title">학습 필기 스캔</string>
+    <string name="camera_frame_hint">화이트보드, 수식 또는 손글씨 노트를 프레임 안에 맞춰주세요</string>
+    <string name="camera_permission_title">카메라 권한 필요</string>
+    <string name="camera_permission_rationale">ExamForge는 화이트보드, 교과서 도표, 손글씨 필기를 Gemini 플래시카드로 분석하기 위해 카메라를 사용합니다.</string>
+    <string name="camera_grant_permission">카메라 허용</string>
+    <string name="camera_retake">다시 찍기</string>
+    <string name="camera_analyze_now">Gemini로 분석</string>
+    <string name="camera_add_notes">메모 및 옵션 추가</string>
+    <string name="flashcards_screen_title">저장된 플래시카드</string>
+    <string name="flashcards_fab_scan">노트 스캔</string>
+    <string name="flashcards_search_placeholder">질문 또는 정답 검색…</string>
+    <string name="flashcards_empty_title">저장된 플래시카드가 없습니다</string>
+    <string name="flashcards_empty_body">노트 스캔을 눌러 손글씨, 수식, 슬라이드를 촬영하면 Gemini가 자동으로 카드를 정리합니다.</string>
+
+    <!-- Decks Hub & Study Arena -->
+    <string name="decks_all_filter">전체</string>
+    <string name="decks_due_summary">복습 예정 %1$d장</string>
+    <string name="decks_study_all_due">예정 카드 학습</string>
+    <string name="decks_match_blitz_button">60초 매치</string>
+    <string name="decks_best_score">최고: %1$d</string>
+    <string name="decks_empty_title">첫 학습 덱을 만들어 보세요</string>
+    <string name="decks_empty_subtitle">칠판 촬영, 강의 음성 입력, 노트 붙여넣기로 능동 회상 카드를 생성하세요.</string>
+    <string name="decks_new_deck">새 덱</string>
+    <string name="decks_saved_cards">전체 카드</string>
+    <string name="study_arena_complete_title">학습 완료</string>
+    <string name="study_arena_reviewed_summary">%1$d장 복습 · %2$d장 암기 완료</string>
+    <string name="study_arena_back_to_decks">덱으로 돌아가기</string>
+    <string name="study_arena_show_hint">힌트 보기</string>
+    <string name="study_arena_reveal_answer">정답 보기</string>
+    <string name="study_rating_again">다시</string>
+    <string name="study_rating_hard">어려움</string>
+    <string name="study_rating_good">보통</string>
+    <string name="study_rating_easy">쉬움</string>
+
+    <!-- Snapshot Forge & Lecture Dictation -->
+    <string name="forge_title">스냅샷 포지</string>
+    <string name="forge_subtitle">수식 촬영, 슬라이드 업로드, 강의 받아쓰기를 통해 Gemini 또는 오프라인 파서가 덱을 생성합니다.</string>
+    <string name="forge_step_capture">1. 학습 자료 촬영 또는 선택</string>
+    <string name="forge_step_notes">2. 강의 음성, 필기 및 옵션</string>
+    <string name="forge_camerax_scan">CameraX 스캔</string>
+    <string name="forge_gallery">갤러리</string>
+    <string name="forge_dictate_start">받아쓰기 (₩0)</string>
+    <string name="forge_dictate_stop">마이크 중지</string>
+    <string name="forge_notes_label">강의 필기, Q:/A: 또는 용어: 정의를 붙여넣거나 말하세요</string>
+    <string name="forge_subject_label">과목 힌트 (선택)</string>
+    <string name="forge_cards_count">카드 수:</string>
+    <string name="forge_generate_gemini">Gemini로 카드 생성</string>
+    <string name="forge_generate_eco_lite">Eco Lite AI로 생성</string>
+    <string name="forge_generate_offline">오프라인으로 생성 (₩0)</string>
+    <string name="forge_instant_offline_btn">즉시 오프라인 파서 (₩0 · AI 한도 절약)</string>
+    <string name="forge_open_deck">덱 열기</string>
+    <string name="forge_scan_another">다른 자료 스캔</string>
+
+    <!-- Oral Quizmaster -->
+    <string name="quizmaster_title">구술 퀴즈마스터</string>
+    <string name="quizmaster_subtitle">소리 내어 답하거나 Gemini와 대화하세요</string>
+    <string name="quizmaster_ready_title">능동 회상 훈련을 시작할까요?</string>
+    <string name="quizmaster_ready_body">Gemini가 덱에서 핵심 질문을 하나씩 출제하고, 말하거나 입력한 설명을 평가해 약점을 짚어줍니다.</string>
+    <string name="quizmaster_start_button">구술 퀴즈 시작</string>
+    <string name="quizmaster_hint_chip">힌트</string>
+    <string name="quizmaster_next_chip">다음 질문</string>
+    <string name="quizmaster_input_placeholder">답변을 말하거나 입력하세요…</string>
+    <string name="quizmaster_empty_title">구술 연습할 덱이 없습니다</string>
+    <string name="quizmaster_go_to_forge">생성으로 이동</string>
+
+    <!-- Match Blitz Mini-Game -->
+    <string name="match_blitz_title">60초 매치 블리츠</string>
+    <string name="match_blitz_start">60초 블리츠 시작</string>
+    <string name="match_blitz_play_again">다시 하기</string>
+    <string name="match_blitz_score_label">점수: %1$d</string>
+
+    <!-- Settings, AI Plan & Quota Recovery -->
+    <string name="settings_title">설정 및 학습 도구</string>
+    <string name="settings_subtitle">야간 다크 모드, AI 사용 설정, 오프라인 캐시, 홈 화면 위젯을 관리합니다.</string>
+    <string name="settings_appearance_title">화면 테마 및 야간 학습 모드</string>
+    <string name="settings_appearance_desc">Obsidian 다크 모드로 늦은 밤 공부 시 눈부심을 줄입니다.</string>
+    <string name="settings_oral_title">구술 퀴즈 자동 읽기</string>
+    <string name="settings_oral_desc">음성 합성으로 질문과 피드백을 소리 내어 읽어줍니다.</string>
+    <string name="settings_widget_title">잠금 해제 복습 홈 위젯</string>
+    <string name="settings_widget_desc">휴대폰을 열 때마다 홈 화면에 복습 카드 1장을 표시합니다.</string>
+    <string name="settings_pin_widget">홈 화면에 인터랙티브 위젯 추가</string>
+    <string name="settings_sync_now">대기 중인 복습 동기화</string>
+    <string name="ai_plan_title">AI 사용 플랜 및 BYOK 키</string>
+    <string name="ai_plan_eco_lite_title">Eco Lite AI 모드 (한도 3배 확장)</string>
+    <string name="ai_plan_offline_title">오프라인 즉시 파서 우선 사용</string>
+    <string name="ai_plan_claim_grace">오늘의 보너스 크레딧 +3 받기</string>
+    <string name="ai_plan_byok_title">개인 Gemini API 키 연결 (BYOK)</string>
+    <string name="ai_plan_test_save">테스트 및 저장</string>
+    <string name="ai_plan_get_key">키 발급받기</string>
+    <string name="ai_plan_remove_key">제거</string>
+
+    <!-- Smart Auto-Popups: Update, Rate App, Share App -->
+    <string name="popup_update_title">업데이트 가능</string>
+    <string name="popup_update_body">더 쾌적한 학습과 개선 사항이 담긴 ExamForge 새 버전(%1$s)이 출시되었습니다.</string>
+    <string name="popup_update_primary">지금 업데이트</string>
+    <string name="popup_update_later">나중에 알림</string>
+    <string name="popup_update_skip">이 버전 건너뛰기</string>
+
+    <string name="popup_rate_title">ExamForge가 도움이 되시나요?</string>
+    <string name="popup_rate_body">꾸준한 학습 흐름을 만들고 계시네요! 다른 학생들에게 도움이 되도록 Google Play에 솔직한 리뷰를 남겨주시겠어요?</string>
+    <string name="popup_rate_primary">Google Play에서 평가</string>
+    <string name="popup_rate_later">나중에</string>
+    <string name="popup_rate_never">다시 묻지 않기</string>
+
+    <string name="popup_share_title">학습 친구에게 ExamForge 공유</string>
+    <string name="popup_share_body">멋진 학습 성과입니다! 친구들과 함께 칠판 필기를 능동 회상 플래시카드로 만들어 보세요.</string>
+    <string name="popup_share_primary">앱 공유</string>
+    <string name="popup_share_later">지금은 안 함</string>
+    <string name="popup_share_never">다시 묻지 않기</string>
+
+    <string name="share_app_chooser_title">ExamForge 공유</string>
+    <string name="share_app_message">ExamForge로 칠판 사진과 강의 필기를 능동 회상 플래시카드와 60초 매치 퀴즈로 만들어 공부하고 있어요: %1$s</string>
+
+    <!-- Settings: Community, Updates, Privacy & Event Telemetry -->
+    <string name="settings_community_title">지원, 업데이트 및 개인정보</string>
+    <string name="settings_community_subtitle">버전 %1$s · 방해 없는 스마트 알림 및 기기 내 이벤트 기록</string>
+    <string name="settings_check_update">업데이트 확인</string>
+    <string name="settings_rate_app">앱 평가</string>
+    <string name="settings_share_app">앱 공유</string>
+    <string name="settings_privacy_policy">개인정보처리방침</string>
+    <string name="settings_telemetry_toggle_show">이벤트 로그 보기 (%1$d)</string>
+    <string name="settings_telemetry_toggle_hide">이벤트 로그 숨기기</string>
+    <string name="settings_telemetry_summary">세션: %1$d · 활동일: %2$d · 참여 점수: %3$d</string>
+    <string name="settings_telemetry_guardrails">팝업 규칙: 앱 시작 시 미표시 · 세션당 최대 1회 · 72시간 간격 · 오류 후 24시간 보류</string>
+    <string name="settings_update_up_to_date">최신 버전(%1$s)을 사용 중입니다.</string>
+    <string name="privacy_policy_title">ExamForge 개인정보처리방침</string>
+    <string name="common_close">닫기</string>
+    <string name="common_cancel">취소</string>
+</resources>

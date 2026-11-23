@@ -1,0 +1,174 @@
+<resources>
+    <!-- App Identity & Home Widget -->
+    <string name="app_name">ExamForge</string>
+    <string name="widget_label">ExamForge Mabilisang Balik-aral</string>
+    <string name="widget_description">Magsanay ng 1 active-recall flashcard direkta sa iyong home screen sa tuwing ia-unlock ang telepono.</string>
+    <string name="widget_header_default">EXAMFORGE</string>
+    <string name="widget_due_default">0 nakatakda</string>
+    <string name="widget_empty_question">Kunan ng larawan ang whiteboard o lecture notes sa ExamForge para ma-unlock ang pang-araw-araw na flashcard sa home screen.</string>
+    <string name="widget_reveal_answer">Ipakita ang Sagot</string>
+    <string name="widget_next">Susunod</string>
+    <string name="widget_again">Ulitin</string>
+    <string name="widget_got_it">Alam Na</string>
+
+    <!-- Auth & Navigation -->
+    <string name="sign_in_google">Mag-sign in gamit ang Google</string>
+    <string name="sign_out">Mag-sign out</string>
+    <string name="tab_decks">Mga Deck</string>
+    <string name="tab_forge">Gumawa</string>
+    <string name="tab_quizmaster">Pasalitang Pagsusulit</string>
+    <string name="tab_settings">Mga Setting</string>
+    <string name="auth_headline">Gawing matibay na memorya ang iyong mga tala</string>
+    <string name="auth_subtitle">I-scan ang mga whiteboard, magsanay nang pasalita, at i-sync ang mga flashcard offline sa iyong mga device.</string>
+    <string name="auth_sync_note">Mag-sign in gamit ang Google upang ligtas na mai-backup ang mga deck at progreso sa pag-aaral.</string>
+
+    <!-- Accessibility Content Descriptions -->
+    <string name="cd_app_logo">Emblema ng ExamForge</string>
+    <string name="cd_hero_banner">Mesang pang-aral na ginagawang kumikinang na flashcard ang mga tala</string>
+    <string name="cd_empty_illustration">Kamerang nag-i-scan ng mga tala sa pisika upang gawing flashcard</string>
+    <string name="cd_toggle_theme">Lumipat sa madilim o maliwanag na tema</string>
+    <string name="cd_navigate_back">Bumalik</string>
+    <string name="cd_snap_photo">Kunan ng larawan ang whiteboard o mga tala gamit ang kamera</string>
+    <string name="cd_pick_gallery">Pumili ng larawan ng tala mula sa gallery</string>
+    <string name="cd_voice_mic">Sabihin ang sagot nang malakas</string>
+    <string name="cd_speak_toggle">I-on o i-off ang pagbabasa nang malakas</string>
+    <string name="cd_camera_close">Isara ang kamera</string>
+    <string name="cd_camera_flash">Palitan ang mode ng flash</string>
+    <string name="cd_camera_torch">I-on o i-off ang flashlight</string>
+    <string name="cd_camera_switch">Lumipat ng lente ng kamera</string>
+    <string name="cd_camera_shutter">Kunan ng larawan ang mga tala</string>
+    <string name="cd_flashcard_camera_fab">Kunan ng larawan ang mga tala upang gumawa ng flashcard</string>
+    <string name="cd_flashcard_add_manual">Magdagdag ng flashcard nang mano-mano</string>
+    <string name="cd_flashcard_edit">I-edit ang flashcard</string>
+    <string name="cd_flashcard_delete">Tanggalin ang flashcard</string>
+
+    <!-- Camera & Saved Flashcards -->
+    <string name="camera_capture_title">I-scan ang mga Tala</string>
+    <string name="camera_frame_hint">Itapat ang whiteboard, mga equation, o sulat-kamay sa loob ng frame</string>
+    <string name="camera_permission_title">Kailangan ng Pahintulot sa Kamera</string>
+    <string name="camera_permission_rationale">Ginagamit ng ExamForge ang iyong kamera upang i-scan ang mga whiteboard, diagram ng aklat, at sulat-kamay para gawing flashcard ng Gemini.</string>
+    <string name="camera_grant_permission">Paganahin ang Kamera</string>
+    <string name="camera_retake">Kunan Ulit</string>
+    <string name="camera_analyze_now">Suriin gamit ang Gemini</string>
+    <string name="camera_add_notes">Magdagdag ng Tala at Opsyon</string>
+    <string name="flashcards_screen_title">Mga Nakasave na Flashcard</string>
+    <string name="flashcards_fab_scan">I-scan ang Tala</string>
+    <string name="flashcards_search_placeholder">Maghanap ng tanong o sagot…</string>
+    <string name="flashcards_empty_title">Wala pang nakasave na flashcard</string>
+    <string name="flashcards_empty_body">I-tap ang I-scan ang Tala upang kunan ang mga sulat-kamay, formula, o slide — awtomatikong gagawin itong flashcard ng Gemini.</string>
+
+    <!-- Decks Hub & Study Arena -->
+    <string name="decks_all_filter">Lahat</string>
+    <string name="decks_due_summary">%1$d nakatakdang repasuhin</string>
+    <string name="decks_study_all_due">Repasuhin ang mga Nakatakda</string>
+    <string name="decks_match_blitz_button">60s Match Blitz</string>
+    <string name="decks_best_score">Pinakamataas: %1$d</string>
+    <string name="decks_empty_title">Gumawa ng iyong unang study deck</string>
+    <string name="decks_empty_subtitle">Kunan ng larawan ang whiteboard, magdikta ng lektyur, o mag-paste ng mga tala para gumawa ng active-recall flashcard.</string>
+    <string name="decks_new_deck">Bagong Deck</string>
+    <string name="decks_saved_cards">Lahat ng Card</string>
+    <string name="study_arena_complete_title">Tapos na ang Sesyon</string>
+    <string name="study_arena_reviewed_summary">Narepaso: %1$d · Kabisado: %2$d</string>
+    <string name="study_arena_back_to_decks">Bumalik sa mga Deck</string>
+    <string name="study_arena_show_hint">Ipakita ang Pahiwatig</string>
+    <string name="study_arena_reveal_answer">Ipakita ang Sagot</string>
+    <string name="study_rating_again">Ulitin</string>
+    <string name="study_rating_hard">Mahirap</string>
+    <string name="study_rating_good">Ayos</string>
+    <string name="study_rating_easy">Madali</string>
+
+    <!-- Snapshot Forge & Lecture Dictation -->
+    <string name="forge_title">Snapshot Forge</string>
+    <string name="forge_subtitle">Kunan ng larawan ang mga formula, mag-upload ng slide, o magdikta ng lektyur — gagawin itong deck ng Gemini o Offline Parser.</string>
+    <string name="forge_step_capture">1. Kunan o Mag-upload ng Materyal</string>
+    <string name="forge_step_notes">2. Audio ng Lektyur, Tala at Opsyon</string>
+    <string name="forge_camerax_scan">CameraX Scan</string>
+    <string name="forge_gallery">Gallery</string>
+    <string name="forge_dictate_start">Magdikta (₱0)</string>
+    <string name="forge_dictate_stop">Ihinto ang Mic</string>
+    <string name="forge_notes_label">I-paste o idikta ang mga tala, Q:/A:, o Termino: Kahulugan</string>
+    <string name="forge_subject_label">Asignatura (opsyonal)</string>
+    <string name="forge_cards_count">Mga Card:</string>
+    <string name="forge_generate_gemini">Gumawa ng Flashcard gamit ang Gemini</string>
+    <string name="forge_generate_eco_lite">Gumawa gamit ang Eco Lite AI</string>
+    <string name="forge_generate_offline">Gumawa Offline (₱0)</string>
+    <string name="forge_instant_offline_btn">Mabilisang Offline Parser (₱0 · Tipid sa AI Quota)</string>
+    <string name="forge_open_deck">Buksan ang Deck</string>
+    <string name="forge_scan_another">Mag-scan ng Iba</string>
+
+    <!-- Oral Quizmaster -->
+    <string name="quizmaster_title">Pasalitang Quizmaster</string>
+    <string name="quizmaster_subtitle">Sabihin ang sagot nang malakas o makipag-chat sa Gemini</string>
+    <string name="quizmaster_ready_title">Handa ka na ba sa active-recall drill?</string>
+    <string name="quizmaster_ready_body">Magtatanong ang Gemini nang paisa-isa mula sa iyong deck, susuriin ang iyong pasalita o nakatype na paliwanag, at patitibayin ang mahihinang bahagi.</string>
+    <string name="quizmaster_start_button">Simulan ang Pasalitang Pagsusulit</string>
+    <string name="quizmaster_hint_chip">Pahiwatig</string>
+    <string name="quizmaster_next_chip">Susunod na Tanong</string>
+    <string name="quizmaster_input_placeholder">Sabihin o i-type ang iyong sagot…</string>
+    <string name="quizmaster_empty_title">Walang deck na handa para sa pasalitang pagsasanay</string>
+    <string name="quizmaster_go_to_forge">Pumunta sa Gumawa</string>
+
+    <!-- Match Blitz Mini-Game -->
+    <string name="match_blitz_title">60s Match Blitz</string>
+    <string name="match_blitz_start">Simulan ang 60s Blitz</string>
+    <string name="match_blitz_play_again">Maglaro Ulit</string>
+    <string name="match_blitz_score_label">Iskor: %1$d</string>
+
+    <!-- Settings, AI Plan & Quota Recovery -->
+    <string name="settings_title">Mga Setting at Kagamitan</string>
+    <string name="settings_subtitle">Ayusin ang Night Dark Mode, plano sa paggamit ng AI, offline cache, at home screen widget.</string>
+    <string name="settings_appearance_title">Hitsura at Night Study Mode</string>
+    <string name="settings_appearance_desc">Binabawasan ng Obsidian Dark ang silaw kapag nag-aaral nang gabi.</string>
+    <string name="settings_oral_title">Auto-Speak sa Pasalitang Pagsusulit</string>
+    <string name="settings_oral_desc">Basahin nang malakas ang mga tanong at puna gamit ang Text-to-Speech.</string>
+    <string name="settings_widget_title">Unlock-to-Recall Home Widget</string>
+    <string name="settings_widget_desc">Nagpapakita ng 1 nakatakdang flashcard sa home screen sa bawat pag-unlock.</string>
+    <string name="settings_pin_widget">Idagdag ang Interactive Widget sa Home Screen</string>
+    <string name="settings_sync_now">I-sync ang mga Nakabinbing Repaso</string>
+    <string name="ai_plan_title">AI Usage Plan at BYOK Key</string>
+    <string name="ai_plan_eco_lite_title">Eco Lite AI Mode (3× Mas Mahabang Quota)</string>
+    <string name="ai_plan_offline_title">Unahin ang Mabilisang Offline Parser</string>
+    <string name="ai_plan_claim_grace">Kunin ang +3 Dagdag na Kredito Ngayon</string>
+    <string name="ai_plan_byok_title">Gamitin ang Sariling Gemini API Key (BYOK)</string>
+    <string name="ai_plan_test_save">Subukan at I-save</string>
+    <string name="ai_plan_get_key">Kumuha ng Key</string>
+    <string name="ai_plan_remove_key">Alisin</string>
+
+    <!-- Smart Auto-Popups: Update, Rate App, Share App -->
+    <string name="popup_update_title">May Bagong Update</string>
+    <string name="popup_update_body">May mas bagong bersyon ng ExamForge (%1$s) na may mas maayos na pag-aaral at mga pagpapahusay.</string>
+    <string name="popup_update_primary">I-update Ngayon</string>
+    <string name="popup_update_later">Ipaalala Mamaya</string>
+    <string name="popup_update_skip">Laktawan ang Bersyong Ito</string>
+
+    <string name="popup_rate_title">Nagugustuhan mo ba ang ExamForge?</string>
+    <string name="popup_rate_body">Maganda ang takbo ng iyong pag-aaral! Gusto mo bang mag-iwan ng tapat na review sa Google Play para matulungan ang ibang mag-aaral na matuklasan ang ExamForge?</string>
+    <string name="popup_rate_primary">I-rate sa Google Play</string>
+    <string name="popup_rate_later">Siguro Mamaya</string>
+    <string name="popup_rate_never">Huwag nang Magtanong</string>
+
+    <string name="popup_share_title">Ibahagi ang ExamForge sa mga Kaklase</string>
+    <string name="popup_share_body">Mahusay na tagumpay sa pag-aaral! Anyayahan ang mga kaibigan na gawing active-recall flashcard din ang kanilang mga tala.</string>
+    <string name="popup_share_primary">Ibahagi ang App</string>
+    <string name="popup_share_later">Hindi Muna</string>
+    <string name="popup_share_never">Huwag nang Magtanong</string>
+
+    <string name="share_app_chooser_title">Ibahagi ang ExamForge</string>
+    <string name="share_app_message">Ginagamit ko ang ExamForge para gawing active-recall flashcards at 60-segundong Match Blitz drills ang mga larawan ng whiteboard at lecture notes. Subukan mo: %1$s</string>
+
+    <!-- Settings: Community, Updates, Privacy & Event Telemetry -->
+    <string name="settings_community_title">Suporta, mga Update at Privacy</string>
+    <string name="settings_community_subtitle">Bersyon %1$s · Matalinong hindi nakakaabalang paalala at malinaw na lokal na event log</string>
+    <string name="settings_check_update">Suriin ang Update</string>
+    <string name="settings_rate_app">I-rate ang App</string>
+    <string name="settings_share_app">Ibahagi</string>
+    <string name="settings_privacy_policy">Patakaran sa Privacy</string>
+    <string name="settings_telemetry_toggle_show">Ipakita ang Event Log (%1$d)</string>
+    <string name="settings_telemetry_toggle_hide">Itago ang Event Log</string>
+    <string name="settings_telemetry_summary">Mga Sesyon: %1$d · Aktibong Araw: %2$d · Iskor ng Aktibidad: %3$d</string>
+    <string name="settings_telemetry_guardrails">Mga panuntunan ng pop-up: Hindi sa pagsisimula · Max 1/sesyon · 72h pahinga · 24h pahinga matapos ang error</string>
+    <string name="settings_update_up_to_date">Nasa pinakabagong bersyon ka na (%1$s).</string>
+    <string name="privacy_policy_title">Patakaran sa Privacy ng ExamForge</string>
+    <string name="common_close">Isara</string>
+    <string name="common_cancel">Kanselahin</string>
+</resources>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ExamForge — Privacy Policy</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --border: #334155;
+    }
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f8fafc;
+        --card: #ffffff;
+        --text: #0f172a;
+        --muted: #475569;
+        --accent: #0284c7;
+        --border: #e2e8f0;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      padding: 16px 12px 32px;
+    }
+    .container {
+      max-width: 780px;
+      margin: 0 auto;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 18px;
+    }
+    h1 { margin-top: 0; font-size: 1.45rem; color: var(--accent); }
+    h2 { margin-top: 1.4rem; font-size: 1.05rem; border-bottom: 1px solid var(--border); padding-bottom: 5px; }
+    p, li { color: var(--text); font-size: 0.92rem; }
+    .meta { color: var(--muted); font-size: 0.84rem; margin-bottom: 14px; }
+    ul { padding-left: 18px; }
+    a { color: var(--accent); }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <h1>ExamForge Privacy Policy</h1>
+    <p class="meta"><strong>Effective Date:</strong> November 22, 2026 &nbsp;|&nbsp; <strong>Contact:</strong> tuyenctbk@gmail.com</p>
+
+    <p>
+      ExamForge ("we", "our", or "the App") is committed to protecting your privacy.
+      This Privacy Policy explains what data ExamForge collects, how it is processed and stored,
+      what Android device permissions are used, and how you can manage or delete your data.
+    </p>
+
+    <h2>1. Information We Collect &amp; Why</h2>
+    <ul>
+      <li><strong>Account Information:</strong> When you sign in with Google via Android Credential Manager, we receive your Firebase User ID, display name, and email address strictly to authenticate your account and sync your study decks across devices.</li>
+      <li><strong>Study Content:</strong> Your flashcard decks, questions, answers, explanations, spaced-repetition intervals, and study streak metrics are cached locally in Room SQLite for offline study and synced to your private partition in Google Cloud Firestore.</li>
+      <li><strong>Study Material Sent to AI:</strong> Photos, typed notes, or dictated text submitted to forge flashcards or fact-check cards are sent securely to Google Gemini (via Firebase AI Logic with App Check, or directly via your own optional Gemini API key) solely to produce study content. We do not sell your notes or use them for advertising.</li>
+      <li><strong>On-Device Event Tracking:</strong> ExamForge stores non-personal engagement events locally in Jetpack DataStore (e.g., sessions, decks forged, completed reviews, and error timestamps) to prevent repetitive update, share, or rate prompts. You can inspect this event log in Settings.</li>
+    </ul>
+
+    <h2>2. Optional Bring Your Own Key (BYOK) Security</h2>
+    <p>
+      If you enter your own Gemini API key in Settings, it is encrypted locally using <strong>Android Keystore AES-256-GCM</strong>
+      and never uploaded to developer servers. You can delete your key anytime in Settings.
+    </p>
+
+    <h2>3. Device Permissions</h2>
+    <ul>
+      <li><strong>Camera:</strong> Requested at runtime only to scan whiteboards, handwritten notes, or textbook pages.</li>
+      <li><strong>Microphone:</strong> Requested at runtime only for live lecture dictation and Oral Quizmaster voice answers using Android's system SpeechRecognizer. Raw audio is not uploaded to developer servers.</li>
+      <li><strong>Android Photo Picker:</strong> Zero-permission system picker granting access only to the specific image you choose.</li>
+    </ul>
+
+    <h2>4. Third-Party Services</h2>
+    <p>
+      ExamForge uses Google Firebase Authentication, Cloud Firestore, Firebase AI Logic, and Firebase App Check.
+      ExamForge does not include third-party advertising networks or cross-app ad tracking.
+    </p>
+
+    <h2>5. Data Retention &amp; Deletion</h2>
+    <p>
+      Delete flashcards or decks directly in the app anytime. To request full account and cloud data deletion,
+      email <a href="mailto:tuyenctbk@gmail.com">tuyenctbk@gmail.com</a> with the subject
+      <em>"ExamForge Account Deletion Request"</em>. Requests are completed within 30 days.
+    </p>
+
+    <h2>6. Children's Privacy</h2>
+    <p>
+      ExamForge is not directed to children under 13 (or the applicable minimum age in your jurisdiction)
+      and does not knowingly collect personal data from children under 13.
+    </p>
+
+    <h2>7. Contact</h2>
+    <p>Email: <a href="mailto:tuyenctbk@gmail.com">tuyenctbk@gmail.com</a></p>
+  </main>
+</body>
+</html>

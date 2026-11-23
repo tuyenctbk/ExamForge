@@ -1,0 +1,174 @@
+<resources>
+    <!-- App Identity & Home Widget -->
+    <string name="app_name">ExamForge</string>
+    <string name="widget_label">ExamForge Quick Recall</string>
+    <string name="widget_description">Practice 1 quick active-recall flashcard right on your home screen every time you unlock your phone.</string>
+    <string name="widget_header_default">EXAMFORGE</string>
+    <string name="widget_due_default">0 due</string>
+    <string name="widget_empty_question">Snap a whiteboard or lecture note in ExamForge to unlock daily home screen flashcards.</string>
+    <string name="widget_reveal_answer">Reveal Answer</string>
+    <string name="widget_next">Next</string>
+    <string name="widget_again">Again</string>
+    <string name="widget_got_it">Got It</string>
+
+    <!-- Auth & Navigation -->
+    <string name="sign_in_google">Sign in with Google</string>
+    <string name="sign_out">Sign out</string>
+    <string name="tab_decks">Decks</string>
+    <string name="tab_forge">Forge</string>
+    <string name="tab_quizmaster">Quizmaster</string>
+    <string name="tab_settings">Settings</string>
+    <string name="auth_headline">Turn study notes into active-recall mastery</string>
+    <string name="auth_subtitle">Scan whiteboards, practice oral recall, and sync flashcards offline across your devices.</string>
+    <string name="auth_sync_note">Sign in with Google to back up decks and study progress securely.</string>
+
+    <!-- Accessibility Content Descriptions -->
+    <string name="cd_app_logo">ExamForge emblem</string>
+    <string name="cd_hero_banner">Study desk transforming notes into glowing flashcards</string>
+    <string name="cd_empty_illustration">Camera framing chalkboard physics notes into flashcards</string>
+    <string name="cd_toggle_theme">Toggle dark or light theme</string>
+    <string name="cd_navigate_back">Navigate back</string>
+    <string name="cd_snap_photo">Capture whiteboard or notes with camera</string>
+    <string name="cd_pick_gallery">Pick notes photo from gallery</string>
+    <string name="cd_voice_mic">Speak answer aloud</string>
+    <string name="cd_speak_toggle">Toggle oral voice readout</string>
+    <string name="cd_camera_close">Close camera</string>
+    <string name="cd_camera_flash">Cycle flash mode</string>
+    <string name="cd_camera_torch">Toggle desk torch light</string>
+    <string name="cd_camera_switch">Switch camera lens</string>
+    <string name="cd_camera_shutter">Capture notes photo</string>
+    <string name="cd_flashcard_camera_fab">Capture notes with camera to create flashcards</string>
+    <string name="cd_flashcard_add_manual">Add flashcard manually</string>
+    <string name="cd_flashcard_edit">Edit flashcard</string>
+    <string name="cd_flashcard_delete">Delete flashcard</string>
+
+    <!-- Camera & Saved Flashcards -->
+    <string name="camera_capture_title">Scan Study Notes</string>
+    <string name="camera_frame_hint">Align whiteboard, equations, or handwritten notes inside the frame</string>
+    <string name="camera_permission_title">Camera Access Needed</string>
+    <string name="camera_permission_rationale">ExamForge uses your camera to scan whiteboards, textbook diagrams, and handwritten notes for Gemini flashcard analysis.</string>
+    <string name="camera_grant_permission">Enable Camera</string>
+    <string name="camera_retake">Retake</string>
+    <string name="camera_analyze_now">Analyze with Gemini</string>
+    <string name="camera_add_notes">Attach &amp; Edit Options</string>
+    <string name="flashcards_screen_title">Saved Flashcards</string>
+    <string name="flashcards_fab_scan">Scan Notes</string>
+    <string name="flashcards_search_placeholder">Search questions or answers…</string>
+    <string name="flashcards_empty_title">No flashcards saved yet</string>
+    <string name="flashcards_empty_body">Tap Scan Notes to photograph handwritten pages, equations, or slides — Gemini parses them into structured cards automatically.</string>
+
+    <!-- Decks Hub & Study Arena -->
+    <string name="decks_all_filter">All</string>
+    <string name="decks_due_summary">%1$d due for review</string>
+    <string name="decks_study_all_due">Study Due Cards</string>
+    <string name="decks_match_blitz_button">60s Match Blitz</string>
+    <string name="decks_best_score">Best: %1$d</string>
+    <string name="decks_empty_title">Build your first study deck</string>
+    <string name="decks_empty_subtitle">Capture a whiteboard photo, dictate a lecture, or paste notes to forge active-recall flashcards.</string>
+    <string name="decks_new_deck">New Deck</string>
+    <string name="decks_saved_cards">All Cards</string>
+    <string name="study_arena_complete_title">Session Complete</string>
+    <string name="study_arena_reviewed_summary">Reviewed %1$d cards · %2$d mastered</string>
+    <string name="study_arena_back_to_decks">Back to Decks</string>
+    <string name="study_arena_show_hint">Show Hint</string>
+    <string name="study_arena_reveal_answer">Reveal Answer</string>
+    <string name="study_rating_again">Again</string>
+    <string name="study_rating_hard">Hard</string>
+    <string name="study_rating_good">Good</string>
+    <string name="study_rating_easy">Easy</string>
+
+    <!-- Snapshot Forge & Lecture Dictation -->
+    <string name="forge_title">Snapshot Forge</string>
+    <string name="forge_subtitle">Snap equations, upload slides, or dictate a live lecture — Gemini or our Offline Parser turns them into active-recall decks.</string>
+    <string name="forge_step_capture">1. Snap or Upload Study Material</string>
+    <string name="forge_step_notes">2. Lecture Audio, Notes &amp; Options</string>
+    <string name="forge_camerax_scan">CameraX Scan</string>
+    <string name="forge_gallery">Gallery</string>
+    <string name="forge_dictate_start">Dictate ($0)</string>
+    <string name="forge_dictate_stop">Stop Mic</string>
+    <string name="forge_notes_label">Paste or dictate lecture notes, Q:/A:, or Term: Definition</string>
+    <string name="forge_subject_label">Subject Hint (optional)</string>
+    <string name="forge_cards_count">Cards:</string>
+    <string name="forge_generate_gemini">Forge Flashcards with Gemini</string>
+    <string name="forge_generate_eco_lite">Forge with Eco Lite AI</string>
+    <string name="forge_generate_offline">Forge Cards Offline ($0)</string>
+    <string name="forge_instant_offline_btn">Instant Offline Parser ($0 · Saves AI Quota)</string>
+    <string name="forge_open_deck">Open Deck</string>
+    <string name="forge_scan_another">Scan Another</string>
+
+    <!-- Oral Quizmaster -->
+    <string name="quizmaster_title">Oral Quizmaster</string>
+    <string name="quizmaster_subtitle">Recite answers aloud or chat with Gemini</string>
+    <string name="quizmaster_ready_title">Ready for an active-recall drill?</string>
+    <string name="quizmaster_ready_body">Gemini asks one high-yield question at a time from your deck, evaluates your recited or typed explanation, and probes weak spots.</string>
+    <string name="quizmaster_start_button">Start Oral Quiz Session</string>
+    <string name="quizmaster_hint_chip">Hint</string>
+    <string name="quizmaster_next_chip">Next Question</string>
+    <string name="quizmaster_input_placeholder">Recite or type your answer…</string>
+    <string name="quizmaster_empty_title">No decks ready for oral practice</string>
+    <string name="quizmaster_go_to_forge">Go to Forge</string>
+
+    <!-- Match Blitz Mini-Game -->
+    <string name="match_blitz_title">60s Match Blitz</string>
+    <string name="match_blitz_start">Start 60s Blitz</string>
+    <string name="match_blitz_play_again">Play Again</string>
+    <string name="match_blitz_score_label">Score: %1$d</string>
+
+    <!-- Settings, AI Plan & Quota Recovery -->
+    <string name="settings_title">Settings &amp; Study Perks</string>
+    <string name="settings_subtitle">Tune late-night Dark Mode, AI usage preferences, offline cache, and your home screen widget.</string>
+    <string name="settings_appearance_title">Appearance &amp; Night Study Mode</string>
+    <string name="settings_appearance_desc">Obsidian Dark minimizes glare during late-night cram sessions.</string>
+    <string name="settings_oral_title">Oral Quizmaster Auto-Speak</string>
+    <string name="settings_oral_desc">Read quizmaster questions and feedback aloud via Text-to-Speech.</string>
+    <string name="settings_widget_title">Unlock-to-Recall Home Widget</string>
+    <string name="settings_widget_desc">Displays 1 quick due flashcard on your home screen every phone unlock.</string>
+    <string name="settings_pin_widget">Add Interactive Widget to Home Screen</string>
+    <string name="settings_sync_now">Sync Pending Reviews</string>
+    <string name="ai_plan_title">AI Usage Plan &amp; BYOK Key</string>
+    <string name="ai_plan_eco_lite_title">Eco Lite AI Mode (3× Quota Stretch)</string>
+    <string name="ai_plan_offline_title">Prefer Offline Instant Parser</string>
+    <string name="ai_plan_claim_grace">Claim +3 Free Daily Grace Credits</string>
+    <string name="ai_plan_byok_title">Bring Your Own Gemini API Key (BYOK)</string>
+    <string name="ai_plan_test_save">Test &amp; Save</string>
+    <string name="ai_plan_get_key">Get Free Key</string>
+    <string name="ai_plan_remove_key">Remove</string>
+
+    <!-- Smart Auto-Popups: Update, Rate App, Share App -->
+    <string name="popup_update_title">Update Available</string>
+    <string name="popup_update_body">A newer version of ExamForge (%1$s) is available with smoother study sessions and improvements.</string>
+    <string name="popup_update_primary">Update Now</string>
+    <string name="popup_update_later">Remind Me Later</string>
+    <string name="popup_update_skip">Skip This Version</string>
+
+    <string name="popup_rate_title">Enjoying ExamForge?</string>
+    <string name="popup_rate_body">You have built real study momentum! Would you like to leave an honest review on Google Play to help other students discover ExamForge?</string>
+    <string name="popup_rate_primary">Rate on Google Play</string>
+    <string name="popup_rate_later">Maybe Later</string>
+    <string name="popup_rate_never">Don\'t Ask Again</string>
+
+    <string name="popup_share_title">Share ExamForge with Study Partners</string>
+    <string name="popup_share_body">Great study milestone! Invite classmates or friends to turn whiteboard notes into active-recall flashcards too.</string>
+    <string name="popup_share_primary">Share App</string>
+    <string name="popup_share_later">Not Now</string>
+    <string name="popup_share_never">Don\'t Ask Again</string>
+
+    <string name="share_app_chooser_title">Share ExamForge</string>
+    <string name="share_app_message">I\'ve been using ExamForge to turn whiteboard photos and lecture notes into active-recall flashcards and 60-second Match Blitz drills. Check it out: %1$s</string>
+
+    <!-- Settings: Community, Updates, Privacy & Event Telemetry -->
+    <string name="settings_community_title">App Support, Updates &amp; Privacy</string>
+    <string name="settings_community_subtitle">Version %1$s · Smart non-intrusive reminders &amp; transparent on-device event tracking</string>
+    <string name="settings_check_update">Check Updates</string>
+    <string name="settings_rate_app">Rate App</string>
+    <string name="settings_share_app">Share App</string>
+    <string name="settings_privacy_policy">Privacy Policy</string>
+    <string name="settings_telemetry_toggle_show">Show Event Log (%1$d)</string>
+    <string name="settings_telemetry_toggle_hide">Hide Event Log</string>
+    <string name="settings_telemetry_summary">Sessions: %1$d · Active Days: %2$d · Engagement Score: %3$d</string>
+    <string name="settings_telemetry_guardrails">Auto-popup guardrails: Never on app start · Max 1/session · 72h global cooldown · 24h error-free window</string>
+    <string name="settings_update_up_to_date">You are on the latest version (%1$s).</string>
+    <string name="privacy_policy_title">ExamForge Privacy Policy</string>
+    <string name="common_close">Close</string>
+    <string name="common_cancel">Cancel</string>
+</resources>

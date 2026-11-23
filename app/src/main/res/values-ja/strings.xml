@@ -1,0 +1,174 @@
+<resources>
+    <!-- App Identity & Home Widget -->
+    <string name="app_name">ExamForge</string>
+    <string name="widget_label">ExamForge クイック復習</string>
+    <string name="widget_description">ロック解除のたびにホーム画面でアクティブリコール単語帳を1枚復習できます。</string>
+    <string name="widget_header_default">EXAMFORGE</string>
+    <string name="widget_due_default">復習予定 0件</string>
+    <string name="widget_empty_question">ExamForgeでホワイトボードや講義ノートを撮影すると、ホーム画面の毎日復習カードが使えます。</string>
+    <string name="widget_reveal_answer">答えを表示</string>
+    <string name="widget_next">次へ</string>
+    <string name="widget_again">もう一度</string>
+    <string name="widget_got_it">覚えた</string>
+
+    <!-- Auth & Navigation -->
+    <string name="sign_in_google">Googleでログイン</string>
+    <string name="sign_out">ログアウト</string>
+    <string name="tab_decks">デッキ</string>
+    <string name="tab_forge">作成</string>
+    <string name="tab_quizmaster">口頭テスト</string>
+    <string name="tab_settings">設定</string>
+    <string name="auth_headline">ノートを確実な記憶に変える</string>
+    <string name="auth_subtitle">板書をスキャンし、口頭テストで練習。単語帳はオフライン対応で端末間同期できます。</string>
+    <string name="auth_sync_note">Googleでログインして、デッキと学習記録を安全にバックアップしましょう。</string>
+
+    <!-- Accessibility Content Descriptions -->
+    <string name="cd_app_logo">ExamForge エンブレム</string>
+    <string name="cd_hero_banner">ノートが光るフラッシュカードへ変わる学習机</string>
+    <string name="cd_empty_illustration">黒板の物理ノートをフラッシュカード化するカメラ</string>
+    <string name="cd_toggle_theme">ダークモードとライトモードを切り替え</string>
+    <string name="cd_navigate_back">戻る</string>
+    <string name="cd_snap_photo">カメラで板書やノートを撮影</string>
+    <string name="cd_pick_gallery">ギャラリーからノート写真を選択</string>
+    <string name="cd_voice_mic">声で回答する</string>
+    <string name="cd_speak_toggle">音声読み上げを切り替え</string>
+    <string name="cd_camera_close">カメラを閉じる</string>
+    <string name="cd_camera_flash">フラッシュモードを切り替え</string>
+    <string name="cd_camera_torch">ライトを切り替え</string>
+    <string name="cd_camera_switch">カメラレンズを切り替え</string>
+    <string name="cd_camera_shutter">ノートを撮影</string>
+    <string name="cd_flashcard_camera_fab">ノートを撮影してフラッシュカードを作成</string>
+    <string name="cd_flashcard_add_manual">カードを手動追加</string>
+    <string name="cd_flashcard_edit">カードを編集</string>
+    <string name="cd_flashcard_delete">カードを削除</string>
+
+    <!-- Camera & Saved Flashcards -->
+    <string name="camera_capture_title">学習ノートをスキャン</string>
+    <string name="camera_frame_hint">板書・数式・手書きノートを枠内に収めてください</string>
+    <string name="camera_permission_title">カメラの許可が必要です</string>
+    <string name="camera_permission_rationale">ExamForgeは板書や教科書の図、手書きノートをGeminiでフラッシュカード解析するためにカメラを使用します。</string>
+    <string name="camera_grant_permission">カメラを有効にする</string>
+    <string name="camera_retake">撮り直す</string>
+    <string name="camera_analyze_now">Geminiで解析</string>
+    <string name="camera_add_notes">メモと設定を追加</string>
+    <string name="flashcards_screen_title">保存済みカード</string>
+    <string name="flashcards_fab_scan">ノートをスキャン</string>
+    <string name="flashcards_search_placeholder">質問や答えを検索…</string>
+    <string name="flashcards_empty_title">保存されたカードはまだありません</string>
+    <string name="flashcards_empty_body">「ノートをスキャン」をタップして手書きノートや数式、スライドを撮影すると、Geminiが自動でカード化します。</string>
+
+    <!-- Decks Hub & Study Arena -->
+    <string name="decks_all_filter">すべて</string>
+    <string name="decks_due_summary">復習予定 %1$d枚</string>
+    <string name="decks_study_all_due">予定カードを復習</string>
+    <string name="decks_match_blitz_button">60秒マッチ</string>
+    <string name="decks_best_score">最高: %1$d</string>
+    <string name="decks_empty_title">最初のデッキを作成しましょう</string>
+    <string name="decks_empty_subtitle">板書の撮影、講義の音声入力、またはテキスト貼り付けで復習カードを作成できます。</string>
+    <string name="decks_new_deck">新規デッキ</string>
+    <string name="decks_saved_cards">全カード</string>
+    <string name="study_arena_complete_title">セッション完了</string>
+    <string name="study_arena_reviewed_summary">%1$d枚復習 · %2$d枚習得</string>
+    <string name="study_arena_back_to_decks">デッキ一覧へ</string>
+    <string name="study_arena_show_hint">ヒントを見る</string>
+    <string name="study_arena_reveal_answer">答えを表示</string>
+    <string name="study_rating_again">もう一度</string>
+    <string name="study_rating_hard">難しい</string>
+    <string name="study_rating_good">普通</string>
+    <string name="study_rating_easy">簡単</string>
+
+    <!-- Snapshot Forge & Lecture Dictation -->
+    <string name="forge_title">スナップショット作成</string>
+    <string name="forge_subtitle">数式の撮影、スライドの読み込み、講義の音声入力からGeminiまたはオフライン解析でデッキを生成します。</string>
+    <string name="forge_step_capture">1. 教材を撮影または選択</string>
+    <string name="forge_step_notes">2. 講義音声・ノートと設定</string>
+    <string name="forge_camerax_scan">CameraXスキャン</string>
+    <string name="forge_gallery">ギャラリー</string>
+    <string name="forge_dictate_start">音声入力 (¥0)</string>
+    <string name="forge_dictate_stop">録音停止</string>
+    <string name="forge_notes_label">講義ノート、Q:/A:、または 用語: 定義 を入力・音声入力</string>
+    <string name="forge_subject_label">科目ヒント（任意）</string>
+    <string name="forge_cards_count">枚数:</string>
+    <string name="forge_generate_gemini">Geminiでカード作成</string>
+    <string name="forge_generate_eco_lite">Eco Lite AIで作成</string>
+    <string name="forge_generate_offline">オフラインで作成 (¥0)</string>
+    <string name="forge_instant_offline_btn">即時オフライン解析 (¥0 · AI枠を節約)</string>
+    <string name="forge_open_deck">デッキを開く</string>
+    <string name="forge_scan_another">別のノートをスキャン</string>
+
+    <!-- Oral Quizmaster -->
+    <string name="quizmaster_title">口頭クイズマスター</string>
+    <string name="quizmaster_subtitle">声で回答するかGeminiとチャット</string>
+    <string name="quizmaster_ready_title">口頭リコール演習を始めますか？</string>
+    <string name="quizmaster_ready_body">Geminiがデッキから重要な問題を1問ずつ出題し、音声またはテキスト回答を評価して弱点を掘り下げます。</string>
+    <string name="quizmaster_start_button">口頭テストを開始</string>
+    <string name="quizmaster_hint_chip">ヒント</string>
+    <string name="quizmaster_next_chip">次の問題</string>
+    <string name="quizmaster_input_placeholder">声またはテキストで回答…</string>
+    <string name="quizmaster_empty_title">口頭練習に使えるデッキがありません</string>
+    <string name="quizmaster_go_to_forge">作成画面へ</string>
+
+    <!-- Match Blitz Mini-Game -->
+    <string name="match_blitz_title">60秒マッチブリッツ</string>
+    <string name="match_blitz_start">60秒ブリッツを開始</string>
+    <string name="match_blitz_play_again">もう一度プレイ</string>
+    <string name="match_blitz_score_label">スコア: %1$d</string>
+
+    <!-- Settings, AI Plan & Quota Recovery -->
+    <string name="settings_title">設定と学習機能</string>
+    <string name="settings_subtitle">深夜向けダークモード、AIプラン、オフラインキャッシュ、ホームウィジェットを調整できます。</string>
+    <string name="settings_appearance_title">外観とナイト学習モード</string>
+    <string name="settings_appearance_desc">Obsidianダークテーマで夜間の学習時のまぶしさを抑えます。</string>
+    <string name="settings_oral_title">口頭クイズ自動読み上げ</string>
+    <string name="settings_oral_desc">問題とフィードバックを音声合成で自動読み上げします。</string>
+    <string name="settings_widget_title">ロック解除クイック復習ウィジェット</string>
+    <string name="settings_widget_desc">スマホを開くたびにホーム画面に復習カードを1枚表示します。</string>
+    <string name="settings_pin_widget">ホーム画面にウィジェットを追加</string>
+    <string name="settings_sync_now">未同期の復習を同期</string>
+    <string name="ai_plan_title">AI利用プランとBYOKキー</string>
+    <string name="ai_plan_eco_lite_title">Eco Lite AIモード（利用枠3倍長持ち）</string>
+    <string name="ai_plan_offline_title">オフライン即時解析を優先</string>
+    <string name="ai_plan_claim_grace">本日のボーナス枠 +3 を受け取る</string>
+    <string name="ai_plan_byok_title">自分のGemini APIキーを使用 (BYOK)</string>
+    <string name="ai_plan_test_save">テストして保存</string>
+    <string name="ai_plan_get_key">キーを取得</string>
+    <string name="ai_plan_remove_key">削除</string>
+
+    <!-- Smart Auto-Popups: Update, Rate App, Share App -->
+    <string name="popup_update_title">アップデートがあります</string>
+    <string name="popup_update_body">より快適な学習体験と改善を含む新しいExamForge (%1$s) が利用可能です。</string>
+    <string name="popup_update_primary">今すぐ更新</string>
+    <string name="popup_update_later">あとで通知</string>
+    <string name="popup_update_skip">このバージョンをスキップ</string>
+
+    <string name="popup_rate_title">ExamForgeはお役に立っていますか？</string>
+    <string name="popup_rate_body">順調に学習が進んでいますね。他の学習者がExamForgeを見つけやすくなるよう、Google Playで率直なレビューを投稿しませんか？</string>
+    <string name="popup_rate_primary">Google Playで評価</string>
+    <string name="popup_rate_later">また今度</string>
+    <string name="popup_rate_never">今後表示しない</string>
+
+    <string name="popup_share_title">学習仲間とExamForgeを共有</string>
+    <string name="popup_share_body">素晴らしい学習マイルストーンです！友達やクラスメートにも板書からの単語帳作成を紹介しませんか？</string>
+    <string name="popup_share_primary">アプリを共有</string>
+    <string name="popup_share_later">今はしない</string>
+    <string name="popup_share_never">今後表示しない</string>
+
+    <string name="share_app_chooser_title">ExamForgeを共有</string>
+    <string name="share_app_message">ExamForgeで板書写真や講義ノートを単語帳と60秒マッチ演習に変えています。ぜひ試してみてください: %1$s</string>
+
+    <!-- Settings: Community, Updates, Privacy & Event Telemetry -->
+    <string name="settings_community_title">サポート・更新・プライバシー</string>
+    <string name="settings_community_subtitle">バージョン %1$s · 控えめな通知と透明な端末内イベント記録</string>
+    <string name="settings_check_update">更新を確認</string>
+    <string name="settings_rate_app">アプリを評価</string>
+    <string name="settings_share_app">アプリを共有</string>
+    <string name="settings_privacy_policy">プライバシー</string>
+    <string name="settings_telemetry_toggle_show">イベントログを表示 (%1$d)</string>
+    <string name="settings_telemetry_toggle_hide">イベントログを隠す</string>
+    <string name="settings_telemetry_summary">セッション: %1$d · 利用日数: %2$d · 活用スコア: %3$d</string>
+    <string name="settings_telemetry_guardrails">通知ルール: 起動時は非表示 · 1セッション最大1回 · 72時間間隔 · エラー後24時間抑制</string>
+    <string name="settings_update_up_to_date">最新バージョン (%1$s) を使用中です。</string>
+    <string name="privacy_policy_title">ExamForge プライバシーポリシー</string>
+    <string name="common_close">閉じる</string>
+    <string name="common_cancel">キャンセル</string>
+</resources>

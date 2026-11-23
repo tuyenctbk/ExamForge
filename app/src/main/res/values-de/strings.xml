@@ -1,0 +1,163 @@
+<resources>
+    <string name="app_name">ExamForge</string>
+    <string name="widget_label">ExamForge Schnellabfrage</string>
+    <string name="widget_description">Übe bei jedem Entsperren 1 aktive Lernkarte direkt auf deinem Startbildschirm.</string>
+    <string name="widget_header_default">EXAMFORGE</string>
+    <string name="widget_due_default">0 fällig</string>
+    <string name="widget_empty_question">Fotografiere eine Tafel oder Vorlesungsnotiz in ExamForge, um tägliche Startbildschirm-Karten freizuschalten.</string>
+    <string name="widget_reveal_answer">Antwort zeigen</string>
+    <string name="widget_next">Weiter</string>
+    <string name="widget_again">Nochmal</string>
+    <string name="widget_got_it">Gewusst</string>
+
+    <string name="sign_in_google">Mit Google anmelden</string>
+    <string name="sign_out">Abmelden</string>
+    <string name="tab_decks">Stapel</string>
+    <string name="tab_forge">Erstellen</string>
+    <string name="tab_quizmaster">Quizmaster</string>
+    <string name="tab_settings">Einstellungen</string>
+    <string name="auth_headline">Verwandle Notizen in echtes Prüfungswissen</string>
+    <string name="auth_subtitle">Scanne Tafeln, übe mündlich und synchronisiere Lernkarten offline auf deinen Geräten.</string>
+    <string name="auth_sync_note">Melde dich mit Google an, um Stapel und Lernfortschritt sicher zu speichern.</string>
+
+    <string name="cd_app_logo">ExamForge Emblem</string>
+    <string name="cd_hero_banner">Schreibtisch, der Notizen in leuchtende Lernkarten verwandelt</string>
+    <string name="cd_empty_illustration">Kamera scannt Tafelnotizen für Lernkarten</string>
+    <string name="cd_toggle_theme">Dunkles oder helles Design wechseln</string>
+    <string name="cd_navigate_back">Zurück</string>
+    <string name="cd_snap_photo">Tafel oder Notizen fotografieren</string>
+    <string name="cd_pick_gallery">Notizfoto aus Galerie wählen</string>
+    <string name="cd_voice_mic">Antwort laut sprechen</string>
+    <string name="cd_speak_toggle">Sprachausgabe umschalten</string>
+    <string name="cd_camera_close">Kamera schließen</string>
+    <string name="cd_camera_flash">Blitzmodus wechseln</string>
+    <string name="cd_camera_torch">Taschenlampe umschalten</string>
+    <string name="cd_camera_switch">Kamera wechseln</string>
+    <string name="cd_camera_shutter">Notizfoto aufnehmen</string>
+    <string name="cd_flashcard_camera_fab">Notizen fotografieren, um Karten zu erstellen</string>
+    <string name="cd_flashcard_add_manual">Lernkarte manuell hinzufügen</string>
+    <string name="cd_flashcard_edit">Lernkarte bearbeiten</string>
+    <string name="cd_flashcard_delete">Lernkarte löschen</string>
+
+    <string name="camera_capture_title">Lernnotizen scannen</string>
+    <string name="camera_frame_hint">Tafel, Gleichungen oder handschriftliche Notizen im Rahmen ausrichten</string>
+    <string name="camera_permission_title">Kamerazugriff erforderlich</string>
+    <string name="camera_permission_rationale">ExamForge nutzt deine Kamera zum Scannen von Tafeln, Diagrammen und Notizen für die Lernkarten-Analyse.</string>
+    <string name="camera_grant_permission">Kamera aktivieren</string>
+    <string name="camera_retake">Neu aufnehmen</string>
+    <string name="camera_analyze_now">Mit Gemini analysieren</string>
+    <string name="camera_add_notes">Optionen anhängen &amp; bearbeiten</string>
+    <string name="flashcards_screen_title">Gespeicherte Karten</string>
+    <string name="flashcards_fab_scan">Notizen scannen</string>
+    <string name="flashcards_search_placeholder">Fragen oder Antworten suchen…</string>
+    <string name="flashcards_empty_title">Noch keine Lernkarten gespeichert</string>
+    <string name="flashcards_empty_body">Tippe auf Notizen scannen, um Seiten, Formeln oder Folien automatisch in strukturierte Karten umzuwandeln.</string>
+
+    <string name="decks_all_filter">Alle</string>
+    <string name="decks_due_summary">%1$d fällig</string>
+    <string name="decks_study_all_due">Fällige lernen</string>
+    <string name="decks_match_blitz_button">60s Match-Blitz</string>
+    <string name="decks_best_score">Rekord: %1$d</string>
+    <string name="decks_empty_title">Erstelle deinen ersten Lernstapel</string>
+    <string name="decks_empty_subtitle">Fotografiere eine Tafel, diktiere eine Vorlesung oder füge Text ein, um Lernkarten zu erstellen.</string>
+    <string name="decks_new_deck">Neuer Stapel</string>
+    <string name="decks_saved_cards">Alle Karten</string>
+    <string name="study_arena_complete_title">Sitzung abgeschlossen</string>
+    <string name="study_arena_reviewed_summary">%1$d Karten gelernt · %2$d gemeistert</string>
+    <string name="study_arena_back_to_decks">Zurück zu Stapeln</string>
+    <string name="study_arena_show_hint">Hinweis zeigen</string>
+    <string name="study_arena_reveal_answer">Antwort aufdecken</string>
+    <string name="study_rating_again">Nochmal</string>
+    <string name="study_rating_hard">Schwer</string>
+    <string name="study_rating_good">Gut</string>
+    <string name="study_rating_easy">Leicht</string>
+
+    <string name="forge_title">Notiz-Schmiede</string>
+    <string name="forge_subtitle">Scanne Formeln, lade Folien hoch oder diktiere eine Vorlesung — Gemini oder unser Offline-Parser erstellt Lernstapel.</string>
+    <string name="forge_step_capture">1. Lernmaterial scannen oder wählen</string>
+    <string name="forge_step_notes">2. Vorlesungs-Audio, Notizen &amp; Optionen</string>
+    <string name="forge_camerax_scan">Kamera-Scan</string>
+    <string name="forge_gallery">Galerie</string>
+    <string name="forge_dictate_start">Diktieren (0$)</string>
+    <string name="forge_dictate_stop">Mikro stoppen</string>
+    <string name="forge_notes_label">Notizen einfügen oder diktieren (Q:/A: oder Begriff: Definition)</string>
+    <string name="forge_subject_label">Fachbereich (optional)</string>
+    <string name="forge_cards_count">Karten:</string>
+    <string name="forge_generate_gemini">Karten mit Gemini erstellen</string>
+    <string name="forge_generate_eco_lite">Mit Eco Lite AI erstellen</string>
+    <string name="forge_generate_offline">Offline erstellen (0$)</string>
+    <string name="forge_instant_offline_btn">Offline-Parser (0$ · Spart Kontingent)</string>
+    <string name="forge_open_deck">Stapel öffnen</string>
+    <string name="forge_scan_another">Weiteres scannen</string>
+
+    <string name="quizmaster_title">Mündlicher Quizmaster</string>
+    <string name="quizmaster_subtitle">Sprich Antworten laut aus oder chatte mit Gemini</string>
+    <string name="quizmaster_ready_title">Bereit für aktives Abfragen?</string>
+    <string name="quizmaster_ready_body">Gemini stellt jeweils eine gezielte Frage aus deinem Stapel, bewertet deine Erklärung und hakt bei Lücken nach.</string>
+    <string name="quizmaster_start_button">Mündliches Quiz starten</string>
+    <string name="quizmaster_hint_chip">Hinweis</string>
+    <string name="quizmaster_next_chip">Nächste Frage</string>
+    <string name="quizmaster_input_placeholder">Antwort sprechen oder tippen…</string>
+    <string name="quizmaster_empty_title">Keine Stapel zum Abfragen bereit</string>
+    <string name="quizmaster_go_to_forge">Zu Erstellen</string>
+
+    <string name="match_blitz_title">60s Match-Blitz</string>
+    <string name="match_blitz_start">60s Blitz starten</string>
+    <string name="match_blitz_play_again">Nochmal spielen</string>
+    <string name="match_blitz_score_label">Punkte: %1$d</string>
+
+    <string name="settings_title">Einstellungen &amp; Lernextras</string>
+    <string name="settings_subtitle">Stelle Nachtmodus, KI-Nutzungsplan, Offline-Speicher und Startbildschirm-Widget ein.</string>
+    <string name="settings_appearance_title">Design &amp; Nacht-Lernmodus</string>
+    <string name="settings_appearance_desc">Obsidian Dark reduziert Blendung beim Lernen am späten Abend.</string>
+    <string name="settings_oral_title">Quizmaster Sprachausgabe</string>
+    <string name="settings_oral_desc">Liest Fragen und Feedback des Quizmasters automatisch laut vor.</string>
+    <string name="settings_widget_title">Startbildschirm-Lernwidget</string>
+    <string name="settings_widget_desc">Zeigt bei jedem Entsperren 1 fällige Lernkarte direkt auf dem Startbildschirm.</string>
+    <string name="settings_pin_widget">Widget zum Startbildschirm hinzufügen</string>
+    <string name="settings_sync_now">Ausstehende Reviews synchronisieren</string>
+    <string name="ai_plan_title">KI-Plan &amp; BYOK-Schlüssel</string>
+    <string name="ai_plan_eco_lite_title">Eco Lite KI-Modus (3× Reichweite)</string>
+    <string name="ai_plan_offline_title">Offline-Sofortparser bevorzugen</string>
+    <string name="ai_plan_claim_grace">+3 tägliche Bonus-Credits sichern</string>
+    <string name="ai_plan_byok_title">Eigenen Gemini API-Schlüssel nutzen (BYOK)</string>
+    <string name="ai_plan_test_save">Prüfen &amp; Speichern</string>
+    <string name="ai_plan_get_key">Schlüssel holen</string>
+    <string name="ai_plan_remove_key">Entfernen</string>
+
+    <string name="popup_update_title">Update verfügbar</string>
+    <string name="popup_update_body">Eine neuere Version von ExamForge (%1$s) ist verfügbar mit flüssigeren Lernsitzungen und Verbesserungen.</string>
+    <string name="popup_update_primary">Jetzt aktualisieren</string>
+    <string name="popup_update_later">Später erinnern</string>
+    <string name="popup_update_skip">Diese Version überspringen</string>
+
+    <string name="popup_rate_title">Gefällt dir ExamForge?</string>
+    <string name="popup_rate_body">Du hast schon tolle Lernfortschritte erzielt! Möchtest du eine ehrliche Bewertung bei Google Play abgeben?</string>
+    <string name="popup_rate_primary">Auf Google Play bewerten</string>
+    <string name="popup_rate_later">Vielleicht später</string>
+    <string name="popup_rate_never">Nicht mehr fragen</string>
+
+    <string name="popup_share_title">ExamForge mit Lernpartnern teilen</string>
+    <string name="popup_share_body">Starker Lernmeilenstein! Lade Kommilitonen ein, Tafelnotizen ebenfalls in Lernkarten zu verwandeln.</string>
+    <string name="popup_share_primary">App teilen</string>
+    <string name="popup_share_later">Jetzt nicht</string>
+    <string name="popup_share_never">Nicht mehr fragen</string>
+
+    <string name="share_app_chooser_title">ExamForge teilen</string>
+    <string name="share_app_message">Ich nutze ExamForge, um Tafelfotos und Vorlesungsnotizen in aktive Lernkarten und 60-Sekunden-Drills zu verwandeln. Schau es dir an: %1$s</string>
+
+    <string name="settings_community_title">Support, Updates &amp; Datenschutz</string>
+    <string name="settings_community_subtitle">Version %1$s · Dezente Hinweise &amp; lokales Ereignisprotokoll</string>
+    <string name="settings_check_update">Updates prüfen</string>
+    <string name="settings_rate_app">Bewerten</string>
+    <string name="settings_share_app">Teilen</string>
+    <string name="settings_privacy_policy">Datenschutz</string>
+    <string name="settings_telemetry_toggle_show">Ereignisprotokoll (%1$d)</string>
+    <string name="settings_telemetry_toggle_hide">Protokoll ausblenden</string>
+    <string name="settings_telemetry_summary">Sitzungen: %1$d · Aktive Tage: %2$d · Score: %3$d</string>
+    <string name="settings_telemetry_guardrails">Anti-Spam-Schutz: Nie beim Start · Max 1/Sitzung · 72h globale Pause · 24h fehlerfreies Fenster</string>
+    <string name="settings_update_up_to_date">Du nutzt bereits die neueste Version (%1$s).</string>
+    <string name="privacy_policy_title">ExamForge Datenschutzerklärung</string>
+    <string name="common_close">Schließen</string>
+    <string name="common_cancel">Abbrechen</string>
+</resources>

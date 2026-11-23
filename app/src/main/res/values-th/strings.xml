@@ -1,0 +1,174 @@
+<resources>
+    <!-- App Identity & Home Widget -->
+    <string name="app_name">ExamForge</string>
+    <string name="widget_label">ExamForge ทบทวนด่วน</string>
+    <string name="widget_description">ฝึกจำแฟลชการ์ดแบบ Active Recall 1 ใบบนหน้าจอหลักทุกครั้งที่ปลดล็อกโทรศัพท์</string>
+    <string name="widget_header_default">EXAMFORGE</string>
+    <string name="widget_due_default">ครบกำหนด 0</string>
+    <string name="widget_empty_question">ถ่ายภาพกระดานไวท์บอร์ดหรือโน้ตเลกเชอร์ใน ExamForge เพื่อปลดล็อกแฟลชการ์ดรายวันบนหน้าจอหลัก</string>
+    <string name="widget_reveal_answer">ดูคำตอบ</string>
+    <string name="widget_next">ถัดไป</string>
+    <string name="widget_again">อีกครั้ง</string>
+    <string name="widget_got_it">จำได้แล้ว</string>
+
+    <!-- Auth & Navigation -->
+    <string name="sign_in_google">เข้าสู่ระบบด้วย Google</string>
+    <string name="sign_out">ออกจากระบบ</string>
+    <string name="tab_decks">ชุดการ์ด</string>
+    <string name="tab_forge">สร้าง</string>
+    <string name="tab_quizmaster">สอบปากเปล่า</string>
+    <string name="tab_settings">ตั้งค่า</string>
+    <string name="auth_headline">เปลี่ยนโน้ตเรียนให้จำแม่นด้วย Active Recall</string>
+    <string name="auth_subtitle">สแกนกระดาน ฝึกตอบปากเปล่า และซิงก์แฟลชการ์ดใช้งานออฟไลน์ได้ทุกอุปกรณ์</string>
+    <string name="auth_sync_note">เข้าสู่ระบบด้วย Google เพื่อสำรองชุดการ์ดและความคืบหน้าการเรียนอย่างปลอดภัย</string>
+
+    <!-- Accessibility Content Descriptions -->
+    <string name="cd_app_logo">ตราสัญลักษณ์ ExamForge</string>
+    <string name="cd_hero_banner">โต๊ะอ่านหนังสือที่เปลี่ยนโน้ตเป็นแฟลชการ์ดเรืองแสง</string>
+    <string name="cd_empty_illustration">กล้องสแกนโน้ตฟิสิกส์บนกระดานดำเป็นแฟลชการ์ด</string>
+    <string name="cd_toggle_theme">สลับธีมมืดหรือธีมสว่าง</string>
+    <string name="cd_navigate_back">ย้อนกลับ</string>
+    <string name="cd_snap_photo">ถ่ายภาพกระดานหรือโน้ตด้วยกล้อง</string>
+    <string name="cd_pick_gallery">เลือกรูปโน้ตจากแกลเลอรี</string>
+    <string name="cd_voice_mic">พูดคำตอบออกเสียง</string>
+    <string name="cd_speak_toggle">เปิดหรือปิดเสียงอ่าน</string>
+    <string name="cd_camera_close">ปิดกล้อง</string>
+    <string name="cd_camera_flash">สลับโหมดแฟลช</string>
+    <string name="cd_camera_torch">เปิดหรือปิดไฟฉาย</string>
+    <string name="cd_camera_switch">สลับกล้องหน้าหรือหลัง</string>
+    <string name="cd_camera_shutter">ถ่ายภาพโน้ต</string>
+    <string name="cd_flashcard_camera_fab">ถ่ายภาพโน้ตด้วยกล้องเพื่อสร้างแฟลชการ์ด</string>
+    <string name="cd_flashcard_add_manual">เพิ่มแฟลชการ์ดด้วยตนเอง</string>
+    <string name="cd_flashcard_edit">แก้ไขแฟลชการ์ด</string>
+    <string name="cd_flashcard_delete">ลบแฟลชการ์ด</string>
+
+    <!-- Camera & Saved Flashcards -->
+    <string name="camera_capture_title">สแกนโน้ตเรียน</string>
+    <string name="camera_frame_hint">จัดวางกระดาน สูตรคำนวณ หรือลายมือให้อยู่ในกรอบ</string>
+    <string name="camera_permission_title">ต้องอนุญาตการใช้งานกล้อง</string>
+    <string name="camera_permission_rationale">ExamForge ใช้กล้องของคุณเพื่อสแกนกระดาน แผนภาพหนังสือ และโน้ตลายมือให้ Gemini วิเคราะห์เป็นแฟลชการ์ด</string>
+    <string name="camera_grant_permission">เปิดใช้งานกล้อง</string>
+    <string name="camera_retake">ถ่ายใหม่</string>
+    <string name="camera_analyze_now">วิเคราะห์ด้วย Gemini</string>
+    <string name="camera_add_notes">เพิ่มโน้ตและตัวเลือก</string>
+    <string name="flashcards_screen_title">แฟลชการ์ดที่บันทึกไว้</string>
+    <string name="flashcards_fab_scan">สแกนโน้ต</string>
+    <string name="flashcards_search_placeholder">ค้นหาคำถามหรือคำตอบ…</string>
+    <string name="flashcards_empty_title">ยังไม่มีแฟลชการ์ดที่บันทึกไว้</string>
+    <string name="flashcards_empty_body">แตะ สแกนโน้ต เพื่อถ่ายภาพหน้ากระดาษ สูตร หรือสไลด์ — Gemini จะแปลงเป็นแฟลชการ์ดให้อัตโนมัติ</string>
+
+    <!-- Decks Hub & Study Arena -->
+    <string name="decks_all_filter">ทั้งหมด</string>
+    <string name="decks_due_summary">ครบกำหนดทบทวน %1$d ใบ</string>
+    <string name="decks_study_all_due">ทบทวนการ์ดครบกำหนด</string>
+    <string name="decks_match_blitz_button">จับคู่ 60 วิ</string>
+    <string name="decks_best_score">สูงสุด: %1$d</string>
+    <string name="decks_empty_title">สร้างชุดการ์ดแรกของคุณ</string>
+    <string name="decks_empty_subtitle">ถ่ายภาพกระดาน พูดบันทึกเลกเชอร์ หรือวางโน้ตเพื่อสร้างการ์ด Active Recall</string>
+    <string name="decks_new_deck">ชุดการ์ดใหม่</string>
+    <string name="decks_saved_cards">การ์ดทั้งหมด</string>
+    <string name="study_arena_complete_title">ทบทวนครบแล้ว</string>
+    <string name="study_arena_reviewed_summary">ทบทวน %1$d ใบ · จำแม่น %2$d ใบ</string>
+    <string name="study_arena_back_to_decks">กลับไปยังชุดการ์ด</string>
+    <string name="study_arena_show_hint">ดูคำใบ้</string>
+    <string name="study_arena_reveal_answer">ดูคำตอบ</string>
+    <string name="study_rating_again">อีกครั้ง</string>
+    <string name="study_rating_hard">ยาก</string>
+    <string name="study_rating_good">ดี</string>
+    <string name="study_rating_easy">ง่าย</string>
+
+    <!-- Snapshot Forge & Lecture Dictation -->
+    <string name="forge_title">สตูดิโอสร้างการ์ด</string>
+    <string name="forge_subtitle">ถ่ายภาพสูตร อัปโหลดสไลด์ หรือพูดบันทึกเลกเชอร์ — Gemini หรือตัวแยกออฟไลน์จะสร้างชุดการ์ดให้ทันที</string>
+    <string name="forge_step_capture">1. ถ่ายภาพหรืออัปโหลดเนื้อหาเรียน</string>
+    <string name="forge_step_notes">2. เสียงเลกเชอร์ โน้ต และตัวเลือก</string>
+    <string name="forge_camerax_scan">สแกน CameraX</string>
+    <string name="forge_gallery">แกลเลอรี</string>
+    <string name="forge_dictate_start">พูดบันทึก (฿0)</string>
+    <string name="forge_dictate_stop">หยุดไมค์</string>
+    <string name="forge_notes_label">วางหรือพูดโน้ตเลกเชอร์ Q:/A: หรือ คำศัพท์: ความหมาย</string>
+    <string name="forge_subject_label">คำใบ้วิชา (ไม่บังคับ)</string>
+    <string name="forge_cards_count">จำนวนการ์ด:</string>
+    <string name="forge_generate_gemini">สร้างแฟลชการ์ดด้วย Gemini</string>
+    <string name="forge_generate_eco_lite">สร้างด้วย Eco Lite AI</string>
+    <string name="forge_generate_offline">สร้างการ์ดออฟไลน์ (฿0)</string>
+    <string name="forge_instant_offline_btn">ตัวแยกออฟไลน์ทันที (฿0 · ประหยัดโควตา AI)</string>
+    <string name="forge_open_deck">เปิดชุดการ์ด</string>
+    <string name="forge_scan_another">สแกนเพิ่มเติม</string>
+
+    <!-- Oral Quizmaster -->
+    <string name="quizmaster_title">ผู้คุมสอบปากเปล่า</string>
+    <string name="quizmaster_subtitle">พูดคำตอบออกเสียงหรือคุยกับ Gemini</string>
+    <string name="quizmaster_ready_title">พร้อมฝึกทบทวนแบบ Active Recall แล้วหรือยัง?</string>
+    <string name="quizmaster_ready_body">Gemini จะถามคำถามสำคัญทีละข้อจากชุดการ์ดของคุณ ประเมินคำตอบที่พูดหรือพิมพ์ และเจาะจุดที่ยังไม่แม่น</string>
+    <string name="quizmaster_start_button">เริ่มสอบปากเปล่า</string>
+    <string name="quizmaster_hint_chip">คำใบ้</string>
+    <string name="quizmaster_next_chip">ข้อถัดไป</string>
+    <string name="quizmaster_input_placeholder">พูดหรือพิมพ์คำตอบของคุณ…</string>
+    <string name="quizmaster_empty_title">ยังไม่มีชุดการ์ดสำหรับฝึกปากเปล่า</string>
+    <string name="quizmaster_go_to_forge">ไปหน้าสร้างการ์ด</string>
+
+    <!-- Match Blitz Mini-Game -->
+    <string name="match_blitz_title">เกมจับคู่ไว 60 วินาที</string>
+    <string name="match_blitz_start">เริ่มจับคู่ 60 วิ</string>
+    <string name="match_blitz_play_again">เล่นอีกครั้ง</string>
+    <string name="match_blitz_score_label">คะแนน: %1$d</string>
+
+    <!-- Settings, AI Plan & Quota Recovery -->
+    <string name="settings_title">การตั้งค่าและตัวช่วยเรียน</string>
+    <string name="settings_subtitle">ปรับโหมดมืดตอนกลางคืน แผนการใช้ AI แคชออฟไลน์ และวิดเจ็ตหน้าจอหลัก</string>
+    <string name="settings_appearance_title">รูปลักษณ์และโหมดอ่านกลางคืน</string>
+    <string name="settings_appearance_desc">ธีมมืด Obsidian ช่วยลดแสงจ้าขณะทบทวนช่วงดึก</string>
+    <string name="settings_oral_title">อ่านออกเสียงอัตโนมัติในโหมดสอบปากเปล่า</string>
+    <string name="settings_oral_desc">อ่านคำถามและข้อเสนอแนะออกเสียงด้วยระบบอ่านข้อความ</string>
+    <string name="settings_widget_title">วิดเจ็ตปลดล็อกเพื่อทบทวน</string>
+    <string name="settings_widget_desc">แสดงแฟลชการ์ดครบกำหนด 1 ใบบนหน้าจอหลักทุกครั้งที่ปลดล็อก</string>
+    <string name="settings_pin_widget">เพิ่มวิดเจ็ตแบบโต้ตอบที่หน้าจอหลัก</string>
+    <string name="settings_sync_now">ซิงก์ประวัติการทบทวนที่ค้างอยู่</string>
+    <string name="ai_plan_title">แผนการใช้ AI และคีย์ BYOK</string>
+    <string name="ai_plan_eco_lite_title">โหมด Eco Lite AI (ประหยัดโควตา 3×)</string>
+    <string name="ai_plan_offline_title">ให้ความสำคัญกับตัวแยกออฟไลน์ทันที</string>
+    <string name="ai_plan_claim_grace">รับโควตาเสริม +3 ครั้งสำหรับวันนี้</string>
+    <string name="ai_plan_byok_title">ใช้คีย์ Gemini API ของคุณเอง (BYOK)</string>
+    <string name="ai_plan_test_save">ทดสอบและบันทึก</string>
+    <string name="ai_plan_get_key">รับคีย์</string>
+    <string name="ai_plan_remove_key">ลบออก</string>
+
+    <!-- Smart Auto-Popups: Update, Rate App, Share App -->
+    <string name="popup_update_title">มีอัปเดตใหม่</string>
+    <string name="popup_update_body">ExamForge เวอร์ชันใหม่ (%1$s) พร้อมให้ใช้งานแล้ว เพื่อการทบทวนที่ลื่นไหลยิ่งขึ้น</string>
+    <string name="popup_update_primary">อัปเดตเลย</string>
+    <string name="popup_update_later">เตือนภายหลัง</string>
+    <string name="popup_update_skip">ข้ามเวอร์ชันนี้</string>
+
+    <string name="popup_rate_title">ชื่นชอบ ExamForge หรือไม่?</string>
+    <string name="popup_rate_body">คุณสร้างจังหวะการเรียนได้ยอดเยี่ยมมาก! สนใจเขียนรีวิวตรงไปตรงมาบน Google Play เพื่อช่วยเพื่อนนักเรียนคนอื่นค้นพบ ExamForge ไหม?</string>
+    <string name="popup_rate_primary">ให้คะแนนบน Google Play</string>
+    <string name="popup_rate_later">ไว้ภายหลัง</string>
+    <string name="popup_rate_never">ไม่ต้องถามอีก</string>
+
+    <string name="popup_share_title">แชร์ ExamForge ให้เพื่อนร่วมเรียน</string>
+    <string name="popup_share_body">ความสำเร็จในการเรียนที่น่าประทับใจ! ชวนเพื่อนมาเปลี่ยนโน้ตบนกระดานให้เป็นแฟลชการ์ด Active Recall ด้วยกัน</string>
+    <string name="popup_share_primary">แชร์แอป</string>
+    <string name="popup_share_later">ยังก่อน</string>
+    <string name="popup_share_never">ไม่ต้องถามอีก</string>
+
+    <string name="share_app_chooser_title">แชร์ ExamForge</string>
+    <string name="share_app_message">ฉันใช้ ExamForge เปลี่ยนภาพกระดานและโน้ตเลกเชอร์เป็นแฟลชการ์ด Active Recall และเกมจับคู่ 60 วินาที ลองดูสิ: %1$s</string>
+
+    <!-- Settings: Community, Updates, Privacy & Event Telemetry -->
+    <string name="settings_community_title">การสนับสนุน อัปเดต และความเป็นส่วนตัว</string>
+    <string name="settings_community_subtitle">เวอร์ชัน %1$s · การแจ้งเตือนอย่างเหมาะสมและบันทึกกิจกรรมบนเครื่องแบบโปร่งใส</string>
+    <string name="settings_check_update">ตรวจหาอัปเดต</string>
+    <string name="settings_rate_app">ให้คะแนนแอป</string>
+    <string name="settings_share_app">แชร์แอป</string>
+    <string name="settings_privacy_policy">นโยบายความเป็นส่วนตัว</string>
+    <string name="settings_telemetry_toggle_show">แสดงบันทึกกิจกรรม (%1$d)</string>
+    <string name="settings_telemetry_toggle_hide">ซ่อนบันทึกกิจกรรม</string>
+    <string name="settings_telemetry_summary">เซสชัน: %1$d · วันที่ใช้งาน: %2$d · คะแนนการมีส่วนร่วม: %3$d</string>
+    <string name="settings_telemetry_guardrails">กติกาป๊อปอัป: ไม่แสดงตอนเปิดแอป · สูงสุด 1/เซสชัน · เว้น 72 ชม. · พัก 24 ชม.หลังเกิดข้อผิดพลาด</string>
+    <string name="settings_update_up_to_date">คุณใช้งานเวอร์ชันล่าสุดแล้ว (%1$s)</string>
+    <string name="privacy_policy_title">นโยบายความเป็นส่วนตัวของ ExamForge</string>
+    <string name="common_close">ปิด</string>
+    <string name="common_cancel">ยกเลิก</string>
+</resources>

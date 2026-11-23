@@ -1,0 +1,163 @@
+<resources>
+    <string name="app_name">ExamForge</string>
+    <string name="widget_label">ExamForge Ôn Tập Nhanh</string>
+    <string name="widget_description">Ôn 1 thẻ ghi nhớ chủ động ngay trên màn hình chính mỗi khi bạn mở khóa điện thoại.</string>
+    <string name="widget_header_default">EXAMFORGE</string>
+    <string name="widget_due_default">0 đến hạn</string>
+    <string name="widget_empty_question">Chụp bảng trắng hoặc ghi chú bài giảng trong ExamForge để mở khóa thẻ học hằng ngày trên màn hình chính.</string>
+    <string name="widget_reveal_answer">Hiện đáp án</string>
+    <string name="widget_next">Tiếp</string>
+    <string name="widget_again">Học lại</string>
+    <string name="widget_got_it">Đã nhớ</string>
+
+    <string name="sign_in_google">Đăng nhập bằng Google</string>
+    <string name="sign_out">Đăng xuất</string>
+    <string name="tab_decks">Bộ thẻ</string>
+    <string name="tab_forge">Tạo thẻ</string>
+    <string name="tab_quizmaster">Hỏi đáp</string>
+    <string name="tab_settings">Cài đặt</string>
+    <string name="auth_headline">Biến ghi chú thành kiến thức vững chắc</string>
+    <string name="auth_subtitle">Quét bảng trắng, luyện hỏi đáp bằng giọng nói và đồng bộ thẻ học ngoại tuyến trên mọi thiết bị.</string>
+    <string name="auth_sync_note">Đăng nhập Google để sao lưu an toàn bộ thẻ và tiến độ học tập.</string>
+
+    <string name="cd_app_logo">Biểu tượng ExamForge</string>
+    <string name="cd_hero_banner">Bàn học biến ghi chú thành thẻ học phát sáng</string>
+    <string name="cd_empty_illustration">Máy ảnh quét ghi chú bảng đen thành thẻ học</string>
+    <string name="cd_toggle_theme">Chuyển giao diện tối hoặc sáng</string>
+    <string name="cd_navigate_back">Quay lại</string>
+    <string name="cd_snap_photo">Chụp bảng trắng hoặc ghi chú bằng máy ảnh</string>
+    <string name="cd_pick_gallery">Chọn ảnh ghi chú từ thư viện</string>
+    <string name="cd_voice_mic">Nói câu trả lời</string>
+    <string name="cd_speak_toggle">Bật hoặc tắt đọc giọng nói</string>
+    <string name="cd_camera_close">Đóng máy ảnh</string>
+    <string name="cd_camera_flash">Đổi chế độ đèn flash</string>
+    <string name="cd_camera_torch">Bật hoặc tắt đèn pin</string>
+    <string name="cd_camera_switch">Đổi camera</string>
+    <string name="cd_camera_shutter">Chụp ảnh ghi chú</string>
+    <string name="cd_flashcard_camera_fab">Chụp ghi chú để tạo thẻ học</string>
+    <string name="cd_flashcard_add_manual">Thêm thẻ học thủ công</string>
+    <string name="cd_flashcard_edit">Chỉnh sửa thẻ học</string>
+    <string name="cd_flashcard_delete">Xóa thẻ học</string>
+
+    <string name="camera_capture_title">Quét ghi chú học tập</string>
+    <string name="camera_frame_hint">Căn chỉnh bảng trắng, công thức hoặc ghi chú viết tay trong khung</string>
+    <string name="camera_permission_title">Cần quyền truy cập máy ảnh</string>
+    <string name="camera_permission_rationale">ExamForge dùng máy ảnh để quét bảng trắng, sơ đồ sách giáo khoa và ghi chú viết tay cho phân tích thẻ học.</string>
+    <string name="camera_grant_permission">Bật máy ảnh</string>
+    <string name="camera_retake">Chụp lại</string>
+    <string name="camera_analyze_now">Phân tích với Gemini</string>
+    <string name="camera_add_notes">Đính kèm &amp; tùy chỉnh</string>
+    <string name="flashcards_screen_title">Thẻ học đã lưu</string>
+    <string name="flashcards_fab_scan">Quét ghi chú</string>
+    <string name="flashcards_search_placeholder">Tìm câu hỏi hoặc đáp án…</string>
+    <string name="flashcards_empty_title">Chưa có thẻ học nào</string>
+    <string name="flashcards_empty_body">Chạm Quét ghi chú để chụp trang viết tay, công thức hoặc slide bài giảng — Gemini sẽ tự động tạo thẻ có cấu trúc.</string>
+
+    <string name="decks_all_filter">Tất cả</string>
+    <string name="decks_due_summary">%1$d thẻ cần ôn</string>
+    <string name="decks_study_all_due">Ôn thẻ đến hạn</string>
+    <string name="decks_match_blitz_button">Ghép thẻ 60 giây</string>
+    <string name="decks_best_score">Cao nhất: %1$d</string>
+    <string name="decks_empty_title">Tạo bộ thẻ đầu tiên</string>
+    <string name="decks_empty_subtitle">Chụp bảng trắng, đọc ghi chú bài giảng hoặc dán văn bản để tạo thẻ ôn tập chủ động.</string>
+    <string name="decks_new_deck">Bộ thẻ mới</string>
+    <string name="decks_saved_cards">Tất cả thẻ</string>
+    <string name="study_arena_complete_title">Hoàn thành phiên học</string>
+    <string name="study_arena_reviewed_summary">Đã ôn %1$d thẻ · Thuộc %2$d thẻ</string>
+    <string name="study_arena_back_to_decks">Về Bộ thẻ</string>
+    <string name="study_arena_show_hint">Xem gợi ý</string>
+    <string name="study_arena_reveal_answer">Hiện đáp án</string>
+    <string name="study_rating_again">Quên</string>
+    <string name="study_rating_hard">Khó</string>
+    <string name="study_rating_good">Tốt</string>
+    <string name="study_rating_easy">Dễ</string>
+
+    <string name="forge_title">Tạo Thẻ Nhanh</string>
+    <string name="forge_subtitle">Chụp công thức, tải slide hoặc đọc bài giảng trực tiếp — Gemini hoặc Trình phân tích ngoại tuyến sẽ tạo bộ thẻ ôn tập.</string>
+    <string name="forge_step_capture">1. Chụp hoặc tải tài liệu học</string>
+    <string name="forge_step_notes">2. Giọng nói bài giảng, ghi chú &amp; tùy chọn</string>
+    <string name="forge_camerax_scan">Quét CameraX</string>
+    <string name="forge_gallery">Thư viện</string>
+    <string name="forge_dictate_start">Đọc ($0)</string>
+    <string name="forge_dictate_stop">Dừng mic</string>
+    <string name="forge_notes_label">Dán hoặc đọc ghi chú bài giảng, Q:/A: hoặc Thuật ngữ: Định nghĩa</string>
+    <string name="forge_subject_label">Gợi ý môn học (tùy chọn)</string>
+    <string name="forge_cards_count">Số thẻ:</string>
+    <string name="forge_generate_gemini">Tạo thẻ học với Gemini</string>
+    <string name="forge_generate_eco_lite">Tạo thẻ với Eco Lite AI</string>
+    <string name="forge_generate_offline">Tạo thẻ ngoại tuyến ($0)</string>
+    <string name="forge_instant_offline_btn">Trình tạo ngoại tuyến ($0 · Tiết kiệm hạn mức)</string>
+    <string name="forge_open_deck">Mở bộ thẻ</string>
+    <string name="forge_scan_another">Quét thêm</string>
+
+    <string name="quizmaster_title">Trợ lý Hỏi đáp</string>
+    <string name="quizmaster_subtitle">Trả lời bằng giọng nói hoặc trò chuyện với Gemini</string>
+    <string name="quizmaster_ready_title">Sẵn sàng luyện phản xạ kiến thức?</string>
+    <string name="quizmaster_ready_body">Gemini đặt từng câu hỏi trọng tâm từ bộ thẻ, chấm câu trả lời nói hoặc gõ của bạn và xoáy sâu phần còn yếu.</string>
+    <string name="quizmaster_start_button">Bắt đầu phiên Hỏi đáp</string>
+    <string name="quizmaster_hint_chip">Gợi ý</string>
+    <string name="quizmaster_next_chip">Câu tiếp theo</string>
+    <string name="quizmaster_input_placeholder">Nói hoặc nhập câu trả lời…</string>
+    <string name="quizmaster_empty_title">Chưa có bộ thẻ để luyện hỏi đáp</string>
+    <string name="quizmaster_go_to_forge">Đến mục Tạo thẻ</string>
+
+    <string name="match_blitz_title">Ghép thẻ 60 giây</string>
+    <string name="match_blitz_start">Bắt đầu 60 giây</string>
+    <string name="match_blitz_play_again">Chơi lại</string>
+    <string name="match_blitz_score_label">Điểm: %1$d</string>
+
+    <string name="settings_title">Cài đặt &amp; Tiện ích học</string>
+    <string name="settings_subtitle">Tùy chỉnh chế độ tối ban đêm, gói AI, bộ nhớ ngoại tuyến và tiện ích màn hình chính.</string>
+    <string name="settings_appearance_title">Giao diện &amp; Chế độ học đêm</string>
+    <string name="settings_appearance_desc">Chế độ tối Obsidian giảm chói mắt khi ôn thi ban đêm.</string>
+    <string name="settings_oral_title">Tự động đọc câu hỏi</string>
+    <string name="settings_oral_desc">Đọc to câu hỏi và nhận xét của Trợ lý Hỏi đáp bằng giọng nói.</string>
+    <string name="settings_widget_title">Widget ôn nhanh màn hình chính</string>
+    <string name="settings_widget_desc">Hiển thị 1 thẻ đến hạn mỗi khi bạn mở khóa điện thoại.</string>
+    <string name="settings_pin_widget">Thêm Widget vào màn hình chính</string>
+    <string name="settings_sync_now">Đồng bộ lượt ôn đang chờ</string>
+    <string name="ai_plan_title">Gói sử dụng AI &amp; Khóa BYOK</string>
+    <string name="ai_plan_eco_lite_title">Chế độ Eco Lite AI (Gấp 3× hạn mức)</string>
+    <string name="ai_plan_offline_title">Ưu tiên tạo thẻ ngoại tuyến</string>
+    <string name="ai_plan_claim_grace">Nhận +3 lượt dự phòng hằng ngày</string>
+    <string name="ai_plan_byok_title">Dùng khóa Gemini API cá nhân (BYOK)</string>
+    <string name="ai_plan_test_save">Kiểm tra &amp; Lưu</string>
+    <string name="ai_plan_get_key">Lấy khóa API</string>
+    <string name="ai_plan_remove_key">Gỡ khóa</string>
+
+    <string name="popup_update_title">Có bản cập nhật mới</string>
+    <string name="popup_update_body">Phiên bản ExamForge mới hơn (%1$s) đã sẵn sàng với nhiều cải tiến giúp ôn thi mượt mà hơn.</string>
+    <string name="popup_update_primary">Cập nhật ngay</string>
+    <string name="popup_update_later">Nhắc tôi sau</string>
+    <string name="popup_update_skip">Bỏ qua bản này</string>
+
+    <string name="popup_rate_title">Bạn thích ExamForge chứ?</string>
+    <string name="popup_rate_body">Bạn đã tạo được đà học tập rất tốt! Bạn có muốn để lại đánh giá chân thực trên Google Play để giúp các bạn học sinh khác biết đến ExamForge không?</string>
+    <string name="popup_rate_primary">Đánh giá trên Google Play</string>
+    <string name="popup_rate_later">Để sau</string>
+    <string name="popup_rate_never">Không hỏi lại</string>
+
+    <string name="popup_share_title">Chia sẻ ExamForge với bạn học</string>
+    <string name="popup_share_body">Thành tích học tập tuyệt vời! Mời bạn bè cùng biến ghi chú bảng trắng thành thẻ học thông minh nhé.</string>
+    <string name="popup_share_primary">Chia sẻ ứng dụng</string>
+    <string name="popup_share_later">Chưa phải lúc này</string>
+    <string name="popup_share_never">Không hỏi lại</string>
+
+    <string name="share_app_chooser_title">Chia sẻ ExamForge</string>
+    <string name="share_app_message">Mình đang dùng ExamForge để biến ảnh bảng trắng và ghi chú bài giảng thành thẻ học và trò chơi Ghép thẻ 60 giây. Thử ngay tại: %1$s</string>
+
+    <string name="settings_community_title">Hỗ trợ, Cập nhật &amp; Quyền riêng tư</string>
+    <string name="settings_community_subtitle">Phiên bản %1$s · Gợi ý thông minh không làm phiền &amp; nhật ký sự kiện trên máy</string>
+    <string name="settings_check_update">Kiểm tra cập nhật</string>
+    <string name="settings_rate_app">Đánh giá</string>
+    <string name="settings_share_app">Chia sẻ</string>
+    <string name="settings_privacy_policy">Quyền riêng tư</string>
+    <string name="settings_telemetry_toggle_show">Xem nhật ký sự kiện (%1$d)</string>
+    <string name="settings_telemetry_toggle_hide">Ẩn nhật ký sự kiện</string>
+    <string name="settings_telemetry_summary">Phiên: %1$d · Ngày hoạt động: %2$d · Điểm gắn kết: %3$d</string>
+    <string name="settings_telemetry_guardrails">Bảo vệ chống làm phiền: Không hiện khi mở app · Tối đa 1 lần/phiên · Cách nhau 72 giờ · Chờ 24 giờ sau lỗi</string>
+    <string name="settings_update_up_to_date">Bạn đang dùng phiên bản mới nhất (%1$s).</string>
+    <string name="privacy_policy_title">Chính sách Quyền riêng tư ExamForge</string>
+    <string name="common_close">Đóng</string>
+    <string name="common_cancel">Hủy</string>
+</resources>

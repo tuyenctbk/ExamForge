@@ -1,0 +1,174 @@
+<resources>
+    <!-- App Identity & Home Widget -->
+    <string name="app_name">ExamForge</string>
+    <string name="widget_label">ExamForge 快速回忆</string>
+    <string name="widget_description">每次解锁手机，直接在主屏幕复习 1 张主动回忆记忆卡。</string>
+    <string name="widget_header_default">EXAMFORGE</string>
+    <string name="widget_due_default">0 待复习</string>
+    <string name="widget_empty_question">在 ExamForge 中拍摄白板或课堂笔记，即可开启主屏幕每日记忆卡。</string>
+    <string name="widget_reveal_answer">显示答案</string>
+    <string name="widget_next">下一张</string>
+    <string name="widget_again">再来</string>
+    <string name="widget_got_it">已掌握</string>
+
+    <!-- Auth & Navigation -->
+    <string name="sign_in_google">使用 Google 登录</string>
+    <string name="sign_out">退出登录</string>
+    <string name="tab_decks">卡组</string>
+    <string name="tab_forge">生成</string>
+    <string name="tab_quizmaster">口语考官</string>
+    <string name="tab_settings">设置</string>
+    <string name="auth_headline">将学习笔记转化为高效主动回忆</string>
+    <string name="auth_subtitle">扫描白板、练习口头作答，并支持离线学习与多设备同步记忆卡。</string>
+    <string name="auth_sync_note">使用 Google 登录，安全备份您的卡组和学习进度。</string>
+
+    <!-- Accessibility Content Descriptions -->
+    <string name="cd_app_logo">ExamForge 图标</string>
+    <string name="cd_hero_banner">书桌上的笔记转化为发光记忆卡</string>
+    <string name="cd_empty_illustration">相机将黑板物理笔记扫描为记忆卡</string>
+    <string name="cd_toggle_theme">切换深色或浅色主题</string>
+    <string name="cd_navigate_back">返回</string>
+    <string name="cd_snap_photo">使用相机拍摄白板或笔记</string>
+    <string name="cd_pick_gallery">从相册选择笔记照片</string>
+    <string name="cd_voice_mic">朗读答案</string>
+    <string name="cd_speak_toggle">切换语音朗读</string>
+    <string name="cd_camera_close">关闭相机</string>
+    <string name="cd_camera_flash">切换闪光灯模式</string>
+    <string name="cd_camera_torch">开关照明灯</string>
+    <string name="cd_camera_switch">切换前后摄像头</string>
+    <string name="cd_camera_shutter">拍摄笔记照片</string>
+    <string name="cd_flashcard_camera_fab">用相机拍摄笔记以创建记忆卡</string>
+    <string name="cd_flashcard_add_manual">手动添加记忆卡</string>
+    <string name="cd_flashcard_edit">编辑记忆卡</string>
+    <string name="cd_flashcard_delete">删除记忆卡</string>
+
+    <!-- Camera & Saved Flashcards -->
+    <string name="camera_capture_title">扫描学习笔记</string>
+    <string name="camera_frame_hint">请将白板、公式或手写笔记对准取景框内</string>
+    <string name="camera_permission_title">需要相机权限</string>
+    <string name="camera_permission_rationale">ExamForge 需要使用相机扫描白板、教材图表和手写笔记，以便 Gemini 生成记忆卡。</string>
+    <string name="camera_grant_permission">开启相机</string>
+    <string name="camera_retake">重拍</string>
+    <string name="camera_analyze_now">使用 Gemini 解析</string>
+    <string name="camera_add_notes">添加备注与选项</string>
+    <string name="flashcards_screen_title">已保存的记忆卡</string>
+    <string name="flashcards_fab_scan">扫描笔记</string>
+    <string name="flashcards_search_placeholder">搜索问题或答案…</string>
+    <string name="flashcards_empty_title">暂无已保存的记忆卡</string>
+    <string name="flashcards_empty_body">点击“扫描笔记”拍摄手写内容、公式或课件，Gemini 将自动解析为结构化卡片。</string>
+
+    <!-- Decks Hub & Study Arena -->
+    <string name="decks_all_filter">全部</string>
+    <string name="decks_due_summary">%1$d 张待复习</string>
+    <string name="decks_study_all_due">复习待学卡片</string>
+    <string name="decks_match_blitz_button">60秒配对赛</string>
+    <string name="decks_best_score">最高: %1$d</string>
+    <string name="decks_empty_title">创建您的第一个学习卡组</string>
+    <string name="decks_empty_subtitle">拍摄白板照片、口述课堂内容或粘贴笔记，快速打造主动回忆卡片。</string>
+    <string name="decks_new_deck">新建卡组</string>
+    <string name="decks_saved_cards">全部卡片</string>
+    <string name="study_arena_complete_title">本次学习完成</string>
+    <string name="study_arena_reviewed_summary">已复习 %1$d 张 · 已掌握 %2$d 张</string>
+    <string name="study_arena_back_to_decks">返回卡组</string>
+    <string name="study_arena_show_hint">查看提示</string>
+    <string name="study_arena_reveal_answer">显示答案</string>
+    <string name="study_rating_again">重来</string>
+    <string name="study_rating_hard">较难</string>
+    <string name="study_rating_good">良好</string>
+    <string name="study_rating_easy">简单</string>
+
+    <!-- Snapshot Forge & Lecture Dictation -->
+    <string name="forge_title">快照工坊</string>
+    <string name="forge_subtitle">拍摄公式、上传课件或口述讲座，由 Gemini 或离线解析器即时生成复习卡组。</string>
+    <string name="forge_step_capture">1. 拍摄或上传学习资料</string>
+    <string name="forge_step_notes">2. 语音听写、笔记与选项</string>
+    <string name="forge_camerax_scan">CameraX 扫描</string>
+    <string name="forge_gallery">相册</string>
+    <string name="forge_dictate_start">语音听写 (¥0)</string>
+    <string name="forge_dictate_stop">停止录音</string>
+    <string name="forge_notes_label">粘贴或听写课堂笔记、Q:/A: 或 术语: 定义</string>
+    <string name="forge_subject_label">学科提示（可选）</string>
+    <string name="forge_cards_count">卡片数量：</string>
+    <string name="forge_generate_gemini">使用 Gemini 生成卡片</string>
+    <string name="forge_generate_eco_lite">使用 Eco Lite AI 生成</string>
+    <string name="forge_generate_offline">离线生成卡片 (¥0)</string>
+    <string name="forge_instant_offline_btn">即时离线解析器 (¥0 · 节省 AI 额度)</string>
+    <string name="forge_open_deck">打开卡组</string>
+    <string name="forge_scan_another">继续扫描</string>
+
+    <!-- Oral Quizmaster -->
+    <string name="quizmaster_title">口语考官</string>
+    <string name="quizmaster_subtitle">大声复述答案或与 Gemini 互动提问</string>
+    <string name="quizmaster_ready_title">准备好进行主动回忆演练了吗？</string>
+    <string name="quizmaster_ready_body">Gemini 每次从您的卡组中抽取一道高频题目，评估您的口头或文字回答并深挖薄弱环节。</string>
+    <string name="quizmaster_start_button">开始口语测验</string>
+    <string name="quizmaster_hint_chip">提示</string>
+    <string name="quizmaster_next_chip">下一题</string>
+    <string name="quizmaster_input_placeholder">口述或输入您的答案…</string>
+    <string name="quizmaster_empty_title">暂无可用于口语练习的卡组</string>
+    <string name="quizmaster_go_to_forge">前往生成</string>
+
+    <!-- Match Blitz Mini-Game -->
+    <string name="match_blitz_title">60秒极速配对</string>
+    <string name="match_blitz_start">开始 60 秒挑战</string>
+    <string name="match_blitz_play_again">再玩一次</string>
+    <string name="match_blitz_score_label">得分：%1$d</string>
+
+    <!-- Settings, AI Plan & Quota Recovery -->
+    <string name="settings_title">设置与学习辅助</string>
+    <string name="settings_subtitle">调整夜间深色模式、AI 额度方案、离线缓存与主屏幕小组件。</string>
+    <string name="settings_appearance_title">外观与夜间学习模式</string>
+    <string name="settings_appearance_desc">曜石深色主题可减少深夜刷题时的屏幕眩光。</string>
+    <string name="settings_oral_title">口语考官自动朗读</string>
+    <string name="settings_oral_desc">通过语音合成自动朗读题目与点评反馈。</string>
+    <string name="settings_widget_title">解锁即复习桌面小组件</string>
+    <string name="settings_widget_desc">每次解锁手机在桌面展示 1 张待复习卡片。</string>
+    <string name="settings_pin_widget">将交互小组件添加到主屏幕</string>
+    <string name="settings_sync_now">同步待上传复习记录</string>
+    <string name="ai_plan_title">AI 使用方案与自带密钥 (BYOK)</string>
+    <string name="ai_plan_eco_lite_title">Eco Lite AI 模式（额度延长 3 倍）</string>
+    <string name="ai_plan_offline_title">优先使用离线即时解析器</string>
+    <string name="ai_plan_claim_grace">领取今日 +3 次额外赠送额度</string>
+    <string name="ai_plan_byok_title">使用您自己的 Gemini API 密钥 (BYOK)</string>
+    <string name="ai_plan_test_save">测试并保存</string>
+    <string name="ai_plan_get_key">获取密钥</string>
+    <string name="ai_plan_remove_key">移除</string>
+
+    <!-- Smart Auto-Popups: Update, Rate App, Share App -->
+    <string name="popup_update_title">发现新版本</string>
+    <string name="popup_update_body">ExamForge 新版本（%1$s）已推出，带来更流畅的学习体验与多项改进。</string>
+    <string name="popup_update_primary">立即更新</string>
+    <string name="popup_update_later">稍后提醒</string>
+    <string name="popup_update_skip">跳过此版本</string>
+
+    <string name="popup_rate_title">喜欢 ExamForge 吗？</string>
+    <string name="popup_rate_body">您已建立很棒的学习节奏！愿意在 Google Play 留下真实评价，帮助更多同学发现 ExamForge 吗？</string>
+    <string name="popup_rate_primary">前往 Google Play 评价</string>
+    <string name="popup_rate_later">以后再说</string>
+    <string name="popup_rate_never">不再询问</string>
+
+    <string name="popup_share_title">与学习伙伴分享 ExamForge</string>
+    <string name="popup_share_body">恭喜达成学习里程碑！邀请同学一起将白板笔记变成主动回忆卡片吧。</string>
+    <string name="popup_share_primary">分享应用</string>
+    <string name="popup_share_later">暂不</string>
+    <string name="popup_share_never">不再询问</string>
+
+    <string name="share_app_chooser_title">分享 ExamForge</string>
+    <string name="share_app_message">我一直在用 ExamForge 把白板照片和课堂笔记变成主动回忆记忆卡和 60 秒配对练习，快来看看：%1$s</string>
+
+    <!-- Settings: Community, Updates, Privacy & Event Telemetry -->
+    <string name="settings_community_title">支持、更新与隐私</string>
+    <string name="settings_community_subtitle">版本 %1$s · 智能免打扰提醒与透明的本地事件日志</string>
+    <string name="settings_check_update">检查更新</string>
+    <string name="settings_rate_app">评价应用</string>
+    <string name="settings_share_app">分享应用</string>
+    <string name="settings_privacy_policy">隐私政策</string>
+    <string name="settings_telemetry_toggle_show">查看事件日志 (%1$d)</string>
+    <string name="settings_telemetry_toggle_hide">隐藏事件日志</string>
+    <string name="settings_telemetry_summary">会话：%1$d · 活跃天数：%2$d · 互动分：%3$d</string>
+    <string name="settings_telemetry_guardrails">弹窗规则：启动时不弹 · 单次最多 1 次 · 72 小时冷却 · 出错后静默 24 小时</string>
+    <string name="settings_update_up_to_date">您已在使用最新版本（%1$s）。</string>
+    <string name="privacy_policy_title">ExamForge 隐私政策</string>
+    <string name="common_close">关闭</string>
+    <string name="common_cancel">取消</string>
+</resources>

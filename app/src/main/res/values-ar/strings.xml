@@ -1,0 +1,174 @@
+<resources>
+    <!-- App Identity & Home Widget -->
+    <string name="app_name">ExamForge</string>
+    <string name="widget_label">استرجاع سريع ExamForge</string>
+    <string name="widget_description">تدرّب على بطاقة استرجاع نشط واحدة على شاشتك الرئيسية في كل مرة تفتح فيها هاتفك.</string>
+    <string name="widget_header_default">EXAMFORGE</string>
+    <string name="widget_due_default">0 للمراجعة</string>
+    <string name="widget_empty_question">التقط صورة للسبورة أو لملاحظات المحاضرة في ExamForge لفتح بطاقات الشاشة الرئيسية اليومية.</string>
+    <string name="widget_reveal_answer">إظهار الإجابة</string>
+    <string name="widget_next">التالي</string>
+    <string name="widget_again">مجدداً</string>
+    <string name="widget_got_it">أتقنتها</string>
+
+    <!-- Auth & Navigation -->
+    <string name="sign_in_google">تسجيل الدخول عبر Google</string>
+    <string name="sign_out">تسجيل الخروج</string>
+    <string name="tab_decks">المجموعات</string>
+    <string name="tab_forge">إنشاء</string>
+    <string name="tab_quizmaster">المختبر الشفهي</string>
+    <string name="tab_settings">الإعدادات</string>
+    <string name="auth_headline">حوّل ملاحظاتك إلى إتقان عبر الاسترجاع النشط</string>
+    <string name="auth_subtitle">امسح السبورات، تدرّب شفهياً، وزامن بطاقاتك دون إنترنت عبر أجهزتك.</string>
+    <string name="auth_sync_note">سجّل الدخول عبر Google لنسخ مجموعاتك وتقدمك الدراسي احتياطياً بأمان.</string>
+
+    <!-- Accessibility Content Descriptions -->
+    <string name="cd_app_logo">شعار ExamForge</string>
+    <string name="cd_hero_banner">مكتب دراسة يحوّل الملاحظات إلى بطاقات مضيئة</string>
+    <string name="cd_empty_illustration">كاميرا تمسح ملاحظات الفيزياء من السبورة إلى بطاقات</string>
+    <string name="cd_toggle_theme">تبديل الوضع الداكن أو الفاتح</string>
+    <string name="cd_navigate_back">الرجوع</string>
+    <string name="cd_snap_photo">التقاط صورة للسبورة أو الملاحظات بالكاميرا</string>
+    <string name="cd_pick_gallery">اختيار صورة ملاحظات من المعرض</string>
+    <string name="cd_voice_mic">نطق الإجابة بصوت عالٍ</string>
+    <string name="cd_speak_toggle">تبديل القراءة الصوتية</string>
+    <string name="cd_camera_close">إغلاق الكاميرا</string>
+    <string name="cd_camera_flash">تبديل وضع الفلاش</string>
+    <string name="cd_camera_torch">تشغيل أو إيقاف الكشاف</string>
+    <string name="cd_camera_switch">تبديل عدسة الكاميرا</string>
+    <string name="cd_camera_shutter">التقاط صورة للملاحظات</string>
+    <string name="cd_flashcard_camera_fab">التقاط ملاحظات بالكاميرا لإنشاء بطاقات</string>
+    <string name="cd_flashcard_add_manual">إضافة بطاقة يدوياً</string>
+    <string name="cd_flashcard_edit">تعديل البطاقة</string>
+    <string name="cd_flashcard_delete">حذف البطاقة</string>
+
+    <!-- Camera & Saved Flashcards -->
+    <string name="camera_capture_title">مسح ملاحظات الدراسة</string>
+    <string name="camera_frame_hint">ضع السبورة أو المعادلات أو الملاحظات المكتوبة داخل الإطار</string>
+    <string name="camera_permission_title">يلزم إذن الكاميرا</string>
+    <string name="camera_permission_rationale">يستخدم ExamForge الكاميرا لمسح السبورات ورسوم الكتب والملاحظات المكتوبة لتحليلها عبر Gemini.</string>
+    <string name="camera_grant_permission">تفعيل الكاميرا</string>
+    <string name="camera_retake">إعادة الالتقاط</string>
+    <string name="camera_analyze_now">تحليل عبر Gemini</string>
+    <string name="camera_add_notes">إضافة ملاحظات وخيارات</string>
+    <string name="flashcards_screen_title">البطاقات المحفوظة</string>
+    <string name="flashcards_fab_scan">مسح الملاحظات</string>
+    <string name="flashcards_search_placeholder">ابحث في الأسئلة أو الإجابات…</string>
+    <string name="flashcards_empty_title">لا توجد بطاقات محفوظة بعد</string>
+    <string name="flashcards_empty_body">اضغط على مسح الملاحظات لتصوير الصفحات المكتوبة أو المعادلات أو الشرائح ليحولها Gemini تلقائياً إلى بطاقات.</string>
+
+    <!-- Decks Hub & Study Arena -->
+    <string name="decks_all_filter">الكل</string>
+    <string name="decks_due_summary">%1$d مستحقة للمراجعة</string>
+    <string name="decks_study_all_due">مراجعة البطاقات المستحقة</string>
+    <string name="decks_match_blitz_button">مطابقة 60 ثانية</string>
+    <string name="decks_best_score">الأفضل: %1$d</string>
+    <string name="decks_empty_title">أنشئ أول مجموعة دراسية</string>
+    <string name="decks_empty_subtitle">التقط صورة سبورة أو أملِ محاضرة أو الصق ملاحظات لبناء بطاقات استرجاع نشط.</string>
+    <string name="decks_new_deck">مجموعة جديدة</string>
+    <string name="decks_saved_cards">كل البطاقات</string>
+    <string name="study_arena_complete_title">اكتملت الجلسة</string>
+    <string name="study_arena_reviewed_summary">تمت مراجعة %1$d بطاقة · إتقان %2$d</string>
+    <string name="study_arena_back_to_decks">العودة للمجموعات</string>
+    <string name="study_arena_show_hint">إظهار التلميح</string>
+    <string name="study_arena_reveal_answer">إظهار الإجابة</string>
+    <string name="study_rating_again">مجدداً</string>
+    <string name="study_rating_hard">صعب</string>
+    <string name="study_rating_good">جيد</string>
+    <string name="study_rating_easy">سهل</string>
+
+    <!-- Snapshot Forge & Lecture Dictation -->
+    <string name="forge_title">ورشة اللقطات</string>
+    <string name="forge_subtitle">صوّر المعادلات أو ارفع الشرائح أو أملِ المحاضرة ليحولها Gemini أو المحلل المحلي إلى مجموعات مراجعة.</string>
+    <string name="forge_step_capture">1. التقط أو ارفع مادة الدراسة</string>
+    <string name="forge_step_notes">2. صوت المحاضرة والملاحظات والخيارات</string>
+    <string name="forge_camerax_scan">مسح CameraX</string>
+    <string name="forge_gallery">المعرض</string>
+    <string name="forge_dictate_start">إملاء ($0)</string>
+    <string name="forge_dictate_stop">إيقاف الميكروفون</string>
+    <string name="forge_notes_label">الصق أو أملِ ملاحظات المحاضرة أو Q:/A: أو المصطلح: التعريف</string>
+    <string name="forge_subject_label">تلميح المادة (اختياري)</string>
+    <string name="forge_cards_count">البطاقات:</string>
+    <string name="forge_generate_gemini">إنشاء بطاقات عبر Gemini</string>
+    <string name="forge_generate_eco_lite">إنشاء عبر Eco Lite AI</string>
+    <string name="forge_generate_offline">إنشاء دون إنترنت ($0)</string>
+    <string name="forge_instant_offline_btn">المحلل المحلي الفوري ($0 · يوفّر حصة AI)</string>
+    <string name="forge_open_deck">فتح المجموعة</string>
+    <string name="forge_scan_another">مسح أخرى</string>
+
+    <!-- Oral Quizmaster -->
+    <string name="quizmaster_title">المختبر الشفهي</string>
+    <string name="quizmaster_subtitle">أجب بصوت عالٍ أو تحاور مع Gemini</string>
+    <string name="quizmaster_ready_title">هل أنت مستعد لتدريب الاسترجاع النشط؟</string>
+    <string name="quizmaster_ready_body">يطرح Gemini سؤالاً مهماً في كل مرة من مجموعتك، ويقيّم شرحك المنطوق أو المكتوب ويعالج نقاط الضعف.</string>
+    <string name="quizmaster_start_button">بدء الجلسة الشفهية</string>
+    <string name="quizmaster_hint_chip">تلميح</string>
+    <string name="quizmaster_next_chip">السؤال التالي</string>
+    <string name="quizmaster_input_placeholder">انطق إجابتك أو اكتبها…</string>
+    <string name="quizmaster_empty_title">لا توجد مجموعات جاهزة للتدريب الشفهي</string>
+    <string name="quizmaster_go_to_forge">الانتقال للإنشاء</string>
+
+    <!-- Match Blitz Mini-Game -->
+    <string name="match_blitz_title">تحدي المطابقة 60 ثانية</string>
+    <string name="match_blitz_start">ابدأ تحدي 60 ثانية</string>
+    <string name="match_blitz_play_again">العب مجدداً</string>
+    <string name="match_blitz_score_label">النتيجة: %1$d</string>
+
+    <!-- Settings, AI Plan & Quota Recovery -->
+    <string name="settings_title">الإعدادات ومزايا الدراسة</string>
+    <string name="settings_subtitle">اضبط الوضع الليلي وخطة الذكاء الاصطناعي والذاكرة المحلية وأداة الشاشة الرئيسية.</string>
+    <string name="settings_appearance_title">المظهر ووضع الدراسة الليلي</string>
+    <string name="settings_appearance_desc">يقلل المظهر الداكن Obsidian من إجهاد العين أثناء المذاكرة ليلاً.</string>
+    <string name="settings_oral_title">القراءة التلقائية للمختبر الشفهي</string>
+    <string name="settings_oral_desc">قراءة الأسئلة والتعليقات بصوت مسموع عبر تحويل النص إلى كلام.</string>
+    <string name="settings_widget_title">أداة الاسترجاع على الشاشة الرئيسية</string>
+    <string name="settings_widget_desc">تعرض بطاقة مراجعة واحدة سريعة عند كل فتح للهاتف.</string>
+    <string name="settings_pin_widget">إضافة الأداة التفاعلية للشاشة الرئيسية</string>
+    <string name="settings_sync_now">مزامنة المراجعات المعلقة</string>
+    <string name="ai_plan_title">خطة الذكاء الاصطناعي ومفتاح BYOK</string>
+    <string name="ai_plan_eco_lite_title">وضع Eco Lite AI (توفير 3× للحصة)</string>
+    <string name="ai_plan_offline_title">تفضيل المحلل المحلي دون إنترنت</string>
+    <string name="ai_plan_claim_grace">احصل على +3 أرصدة إضافية اليوم</string>
+    <string name="ai_plan_byok_title">استخدم مفتاح Gemini API الخاص بك (BYOK)</string>
+    <string name="ai_plan_test_save">اختبار وحفظ</string>
+    <string name="ai_plan_get_key">احصل على مفتاح</string>
+    <string name="ai_plan_remove_key">إزالة</string>
+
+    <!-- Smart Auto-Popups: Update, Rate App, Share App -->
+    <string name="popup_update_title">تحديث متوفر</string>
+    <string name="popup_update_body">يتوفر إصدار أحدث من ExamForge (%1$s) مع جلسات دراسة أكثر سلاسة وتحسينات عامة.</string>
+    <string name="popup_update_primary">تحديث الآن</string>
+    <string name="popup_update_later">ذكّرني لاحقاً</string>
+    <string name="popup_update_skip">تخطي هذا الإصدار</string>
+
+    <string name="popup_rate_title">هل تستمتع بتطبيق ExamForge؟</string>
+    <string name="popup_rate_body">لقد حققت وتيرة دراسة رائعة! هل تود كتابة مراجعة صادقة على Google Play لمساعدة طلاب آخرين على اكتشاف ExamForge؟</string>
+    <string name="popup_rate_primary">التقييم على Google Play</string>
+    <string name="popup_rate_later">ربما لاحقاً</string>
+    <string name="popup_rate_never">عدم السؤال مجدداً</string>
+
+    <string name="popup_share_title">شارك ExamForge مع زملاء الدراسة</string>
+    <string name="popup_share_body">إنجاز دراسي رائع! ادعُ زملاءك لتحويل ملاحظات السبورة إلى بطاقات استرجاع نشط أيضاً.</string>
+    <string name="popup_share_primary">مشاركة التطبيق</string>
+    <string name="popup_share_later">ليس الآن</string>
+    <string name="popup_share_never">عدم السؤال مجدداً</string>
+
+    <string name="share_app_chooser_title">مشاركة ExamForge</string>
+    <string name="share_app_message">أستخدم ExamForge لتحويل صور السبورة وملاحظات المحاضرات إلى بطاقات استرجاع نشط وتحدي مطابقة 60 ثانية. جرّبه هنا: %1$s</string>
+
+    <!-- Settings: Community, Updates, Privacy & Event Telemetry -->
+    <string name="settings_community_title">الدعم والتحديثات والخصوصية</string>
+    <string name="settings_community_subtitle">الإصدار %1$s · تذكيرات ذكية غير مزعجة وسجل أحداث محلي شفاف</string>
+    <string name="settings_check_update">التحقق من التحديثات</string>
+    <string name="settings_rate_app">تقييم التطبيق</string>
+    <string name="settings_share_app">مشاركة التطبيق</string>
+    <string name="settings_privacy_policy">سياسة الخصوصية</string>
+    <string name="settings_telemetry_toggle_show">عرض سجل الأحداث (%1$d)</string>
+    <string name="settings_telemetry_toggle_hide">إخفاء سجل الأحداث</string>
+    <string name="settings_telemetry_summary">الجلسات: %1$d · أيام النشاط: %2$d · نقاط التفاعل: %3$d</string>
+    <string name="settings_telemetry_guardrails">ضوابط النوافذ: لا تظهر عند البدء · بحد أقصى 1 لكل جلسة · فاصل 72 ساعة · هدوء 24 ساعة بعد أي خطأ</string>
+    <string name="settings_update_up_to_date">أنت تستخدم أحدث إصدار (%1$s).</string>
+    <string name="privacy_policy_title">سياسة خصوصية ExamForge</string>
+    <string name="common_close">إغلاق</string>
+    <string name="common_cancel">إلغاء</string>
+</resources>

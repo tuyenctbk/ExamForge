@@ -1,0 +1,745 @@
+package com.example
+
+import android.app.Activity
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.LightMode
+import androidx.compose.material.icons.filled.RecordVoiceOver
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Style
+import androidx.compose.material.icons.outlined.AutoAwesome
+import androidx.compose.material.icons.outlined.RecordVoiceOver
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.outlined.Style
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationRail
+import androidx.compose.material3.NavigationRailItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import androidx.credentials.CredentialManager
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.data.ai.FlashcardAiService
+import com.example.data.analytics.AppEventTracker
+import com.example.data.analytics.EngagementPromptEngine
+import com.example.data.firebase.authStateFlow
+import com.example.data.firebase.configureAppCheck
+import com.example.data.firebase.signOutUser
+import com.example.data.local.AppDatabase
+import com.example.data.local.PreferencesRepository
+import com.example.data.repository.FlashcardLocalRepository
+import com.example.data.repository.GeminiStudyService
+import com.example.data.repository.StudyRepository
+import com.example.ui.components.DonationSheetDialog
+import com.example.ui.components.EngagementPromptDialog
+import com.example.ui.components.FactCheckDialog
+import com.example.ui.components.TopBarSupporterAction
+import com.example.ui.screens.AuthScreen
+import com.example.ui.screens.CameraCaptureScreen
+import com.example.ui.screens.DeckDetailScreen
+import com.example.ui.screens.DecksScreen
+import com.example.ui.screens.FlashcardListScreen
+import com.example.ui.screens.ForgeScreen
+import com.example.ui.screens.MatchBlitzGameScreen
+import com.example.ui.screens.QuizmasterScreen
+import com.example.ui.screens.SettingsScreen
+import com.example.ui.screens.StudyArenaScreen
+import com.example.ui.screens.SupportDevelopmentScreen
+import com.example.ui.theme.ExamForgeTheme
+import com.example.ui.theme.ThemeMode
+import com.example.ui.viewmodel.ExamForgeViewModel
+import com.example.ui.viewmodel.FlashcardViewModel
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.launch
+
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        // STEP 1: Configure Firebase App Check with launch intent before UI, ViewModels, or Firebase calls
+        configureAppCheck(this, intent)
+
+        // STEP 2: Enable Edge-to-Edge display
+        enableEdgeToEdge()
+
+        setContent {
+            val prefsRepo = remember { PreferencesRepository(applicationContext) }
+            val themeMode by prefsRepo.themeMode.collectAsStateWithLifecycle(initialValue = ThemeMode.DARK)
+            val oralAutoSpeak by prefsRepo.oralAutoSpeak.collectAsStateWithLifecycle(initialValue = true)
+
+            ExamForgeTheme(themeMode = themeMode) {
+                ExamForgeRoot(
+                    hostActivity = this@MainActivity,
+                    prefsRepo = prefsRepo,
+                    themeMode = themeMode,
+                    oralAutoSpeak = oralAutoSpeak
+                )
+            }
+        }
+    }
+}
+
+private enum class MainTab(
+    val labelRes: Int,
+    val selectedIcon: ImageVector,
+    val unselectedIcon: ImageVector,
+    val testTag: String
+) {
+    DECKS(R.string.tab_decks, Icons.Filled.Style, Icons.Outlined.Style, "nav_decks"),
+    FORGE(R.string.tab_forge, Icons.Filled.AutoAwesome, Icons.Outlined.AutoAwesome, "nav_forge"),
+    QUIZMASTER(R.string.tab_quizmaster, Icons.Filled.RecordVoiceOver, Icons.Outlined.RecordVoiceOver, "nav_quizmaster"),
+    SETTINGS(R.string.tab_settings, Icons.Filled.Settings, Icons.Outlined.Settings, "nav_settings")
+}
+
+private sealed interface SubScreen {
+    data object None : SubScreen
+    data class DeckDetail(val deckId: String) : SubScreen
+    data object StudyArena : SubScreen
+    data class MatchBlitz(val deckId: String?, val deckTitle: String) : SubScreen
+    data object SavedFlashcards : SubScreen
+    data object SupportDevelopment : SubScreen
+    data class CameraCapture(
+        val saveDirectToRoom: Boolean = false,
+        val targetDeckId: String? = null
+    ) : SubScreen
+}
+
+@Composable
+private fun ExamForgeRoot(
+    hostActivity: Activity,
+    prefsRepo: PreferencesRepository,
+    themeMode: ThemeMode,
+    oralAutoSpeak: Boolean
+) {
+    val auth = remember { Firebase.auth }
+    val currentUser by auth.authStateFlow().collectAsStateWithLifecycle(initialValue = auth.currentUser)
+    val user = currentUser
+
+    if (user == null) {
+        AuthScreen(onAuthSuccess = {})
+    } else {
+        key(user.uid) {
+            ExamForgeAppShell(
+                hostActivity = hostActivity,
+                currentUserId = user.uid,
+                userEmail = user.email,
+                userDisplayName = user.displayName,
+                prefsRepo = prefsRepo,
+                themeMode = themeMode,
+                oralAutoSpeak = oralAutoSpeak
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ExamForgeAppShell(
+    hostActivity: Activity,
+    currentUserId: String,
+    userEmail: String?,
+    userDisplayName: String?,
+    prefsRepo: PreferencesRepository,
+    themeMode: ThemeMode,
+    oralAutoSpeak: Boolean
+) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val credentialManager = remember(context) { CredentialManager.create(context) }
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    val viewModel: ExamForgeViewModel = viewModel(
+        key = currentUserId,
+        factory = viewModelFactory {
+            initializer {
+                val app = checkNotNull(this[APPLICATION_KEY]) {
+                    "APPLICATION_KEY missing from CreationExtras"
+                }
+                val databaseId = app.getString(R.string.firestore_database_id)
+                val firestore = FirebaseFirestore.getInstance(databaseId)
+                val localDb = AppDatabase.getInstance(app)
+                val repo = StudyRepository(
+                    appContext = app,
+                    db = firestore,
+                    localDb = localDb
+                )
+                ExamForgeViewModel(
+                    currentUserId = currentUserId,
+                    initialDisplayName = userDisplayName ?: userEmail?.substringBefore("@") ?: "Student",
+                    studyRepository = repo,
+                    geminiService = GeminiStudyService(preferencesRepository = prefsRepo),
+                    preferencesRepository = prefsRepo,
+                    eventTracker = AppEventTracker(app),
+                    appContext = app
+                )
+            }
+        }
+    )
+
+    val flashcardViewModel: FlashcardViewModel = viewModel(
+        key = "flashcards_$currentUserId",
+        factory = viewModelFactory {
+            initializer {
+                val app = checkNotNull(this[APPLICATION_KEY]) {
+                    "APPLICATION_KEY missing from CreationExtras"
+                }
+                val databaseId = app.getString(R.string.firestore_database_id)
+                val firestore = FirebaseFirestore.getInstance(databaseId)
+                val localDb = AppDatabase.getInstance(app)
+                val repo = StudyRepository(
+                    appContext = app,
+                    db = firestore,
+                    localDb = localDb
+                )
+                FlashcardViewModel(
+                    currentUserId = currentUserId,
+                    localRepository = FlashcardLocalRepository(localDb, app),
+                    flashcardAiService = FlashcardAiService(preferencesRepository = prefsRepo),
+                    studyRepository = repo
+                )
+            }
+        }
+    )
+
+    val decks by viewModel.decks.collectAsStateWithLifecycle()
+    val allCards by viewModel.allCards.collectAsStateWithLifecycle()
+    val profile by viewModel.userProfile.collectAsStateWithLifecycle()
+    val forgeState by viewModel.forgeState.collectAsStateWithLifecycle()
+    val selectedSnapshot by viewModel.selectedSnapshot.collectAsStateWithLifecycle()
+    val quizState by viewModel.quizState.collectAsStateWithLifecycle()
+    val studySession by viewModel.studySession.collectAsStateWithLifecycle()
+    val syncStatus by viewModel.syncStatus.collectAsStateWithLifecycle()
+    val aiUsagePlan by viewModel.aiUsagePlan.collectAsStateWithLifecycle()
+    val matchBlitzBestScore by viewModel.matchBlitzBestScore.collectAsStateWithLifecycle()
+    val factCheckState by viewModel.factCheckState.collectAsStateWithLifecycle()
+    val byokKeyState by viewModel.byokKeyState.collectAsStateWithLifecycle()
+    val engagementTelemetry by viewModel.engagementTelemetry.collectAsStateWithLifecycle()
+    val activePopupSuggestion by viewModel.activePopupSuggestion.collectAsStateWithLifecycle()
+    val donationSheetVisible by viewModel.donationSheetVisible.collectAsStateWithLifecycle()
+    val donationSheetMilestone by viewModel.donationSheetMilestone.collectAsStateWithLifecycle()
+    val donationBillingState by viewModel.donationBillingState.collectAsStateWithLifecycle()
+
+    val showHomeDonationBanner = remember(engagementTelemetry) {
+        EngagementPromptEngine.shouldShowHomeDonationBanner(engagementTelemetry)
+    }
+    val showPostOpSupportCard = remember(engagementTelemetry) {
+        EngagementPromptEngine.shouldShowPostOperationSupportCard(engagementTelemetry)
+    }
+
+    val flashcardStatusMessage by flashcardViewModel.statusMessage.collectAsStateWithLifecycle()
+
+    var selectedTab by rememberSaveable { mutableStateOf(MainTab.DECKS) }
+    var subScreen by remember { mutableStateOf<SubScreen>(SubScreen.None) }
+
+    LaunchedEffect(syncStatus.lastActionBanner) {
+        val banner = syncStatus.lastActionBanner
+        if (!banner.isNullOrBlank()) {
+            snackbarHostState.showSnackbar(banner)
+            viewModel.clearBanner()
+        }
+    }
+
+    LaunchedEffect(flashcardStatusMessage) {
+        val message = flashcardStatusMessage
+        if (!message.isNullOrBlank()) {
+            snackbarHostState.showSnackbar(message)
+            flashcardViewModel.clearStatusMessage()
+        }
+    }
+
+    // Smart anti-spam Auto-Popup (Update / Rate / Share / Milestone Support) rendered at root
+    EngagementPromptDialog(
+        suggestion = activePopupSuggestion,
+        onAccept = viewModel::acceptPopupSuggestion,
+        onDismissLater = viewModel::dismissPopupSuggestionLater,
+        onOptOut = viewModel::optOutPopupSuggestion,
+        onOpenDonationSheet = { milestone ->
+            viewModel.openDonationSheet(source = "auto_prompt", milestoneCount = milestone)
+        }
+    )
+
+    // Multi-channel Donation Bottom Sheet (explicitly bound to live hostActivity for Google Play Billing)
+    DonationSheetDialog(
+        visible = donationSheetVisible,
+        hostActivity = hostActivity,
+        isActiveSupporter = engagementTelemetry.isActiveSupporter,
+        milestoneCount = donationSheetMilestone,
+        billingState = donationBillingState,
+        onPurchaseGooglePlay = viewModel::purchaseDonationViaGooglePlay,
+        onRestorePurchases = viewModel::restoreDonationPurchases,
+        onExternalChannelUsed = viewModel::recordExternalDonationAction,
+        onOptOutReminders = viewModel::optOutDonationReminders,
+        onDismiss = viewModel::dismissDonationSheet
+    )
+
+    // Fact-check dialog rendered at root so it works seamlessly over DeckDetailScreen
+    FactCheckDialog(
+        state = factCheckState,
+        onDismiss = viewModel::dismissFactCheck,
+        onApplyAnswer = viewModel::applyFactCheckAnswer,
+        onOpenAiSettings = {
+            viewModel.dismissFactCheck()
+            subScreen = SubScreen.None
+            selectedTab = MainTab.SETTINGS
+        }
+    )
+
+    // Sub-screens take full screen with BackHandler support
+    when (val activeSub = subScreen) {
+        is SubScreen.StudyArena -> {
+            StudyArenaScreen(
+                session = studySession,
+                onBack = { subScreen = SubScreen.None },
+                onSelectMcq = viewModel::selectMcqOption,
+                onUpdateCloze = viewModel::updateClozeInput,
+                onCheckCloze = viewModel::checkClozeAnswer,
+                onReveal = viewModel::revealCurrentCard,
+                onToggleHint = viewModel::toggleHint,
+                onRate = viewModel::rateCurrentCard,
+                showPostOpSupportCard = showPostOpSupportCard,
+                onOpenSupportSheet = { viewModel.openDonationSheet(source = "study_complete_card") },
+                onDismissSupportCard = viewModel::dismissHomeDonationBanner
+            )
+            return
+        }
+
+        is SubScreen.MatchBlitz -> {
+            val gameCards = remember(allCards, activeSub.deckId) {
+                if (activeSub.deckId == null) allCards else allCards.filter { it.deckId == activeSub.deckId }
+            }
+            MatchBlitzGameScreen(
+                deckTitle = activeSub.deckTitle,
+                cards = gameCards,
+                bestScore = matchBlitzBestScore,
+                onScoreRecorded = viewModel::recordMatchBlitzScore,
+                onBack = {
+                    subScreen = if (activeSub.deckId != null) {
+                        SubScreen.DeckDetail(activeSub.deckId)
+                    } else {
+                        SubScreen.None
+                    }
+                }
+            )
+            return
+        }
+
+        is SubScreen.DeckDetail -> {
+            val deck = decks.firstOrNull { it.id == activeSub.deckId }
+            if (deck == null) {
+                LaunchedEffect(Unit) { subScreen = SubScreen.None }
+            } else {
+                val deckCards = remember(allCards, deck.id) {
+                    allCards.filter { it.deckId == deck.id }
+                }
+                DeckDetailScreen(
+                    deck = deck,
+                    cards = deckCards,
+                    onBack = { subScreen = SubScreen.None },
+                    onStartStudy = { dueOnly ->
+                        viewModel.startStudySession(deck, dueOnly = dueOnly)
+                        subScreen = SubScreen.StudyArena
+                    },
+                    onStartOralQuiz = {
+                        viewModel.startQuizSession(deck.id, oralAutoSpeak)
+                        subScreen = SubScreen.None
+                        selectedTab = MainTab.QUIZMASTER
+                    },
+                    onStartMatchBlitz = {
+                        subScreen = SubScreen.MatchBlitz(deckId = deck.id, deckTitle = deck.title)
+                    },
+                    onVerifyCard = { card ->
+                        viewModel.verifyFlashcard(card = card, subject = deck.subject)
+                    },
+                    onAddManualCard = { type, q, a, exp, hint, opts, correctIdx ->
+                        viewModel.addManualCard(deck.id, type, q, a, exp, hint, opts, correctIdx)
+                    },
+                    onEditCard = { cardId, q, a, exp, hint ->
+                        flashcardViewModel.updateFlashcardById(cardId, q, a, exp, hint)
+                    },
+                    onSnapCardsForDeck = {
+                        subScreen = SubScreen.CameraCapture(
+                            saveDirectToRoom = true,
+                            targetDeckId = deck.id
+                        )
+                    },
+                    onDeleteCard = viewModel::deleteCard,
+                    onDeleteDeck = {
+                        viewModel.deleteDeck(deck)
+                        subScreen = SubScreen.None
+                    }
+                )
+                return
+            }
+        }
+
+        is SubScreen.SavedFlashcards -> {
+            FlashcardListScreen(
+                viewModel = flashcardViewModel,
+                decks = decks,
+                onBack = { subScreen = SubScreen.None },
+                onTriggerCameraCapture = { targetDeckId ->
+                    subScreen = SubScreen.CameraCapture(
+                        saveDirectToRoom = true,
+                        targetDeckId = targetDeckId
+                    )
+                }
+            )
+            return
+        }
+
+        is SubScreen.CameraCapture -> {
+            CameraCaptureScreen(
+                onBack = {
+                    subScreen = if (activeSub.saveDirectToRoom) {
+                        if (activeSub.targetDeckId != null) {
+                            SubScreen.DeckDetail(activeSub.targetDeckId)
+                        } else {
+                            SubScreen.SavedFlashcards
+                        }
+                    } else {
+                        SubScreen.None
+                    }
+                },
+                onUsePhotoForForge = { bitmap ->
+                    viewModel.setSelectedSnapshot(bitmap)
+                    selectedTab = MainTab.FORGE
+                    subScreen = SubScreen.None
+                },
+                onAnalyzePhotoNow = { bitmap ->
+                    if (activeSub.saveDirectToRoom) {
+                        flashcardViewModel.addFlashcardsFromCameraCapture(
+                            bitmap = bitmap,
+                            targetDeckId = activeSub.targetDeckId
+                        )
+                        subScreen = if (activeSub.targetDeckId != null) {
+                            SubScreen.DeckDetail(activeSub.targetDeckId)
+                        } else {
+                            SubScreen.SavedFlashcards
+                        }
+                    } else {
+                        viewModel.setSelectedSnapshot(bitmap)
+                        viewModel.forgeFlashcards(
+                            bitmap = bitmap,
+                            rawNotes = "",
+                            targetCount = 6,
+                            subjectHint = ""
+                        )
+                        selectedTab = MainTab.FORGE
+                        subScreen = SubScreen.None
+                    }
+                }
+            )
+            return
+        }
+
+        is SubScreen.SupportDevelopment -> {
+            SupportDevelopmentScreen(
+                hostActivity = hostActivity,
+                isActiveSupporter = engagementTelemetry.isActiveSupporter,
+                billingState = donationBillingState,
+                onPurchaseGooglePlay = viewModel::purchaseDonationViaGooglePlay,
+                onRestorePurchases = viewModel::restoreDonationPurchases,
+                onExternalChannelUsed = viewModel::recordExternalDonationAction,
+                onBack = { subScreen = SubScreen.None }
+            )
+            return
+        }
+
+        SubScreen.None -> Unit
+    }
+
+    BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+        val useNavRail = maxWidth >= 600.dp
+
+        Scaffold(
+            contentWindowInsets = WindowInsets.safeDrawing,
+            snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                imageVector = Icons.Filled.AutoAwesome,
+                                contentDescription = stringResource(id = R.string.cd_app_logo),
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(22.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = stringResource(id = R.string.app_name),
+                                style = MaterialTheme.typography.titleLarge
+                            )
+                        }
+                    },
+                    actions = {
+                        TopBarSupporterAction(
+                            isActiveSupporter = engagementTelemetry.isActiveSupporter,
+                            onOpenSupport = { viewModel.openDonationSheet(source = "top_bar") }
+                        )
+                        IconButton(
+                            onClick = {
+                                val nextMode = if (themeMode == ThemeMode.LIGHT) ThemeMode.DARK else ThemeMode.LIGHT
+                                scope.launch { prefsRepo.setThemeMode(nextMode) }
+                            },
+                            modifier = Modifier.testTag("top_bar_theme_toggle")
+                        ) {
+                            Icon(
+                                imageVector = if (themeMode == ThemeMode.LIGHT) Icons.Default.DarkMode else Icons.Default.LightMode,
+                                contentDescription = stringResource(id = R.string.cd_toggle_theme),
+                                tint = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.background
+                    )
+                )
+            },
+            bottomBar = {
+                if (!useNavRail) {
+                    NavigationBar(containerColor = MaterialTheme.colorScheme.surface) {
+                        MainTab.entries.forEach { tab ->
+                            val selected = selectedTab == tab
+                            NavigationBarItem(
+                                selected = selected,
+                                onClick = { selectedTab = tab },
+                                icon = {
+                                    Icon(
+                                        imageVector = if (selected) tab.selectedIcon else tab.unselectedIcon,
+                                        contentDescription = stringResource(id = tab.labelRes)
+                                    )
+                                },
+                                label = { Text(stringResource(id = tab.labelRes)) },
+                                modifier = Modifier.testTag(tab.testTag)
+                            )
+                        }
+                    }
+                }
+            }
+        ) { innerPadding ->
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+            ) {
+                if (useNavRail) {
+                    NavigationRail(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        modifier = Modifier.fillMaxHeight()
+                    ) {
+                        MainTab.entries.forEach { tab ->
+                            val selected = selectedTab == tab
+                            NavigationRailItem(
+                                selected = selected,
+                                onClick = { selectedTab = tab },
+                                icon = {
+                                    Icon(
+                                        imageVector = if (selected) tab.selectedIcon else tab.unselectedIcon,
+                                        contentDescription = stringResource(id = tab.labelRes)
+                                    )
+                                },
+                                label = { Text(stringResource(id = tab.labelRes)) },
+                                modifier = Modifier.testTag(tab.testTag)
+                            )
+                        }
+                    }
+                }
+
+                Box(modifier = Modifier.weight(1f)) {
+                    when (selectedTab) {
+                        MainTab.DECKS -> {
+                            DecksScreen(
+                                decks = decks,
+                                allCards = allCards,
+                                profile = profile,
+                                syncStatus = syncStatus,
+                                matchBlitzBestScore = matchBlitzBestScore,
+                                onOpenForge = { subScreen = SubScreen.CameraCapture() },
+                                onOpenSavedFlashcards = { subScreen = SubScreen.SavedFlashcards },
+                                onOpenMatchBlitzAll = {
+                                    subScreen = SubScreen.MatchBlitz(
+                                        deckId = null,
+                                        deckTitle = "All Saved Decks"
+                                    )
+                                },
+                                onOpenDeckDetail = { deck -> subScreen = SubScreen.DeckDetail(deck.id) },
+                                onQuickStudyAllDue = {
+                                    viewModel.startStudySession(deck = null, dueOnly = true)
+                                    subScreen = SubScreen.StudyArena
+                                },
+                                onQuickStudyDeck = { deck ->
+                                    viewModel.startStudySession(deck = deck, dueOnly = true)
+                                    subScreen = SubScreen.StudyArena
+                                },
+                                onStartOralQuizDeck = { deck ->
+                                    viewModel.startQuizSession(deck.id, oralAutoSpeak)
+                                    selectedTab = MainTab.QUIZMASTER
+                                },
+                                onCreateManualDeck = viewModel::createManualDeck,
+                                showHomeDonationBanner = showHomeDonationBanner,
+                                completedTasksCount = engagementTelemetry.successfulCoreOps,
+                                onOpenSupportSheet = { viewModel.openDonationSheet(source = "home_banner") },
+                                onDismissHomeDonationBanner = viewModel::dismissHomeDonationBanner
+                            )
+                        }
+
+                        MainTab.FORGE -> {
+                            ForgeScreen(
+                                forgeState = forgeState,
+                                selectedSnapshot = selectedSnapshot,
+                                existingDecks = decks,
+                                aiUsagePlan = aiUsagePlan,
+                                onSnapshotSelected = viewModel::setSelectedSnapshot,
+                                onOpenCameraCapture = { subScreen = SubScreen.CameraCapture() },
+                                onForgeRequested = { bmp, notes, count, hint ->
+                                    viewModel.forgeFlashcards(bmp, notes, count, hint)
+                                },
+                                onForgeOfflineRequested = { notes, count, hint ->
+                                    viewModel.forgeFlashcards(
+                                        bitmap = null,
+                                        rawNotes = notes,
+                                        targetCount = count,
+                                        subjectHint = hint,
+                                        forceOffline = true
+                                    )
+                                },
+                                onForgeEcoLiteRequested = { bmp, notes, count, hint ->
+                                    viewModel.forgeFlashcards(
+                                        bitmap = bmp,
+                                        rawNotes = notes,
+                                        targetCount = count,
+                                        subjectHint = hint,
+                                        forceEcoLite = true
+                                    )
+                                },
+                                onEnableEcoLite = { viewModel.setEcoLiteMode(true) },
+                                onClaimGraceCredits = viewModel::claimDailyGraceCredits,
+                                onOpenByokSettings = { selectedTab = MainTab.SETTINGS },
+                                onUpdateDraftMeta = viewModel::updateDraftMetadata,
+                                onRemoveDraftCard = viewModel::removeDraftCard,
+                                onSaveDraft = viewModel::saveForgedDeck,
+                                onResetForge = viewModel::resetForgeState,
+                                onOpenSavedDeck = { deckId ->
+                                    selectedTab = MainTab.DECKS
+                                    subScreen = SubScreen.DeckDetail(deckId)
+                                },
+                                showPostOpSupportCard = showPostOpSupportCard,
+                                onOpenSupportSheet = { viewModel.openDonationSheet(source = "forge_complete_card") },
+                                onDismissSupportCard = viewModel::dismissHomeDonationBanner
+                            )
+                        }
+
+                        MainTab.QUIZMASTER -> {
+                            QuizmasterScreen(
+                                decks = decks,
+                                quizState = quizState,
+                                oralAutoSpeak = oralAutoSpeak,
+                                aiUsagePlan = aiUsagePlan,
+                                onToggleOralAutoSpeak = { enabled ->
+                                    scope.launch { prefsRepo.setOralAutoSpeak(enabled) }
+                                },
+                                onSelectDeck = viewModel::selectQuizDeck,
+                                onStartSession = viewModel::startQuizSession,
+                                onSendMessage = { text, oral -> viewModel.sendQuizMessage(text, oral) },
+                                onClearSpokenReply = viewModel::clearSpokenReply,
+                                onResetConversation = viewModel::resetQuizConversation,
+                                onEnableEcoLite = { viewModel.setEcoLiteMode(true) },
+                                onClaimGraceCredits = viewModel::claimDailyGraceCredits,
+                                onOpenByokSettings = { selectedTab = MainTab.SETTINGS },
+                                onOpenForge = { selectedTab = MainTab.FORGE }
+                            )
+                        }
+
+                        MainTab.SETTINGS -> {
+                            SettingsScreen(
+                                userEmail = userEmail,
+                                userDisplayName = userDisplayName,
+                                profile = profile,
+                                themeMode = themeMode,
+                                oralAutoSpeak = oralAutoSpeak,
+                                syncStatus = syncStatus,
+                                totalCachedCards = allCards.size,
+                                sampleWidgetCard = allCards.firstOrNull(),
+                                aiUsagePlan = aiUsagePlan,
+                                byokKeyState = byokKeyState,
+                                onTestAndSaveByokKey = viewModel::testAndSaveByokKey,
+                                onRemoveByokKey = viewModel::removeByokKey,
+                                onPreferOfflineParserChange = viewModel::setPreferOfflineParser,
+                                onEcoLiteModeChange = viewModel::setEcoLiteMode,
+                                onClaimGraceCredits = viewModel::claimDailyGraceCredits,
+                                engagementTelemetry = engagementTelemetry,
+                                onCheckForUpdate = viewModel::manualCheckForUpdates,
+                                onManualRate = viewModel::logManualRate,
+                                onManualShare = viewModel::logManualShare,
+                                onOpenSupportSheet = {
+                                    viewModel.prepareSupportScreen("settings_support_screen")
+                                    subScreen = SubScreen.SupportDevelopment
+                                },
+                                onThemeModeChange = { mode ->
+                                    scope.launch { prefsRepo.setThemeMode(mode) }
+                                },
+                                onOralAutoSpeakChange = { enabled ->
+                                    scope.launch { prefsRepo.setOralAutoSpeak(enabled) }
+                                },
+                                onSyncNow = viewModel::manualSyncPendingReviews,
+                                onSignOut = {
+                                    signOutUser(
+                                        credentialManager = credentialManager,
+                                        scope = scope,
+                                        beforeSignOut = { prefsRepo.setActiveUserId(null) }
+                                    )
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

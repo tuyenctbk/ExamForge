@@ -1,0 +1,174 @@
+<resources>
+    <!-- App Identity & Home Widget -->
+    <string name="app_name">ExamForge</string>
+    <string name="widget_label">ExamForge त्वरित दोहराव</string>
+    <string name="widget_description">हर बार फ़ोन अनलॉक करते समय अपनी होम स्क्रीन पर 1 एक्टिव-रिकॉल फ़्लैशकार्ड का अभ्यास करें।</string>
+    <string name="widget_header_default">EXAMFORGE</string>
+    <string name="widget_due_default">0 शेष</string>
+    <string name="widget_empty_question">दैनिक होम स्क्रीन फ़्लैशकार्ड अनलॉक करने के लिए ExamForge में व्हाइटबोर्ड या लेक्चर नोट्स की फ़ोटो लें।</string>
+    <string name="widget_reveal_answer">उत्तर दिखाएं</string>
+    <string name="widget_next">अगला</string>
+    <string name="widget_again">फिर से</string>
+    <string name="widget_got_it">याद हो गया</string>
+
+    <!-- Auth & Navigation -->
+    <string name="sign_in_google">Google से साइन इन करें</string>
+    <string name="sign_out">साइन आउट</string>
+    <string name="tab_decks">डेक</string>
+    <string name="tab_forge">बनाएं</string>
+    <string name="tab_quizmaster">मौखिक क्विज़</string>
+    <string name="tab_settings">सेटिंग्स</string>
+    <string name="auth_headline">स्टडी नोट्स को पक्की याददाश्त में बदलें</string>
+    <string name="auth_subtitle">व्हाइटबोर्ड स्कैन करें, मौखिक अभ्यास करें और सभी डिवाइस पर ऑफ़लाइन फ़्लैशकार्ड सिंक करें।</string>
+    <string name="auth_sync_note">अपने डेक और अध्ययन प्रगति का सुरक्षित बैकअप लेने के लिए Google से साइन इन करें।</string>
+
+    <!-- Accessibility Content Descriptions -->
+    <string name="cd_app_logo">ExamForge प्रतीक</string>
+    <string name="cd_hero_banner">नोट्स को चमकते फ़्लैशकार्ड में बदलती अध्ययन मेज़</string>
+    <string name="cd_empty_illustration">ब्लैकबोर्ड के भौतिकी नोट्स को फ़्लैशकार्ड में बदलता कैमरा</string>
+    <string name="cd_toggle_theme">डार्क या लाइट थीम बदलें</string>
+    <string name="cd_navigate_back">वापस जाएं</string>
+    <string name="cd_snap_photo">कैमरे से व्हाइटबोर्ड या नोट्स कैप्चर करें</string>
+    <string name="cd_pick_gallery">गैलरी से नोट्स की फ़ोटो चुनें</string>
+    <string name="cd_voice_mic">उत्तर बोलकर बताएं</string>
+    <string name="cd_speak_toggle">वॉइस रीडआउट चालू या बंद करें</string>
+    <string name="cd_camera_close">कैमरा बंद करें</string>
+    <string name="cd_camera_flash">फ़्लैश मोड बदलें</string>
+    <string name="cd_camera_torch">टॉर्च लाइट चालू या बंद करें</string>
+    <string name="cd_camera_switch">कैमरा लेंस बदलें</string>
+    <string name="cd_camera_shutter">नोट्स की फ़ोटो खींचें</string>
+    <string name="cd_flashcard_camera_fab">फ़्लैशकार्ड बनाने के लिए कैमरे से नोट्स लें</string>
+    <string name="cd_flashcard_add_manual">फ़्लैशकार्ड स्वयं जोड़ें</string>
+    <string name="cd_flashcard_edit">फ़्लैशकार्ड संपादित करें</string>
+    <string name="cd_flashcard_delete">फ़्लैशकार्ड हटाएं</string>
+
+    <!-- Camera & Saved Flashcards -->
+    <string name="camera_capture_title">स्टडी नोट्स स्कैन करें</string>
+    <string name="camera_frame_hint">व्हाइटबोर्ड, समीकरण या हस्तलिखित नोट्स को फ़्रेम के भीतर रखें</string>
+    <string name="camera_permission_title">कैमरा अनुमति आवश्यक</string>
+    <string name="camera_permission_rationale">ExamForge आपके कैमरे का उपयोग व्हाइटबोर्ड, पुस्तक आरेख और हस्तलिखित नोट्स को Gemini फ़्लैशकार्ड में बदलने के लिए करता है।</string>
+    <string name="camera_grant_permission">कैमरा चालू करें</string>
+    <string name="camera_retake">फिर से लें</string>
+    <string name="camera_analyze_now">Gemini से विश्लेषण करें</string>
+    <string name="camera_add_notes">नोट्स और विकल्प जोड़ें</string>
+    <string name="flashcards_screen_title">सहेजे गए फ़्लैशकार्ड</string>
+    <string name="flashcards_fab_scan">नोट्स स्कैन करें</string>
+    <string name="flashcards_search_placeholder">प्रश्न या उत्तर खोजें…</string>
+    <string name="flashcards_empty_title">अभी तक कोई फ़्लैशकार्ड नहीं</string>
+    <string name="flashcards_empty_body">हस्तलिखित पेज, सूत्र या स्लाइड की फ़ोटो लेने के लिए नोट्स स्कैन करें पर टैप करें — Gemini अपने आप कार्ड बना देगा।</string>
+
+    <!-- Decks Hub & Study Arena -->
+    <string name="decks_all_filter">सभी</string>
+    <string name="decks_due_summary">दोहराव हेतु %1$d शेष</string>
+    <string name="decks_study_all_due">शेष कार्ड दोहराएं</string>
+    <string name="decks_match_blitz_button">60 सेकंड मैच</string>
+    <string name="decks_best_score">सर्वश्रेष्ठ: %1$d</string>
+    <string name="decks_empty_title">अपना पहला स्टडी डेक बनाएं</string>
+    <string name="decks_empty_subtitle">एक्टिव-रिकॉल फ़्लैशकार्ड बनाने के लिए व्हाइटबोर्ड की फ़ोटो लें, लेक्चर बोलकर लिखें या नोट्स पेस्ट करें।</string>
+    <string name="decks_new_deck">नया डेक</string>
+    <string name="decks_saved_cards">सभी कार्ड</string>
+    <string name="study_arena_complete_title">सत्र पूरा हुआ</string>
+    <string name="study_arena_reviewed_summary">%1$d कार्ड दोहराए · %2$d पक्के हुए</string>
+    <string name="study_arena_back_to_decks">डेक पर लौटें</string>
+    <string name="study_arena_show_hint">संकेत देखें</string>
+    <string name="study_arena_reveal_answer">उत्तर दिखाएं</string>
+    <string name="study_rating_again">फिर से</string>
+    <string name="study_rating_hard">कठिन</string>
+    <string name="study_rating_good">ठीक</string>
+    <string name="study_rating_easy">आसान</string>
+
+    <!-- Snapshot Forge & Lecture Dictation -->
+    <string name="forge_title">स्नैपशॉट फ़ोर्ज</string>
+    <string name="forge_subtitle">सूत्र खींचें, स्लाइड अपलोड करें या लेक्चर बोलकर लिखें — Gemini या ऑफ़लाइन पार्सर उन्हें डेक में बदल देता है।</string>
+    <string name="forge_step_capture">1. अध्ययन सामग्री खींचें या अपलोड करें</string>
+    <string name="forge_step_notes">2. लेक्चर ऑडियो, नोट्स और विकल्प</string>
+    <string name="forge_camerax_scan">CameraX स्कैन</string>
+    <string name="forge_gallery">गैलरी</string>
+    <string name="forge_dictate_start">डिक्टेट (₹0)</string>
+    <string name="forge_dictate_stop">माइक रोकें</string>
+    <string name="forge_notes_label">लेक्चर नोट्स, Q:/A: या शब्द: परिभाषा पेस्ट या बोलकर लिखें</string>
+    <string name="forge_subject_label">विषय संकेत (वैकल्पिक)</string>
+    <string name="forge_cards_count">कार्ड:</string>
+    <string name="forge_generate_gemini">Gemini से फ़्लैशकार्ड बनाएं</string>
+    <string name="forge_generate_eco_lite">Eco Lite AI से बनाएं</string>
+    <string name="forge_generate_offline">ऑफ़लाइन कार्ड बनाएं (₹0)</string>
+    <string name="forge_instant_offline_btn">त्वरित ऑफ़लाइन पार्सर (₹0 · AI कोटा बचाएं)</string>
+    <string name="forge_open_deck">डेक खोलें</string>
+    <string name="forge_scan_another">एक और स्कैन करें</string>
+
+    <!-- Oral Quizmaster -->
+    <string name="quizmaster_title">मौखिक क्विज़मास्टर</string>
+    <string name="quizmaster_subtitle">उत्तर बोलकर सुनाएं या Gemini से चैट करें</string>
+    <string name="quizmaster_ready_title">एक्टिव-रिकॉल अभ्यास के लिए तैयार हैं?</string>
+    <string name="quizmaster_ready_body">Gemini आपके डेक से एक-एक महत्वपूर्ण प्रश्न पूछता है, आपके बोले या लिखे उत्तर की जांच करता है और कमजोर बिंदुओं को मजबूत करता है।</string>
+    <string name="quizmaster_start_button">मौखिक क्विज़ शुरू करें</string>
+    <string name="quizmaster_hint_chip">संकेत</string>
+    <string name="quizmaster_next_chip">अगला प्रश्न</string>
+    <string name="quizmaster_input_placeholder">अपना उत्तर बोलें या टाइप करें…</string>
+    <string name="quizmaster_empty_title">मौखिक अभ्यास के लिए कोई डेक नहीं</string>
+    <string name="quizmaster_go_to_forge">बनाने जाएं</string>
+
+    <!-- Match Blitz Mini-Game -->
+    <string name="match_blitz_title">60 सेकंड मैच ब्लिट्ज़</string>
+    <string name="match_blitz_start">60 सेकंड ब्लिट्ज़ शुरू करें</string>
+    <string name="match_blitz_play_again">फिर से खेलें</string>
+    <string name="match_blitz_score_label">स्कोर: %1$d</string>
+
+    <!-- Settings, AI Plan & Quota Recovery -->
+    <string name="settings_title">सेटिंग्स और अध्ययन सुविधाएं</string>
+    <string name="settings_subtitle">नाइट डार्क मोड, AI उपयोग योजना, ऑफ़लाइन कैश और होम स्क्रीन विजेट सेट करें।</string>
+    <string name="settings_appearance_title">रूप और रात्रि अध्ययन मोड</string>
+    <string name="settings_appearance_desc">Obsidian डार्क थीम देर रात पढ़ाई के समय आंखों की चमक कम करती है।</string>
+    <string name="settings_oral_title">मौखिक क्विज़ ऑटो-स्पीक</string>
+    <string name="settings_oral_desc">टेक्स्ट-टू-स्पीच के ज़रिए प्रश्न और फ़ीडबैक जोर से पढ़ें।</string>
+    <string name="settings_widget_title">अनलॉक-टू-रिकॉल होम विजेट</string>
+    <string name="settings_widget_desc">फ़ोन अनलॉक करने पर होम स्क्रीन पर 1 शेष फ़्लैशकार्ड दिखाता है।</string>
+    <string name="settings_pin_widget">होम स्क्रीन पर इंटरैक्टिव विजेट जोड़ें</string>
+    <string name="settings_sync_now">लंबित समीक्षाएं सिंक करें</string>
+    <string name="ai_plan_title">AI उपयोग योजना और BYOK कुंजी</string>
+    <string name="ai_plan_eco_lite_title">Eco Lite AI मोड (3× अधिक कोटा)</string>
+    <string name="ai_plan_offline_title">ऑफ़लाइन त्वरित पार्सर को प्राथमिकता दें</string>
+    <string name="ai_plan_claim_grace">आज के +3 अतिरिक्त ग्रेस क्रेडिट लें</string>
+    <string name="ai_plan_byok_title">अपनी Gemini API कुंजी उपयोग करें (BYOK)</string>
+    <string name="ai_plan_test_save">जांचें और सहेजें</string>
+    <string name="ai_plan_get_key">कुंजी प्राप्त करें</string>
+    <string name="ai_plan_remove_key">हटाएं</string>
+
+    <!-- Smart Auto-Popups: Update, Rate App, Share App -->
+    <string name="popup_update_title">अपडेट उपलब्ध है</string>
+    <string name="popup_update_body">बेहतर अध्ययन सत्रों और सुधारों के साथ ExamForge का नया संस्करण (%1$s) उपलब्ध है।</string>
+    <string name="popup_update_primary">अभी अपडेट करें</string>
+    <string name="popup_update_later">बाद में याद दिलाएं</string>
+    <string name="popup_update_skip">यह संस्करण छोड़ें</string>
+
+    <string name="popup_rate_title">क्या आपको ExamForge पसंद आ रहा है?</string>
+    <string name="popup_rate_body">आपने पढ़ाई की शानदार लय बनाई है! क्या आप अन्य छात्रों की मदद के लिए Google Play पर ईमानदार समीक्षा लिखना चाहेंगे?</string>
+    <string name="popup_rate_primary">Google Play पर रेट करें</string>
+    <string name="popup_rate_later">शायद बाद में</string>
+    <string name="popup_rate_never">दोबारा न पूछें</string>
+
+    <string name="popup_share_title">दोस्तों के साथ ExamForge साझा करें</string>
+    <string name="popup_share_body">शानदार अध्ययन उपलब्धि! अपने सहपाठियों को भी व्हाइटबोर्ड नोट्स से फ़्लैशकार्ड बनाने के लिए आमंत्रित करें।</string>
+    <string name="popup_share_primary">ऐप साझा करें</string>
+    <string name="popup_share_later">अभी नहीं</string>
+    <string name="popup_share_never">दोबारा न पूछें</string>
+
+    <string name="share_app_chooser_title">ExamForge साझा करें</string>
+    <string name="share_app_message">मैं व्हाइटबोर्ड फ़ोटो और लेक्चर नोट्स को फ़्लैशकार्ड और 60-सेकंड मैच अभ्यास में बदलने के लिए ExamForge का उपयोग कर रहा हूं। इसे देखें: %1$s</string>
+
+    <!-- Settings: Community, Updates, Privacy & Event Telemetry -->
+    <string name="settings_community_title">सहायता, अपडेट और गोपनीयता</string>
+    <string name="settings_community_subtitle">संस्करण %1$s · स्मार्ट गैर-बाधाकारी रिमाइंडर और पारदर्शी लोकल इवेंट लॉग</string>
+    <string name="settings_check_update">अपडेट जांचें</string>
+    <string name="settings_rate_app">ऐप रेट करें</string>
+    <string name="settings_share_app">ऐप साझा करें</string>
+    <string name="settings_privacy_policy">गोपनीयता नीति</string>
+    <string name="settings_telemetry_toggle_show">इवेंट लॉग दिखाएं (%1$d)</string>
+    <string name="settings_telemetry_toggle_hide">इवेंट लॉग छिपाएं</string>
+    <string name="settings_telemetry_summary">सत्र: %1$d · सक्रिय दिन: %2$d · सहभागिता स्कोर: %3$d</string>
+    <string name="settings_telemetry_guardrails">पॉपअप नियम: ऐप शुरू होते ही नहीं · प्रति सत्र अधिकतम 1 · 72 घंटे अंतराल · त्रुटि के बाद 24 घंटे विराम</string>
+    <string name="settings_update_up_to_date">आप नवीनतम संस्करण (%1$s) पर हैं।</string>
+    <string name="privacy_policy_title">ExamForge गोपनीयता नीति</string>
+    <string name="common_close">बंद करें</string>
+    <string name="common_cancel">रद्द करें</string>
+</resources>

@@ -1,0 +1,174 @@
+<resources>
+    <!-- App Identity & Home Widget -->
+    <string name="app_name">ExamForge</string>
+    <string name="widget_label">ExamForge Szybka Powtórka</string>
+    <string name="widget_description">Powtórz 1 fiszkę aktywnego przypominania na ekranie głównym przy każdym odblokowaniu telefonu.</string>
+    <string name="widget_header_default">EXAMFORGE</string>
+    <string name="widget_due_default">0 do powtórki</string>
+    <string name="widget_empty_question">Zrób zdjęcie tablicy lub notatek z wykładu w ExamForge, aby odblokować codzienne fiszki na ekranie głównym.</string>
+    <string name="widget_reveal_answer">Pokaż odpowiedź</string>
+    <string name="widget_next">Następna</string>
+    <string name="widget_again">Jeszcze raz</string>
+    <string name="widget_got_it">Umiem</string>
+
+    <!-- Auth & Navigation -->
+    <string name="sign_in_google">Zaloguj przez Google</string>
+    <string name="sign_out">Wyloguj</string>
+    <string name="tab_decks">Talie</string>
+    <string name="tab_forge">Twórz</string>
+    <string name="tab_quizmaster">Egzamin ustny</string>
+    <string name="tab_settings">Ustawienia</string>
+    <string name="auth_headline">Zamień notatki w trwałą wiedzę</string>
+    <string name="auth_subtitle">Skanuj tablice, ćwicz odpowiedzi ustne i synchronizuj fiszki offline na wszystkich urządzeniach.</string>
+    <string name="auth_sync_note">Zaloguj się przez Google, aby bezpiecznie tworzyć kopie zapasowe talii i postępów.</string>
+
+    <!-- Accessibility Content Descriptions -->
+    <string name="cd_app_logo">Emblemat ExamForge</string>
+    <string name="cd_hero_banner">Biurko zamieniające notatki w świecące fiszki</string>
+    <string name="cd_empty_illustration">Aparat skanujący notatki z fizyki z tablicy w fiszki</string>
+    <string name="cd_toggle_theme">Przełącz motyw ciemny lub jasny</string>
+    <string name="cd_navigate_back">Wróć</string>
+    <string name="cd_snap_photo">Zrób zdjęcie tablicy lub notatek aparatem</string>
+    <string name="cd_pick_gallery">Wybierz zdjęcie notatek z galerii</string>
+    <string name="cd_voice_mic">Wypowiedz odpowiedź na głos</string>
+    <string name="cd_speak_toggle">Przełącz odczyt głosowy</string>
+    <string name="cd_camera_close">Zamknij aparat</string>
+    <string name="cd_camera_flash">Zmień tryb lampy błyskowej</string>
+    <string name="cd_camera_torch">Włącz lub wyłącz latarkę</string>
+    <string name="cd_camera_switch">Przełącz obiektyw aparatu</string>
+    <string name="cd_camera_shutter">Zrób zdjęcie notatek</string>
+    <string name="cd_flashcard_camera_fab">Zrób zdjęcie notatek, aby utworzyć fiszki</string>
+    <string name="cd_flashcard_add_manual">Dodaj fiszkę ręcznie</string>
+    <string name="cd_flashcard_edit">Edytuj fiszkę</string>
+    <string name="cd_flashcard_delete">Usuń fiszkę</string>
+
+    <!-- Camera & Saved Flashcards -->
+    <string name="camera_capture_title">Skanuj notatki</string>
+    <string name="camera_frame_hint">Umieść tablicę, wzory lub odręczne notatki w ramce</string>
+    <string name="camera_permission_title">Wymagany dostęp do aparatu</string>
+    <string name="camera_permission_rationale">ExamForge używa aparatu do skanowania tablic, schematów i odręcznych notatek do analizy Gemini.</string>
+    <string name="camera_grant_permission">Włącz aparat</string>
+    <string name="camera_retake">Powtórz zdjęcie</string>
+    <string name="camera_analyze_now">Analizuj w Gemini</string>
+    <string name="camera_add_notes">Dodaj notatki i opcje</string>
+    <string name="flashcards_screen_title">Zapisane fiszki</string>
+    <string name="flashcards_fab_scan">Skanuj notatki</string>
+    <string name="flashcards_search_placeholder">Szukaj pytań lub odpowiedzi…</string>
+    <string name="flashcards_empty_title">Brak zapisanych fiszek</string>
+    <string name="flashcards_empty_body">Dotknij Skanuj notatki, aby sfotografować rękopisy, wzory lub slajdy — Gemini automatycznie utworzy fiszki.</string>
+
+    <!-- Decks Hub & Study Arena -->
+    <string name="decks_all_filter">Wszystkie</string>
+    <string name="decks_due_summary">%1$d do powtórki</string>
+    <string name="decks_study_all_due">Powtórz zaległe karty</string>
+    <string name="decks_match_blitz_button">Dopasuj w 60s</string>
+    <string name="decks_best_score">Rekord: %1$d</string>
+    <string name="decks_empty_title">Stwórz swoją pierwszą talię</string>
+    <string name="decks_empty_subtitle">Zrób zdjęcie tablicy, podyktuj wykład lub wklej notatki, aby wygenerować fiszki.</string>
+    <string name="decks_new_deck">Nowa talia</string>
+    <string name="decks_saved_cards">Wszystkie karty</string>
+    <string name="study_arena_complete_title">Sesja ukończona</string>
+    <string name="study_arena_reviewed_summary">Powtórzono %1$d kart · Opanowano %2$d</string>
+    <string name="study_arena_back_to_decks">Wróć do talii</string>
+    <string name="study_arena_show_hint">Pokaż wskazówkę</string>
+    <string name="study_arena_reveal_answer">Pokaż odpowiedź</string>
+    <string name="study_rating_again">Jeszcze raz</string>
+    <string name="study_rating_hard">Trudne</string>
+    <string name="study_rating_good">Dobrze</string>
+    <string name="study_rating_easy">Łatwe</string>
+
+    <!-- Snapshot Forge & Lecture Dictation -->
+    <string name="forge_title">Kuźnia Notatek</string>
+    <string name="forge_subtitle">Zrób zdjęcie wzorów, wgraj slajdy lub podyktuj wykład — Gemini lub parser offline zamieni je w talię.</string>
+    <string name="forge_step_capture">1. Zrób zdjęcie lub wgraj materiał</string>
+    <string name="forge_step_notes">2. Dyktowanie, notatki i opcje</string>
+    <string name="forge_camerax_scan">Skan CameraX</string>
+    <string name="forge_gallery">Galeria</string>
+    <string name="forge_dictate_start">Dyktuj (0 zł)</string>
+    <string name="forge_dictate_stop">Zatrzymaj mikrofon</string>
+    <string name="forge_notes_label">Wklej lub podyktuj notatki, Q:/A: albo Pojęcie: Definicja</string>
+    <string name="forge_subject_label">Przedmiot (opcjonalnie)</string>
+    <string name="forge_cards_count">Karty:</string>
+    <string name="forge_generate_gemini">Generuj fiszki z Gemini</string>
+    <string name="forge_generate_eco_lite">Generuj w Eco Lite AI</string>
+    <string name="forge_generate_offline">Twórz fiszki offline (0 zł)</string>
+    <string name="forge_instant_offline_btn">Natychmiastowy parser offline (0 zł · oszczędza limit AI)</string>
+    <string name="forge_open_deck">Otwórz talię</string>
+    <string name="forge_scan_another">Skanuj kolejne</string>
+
+    <!-- Oral Quizmaster -->
+    <string name="quizmaster_title">Egzaminator Ustny</string>
+    <string name="quizmaster_subtitle">Odpowiadaj głosowo lub rozmawiaj z Gemini</string>
+    <string name="quizmaster_ready_title">Gotowy na trening aktywnego przypominania?</string>
+    <string name="quizmaster_ready_body">Gemini zadaje po jednym ważnym pytaniu z talii, ocenia Twoją odpowiedź ustną lub pisemną i wzmacnia słabsze punkty.</string>
+    <string name="quizmaster_start_button">Rozpocznij egzamin ustny</string>
+    <string name="quizmaster_hint_chip">Wskazówka</string>
+    <string name="quizmaster_next_chip">Następne pytanie</string>
+    <string name="quizmaster_input_placeholder">Wypowiedz lub wpisz odpowiedź…</string>
+    <string name="quizmaster_empty_title">Brak talii do ćwiczeń ustnych</string>
+    <string name="quizmaster_go_to_forge">Przejdź do tworzenia</string>
+
+    <!-- Match Blitz Mini-Game -->
+    <string name="match_blitz_title">Szybkie dopasowanie 60s</string>
+    <string name="match_blitz_start">Rozpocznij 60s Blitz</string>
+    <string name="match_blitz_play_again">Zagraj ponownie</string>
+    <string name="match_blitz_score_label">Wynik: %1$d</string>
+
+    <!-- Settings, AI Plan & Quota Recovery -->
+    <string name="settings_title">Ustawienia i dodatki</string>
+    <string name="settings_subtitle">Dostosuj tryb nocny, plan AI, pamięć offline oraz widżet ekranu głównego.</string>
+    <string name="settings_appearance_title">Wygląd i tryb nauki nocnej</string>
+    <string name="settings_appearance_desc">Ciemny motyw Obsidian ogranicza zmęczenie oczu podczas nocnej nauki.</string>
+    <string name="settings_oral_title">Automatyczny lektor egzaminu</string>
+    <string name="settings_oral_desc">Odczytuj pytania i wskazówki na głos za pomocą syntezatora mowy.</string>
+    <string name="settings_widget_title">Widżet szybkiej powtórki</string>
+    <string name="settings_widget_desc">Pokazuje 1 fiszkę do powtórki na ekranie głównym po odblokowaniu telefonu.</string>
+    <string name="settings_pin_widget">Dodaj interaktywny widżet na ekran główny</string>
+    <string name="settings_sync_now">Synchronizuj oczekujące powtórki</string>
+    <string name="ai_plan_title">Plan AI i własny klucz BYOK</string>
+    <string name="ai_plan_eco_lite_title">Tryb Eco Lite AI (3× dłuższy limit)</string>
+    <string name="ai_plan_offline_title">Preferuj szybki parser offline</string>
+    <string name="ai_plan_claim_grace">Odbierz +3 dodatkowe kredyty na dziś</string>
+    <string name="ai_plan_byok_title">Użyj własnego klucza Gemini API (BYOK)</string>
+    <string name="ai_plan_test_save">Testuj i zapisz</string>
+    <string name="ai_plan_get_key">Uzyskaj klucz</string>
+    <string name="ai_plan_remove_key">Usuń</string>
+
+    <!-- Smart Auto-Popups: Update, Rate App, Share App -->
+    <string name="popup_update_title">Dostępna aktualizacja</string>
+    <string name="popup_update_body">Nowa wersja ExamForge (%1$s) jest dostępna z płynniejszymi sesjami nauki i ulepszeniami.</string>
+    <string name="popup_update_primary">Zaktualizuj teraz</string>
+    <string name="popup_update_later">Przypomnij później</string>
+    <string name="popup_update_skip">Pomiń tę wersję</string>
+
+    <string name="popup_rate_title">Podoba Ci się ExamForge?</string>
+    <string name="popup_rate_body">Świetnie Ci idzie z nauką! Chcesz zostawić szczerą opinię w Google Play, aby pomóc innym uczniom odkryć ExamForge?</string>
+    <string name="popup_rate_primary">Oceń w Google Play</string>
+    <string name="popup_rate_later">Może później</string>
+    <string name="popup_rate_never">Nie pytaj ponownie</string>
+
+    <string name="popup_share_title">Udostępnij ExamForge znajomym</string>
+    <string name="popup_share_body">Wspaniały kamień milowy w nauce! Zaproś znajomych z klasy, by także zamieniali notatki w fiszki.</string>
+    <string name="popup_share_primary">Udostępnij aplikację</string>
+    <string name="popup_share_later">Nie teraz</string>
+    <string name="popup_share_never">Nie pytaj ponownie</string>
+
+    <string name="share_app_chooser_title">Udostępnij ExamForge</string>
+    <string name="share_app_message">Używam ExamForge do zamiany zdjęć tablicy i notatek z wykładów w fiszki aktywnego przypominania i 60-sekundowe wyzwania. Sprawdź: %1$s</string>
+
+    <!-- Settings: Community, Updates, Privacy & Event Telemetry -->
+    <string name="settings_community_title">Wsparcie, aktualizacje i prywatność</string>
+    <string name="settings_community_subtitle">Wersja %1$s · Nienachalne przypomnienia i przejrzysty lokalny rejestr zdarzeń</string>
+    <string name="settings_check_update">Sprawdź aktualizacje</string>
+    <string name="settings_rate_app">Oceń aplikację</string>
+    <string name="settings_share_app">Udostępnij</string>
+    <string name="settings_privacy_policy">Polityka prywatności</string>
+    <string name="settings_telemetry_toggle_show">Pokaż rejestr zdarzeń (%1$d)</string>
+    <string name="settings_telemetry_toggle_hide">Ukryj rejestr zdarzeń</string>
+    <string name="settings_telemetry_summary">Sesje: %1$d · Aktywne dni: %2$d · Wynik zaangażowania: %3$d</string>
+    <string name="settings_telemetry_guardrails">Zasady okienek: nigdy przy starcie · maks. 1/sesję · przerwa 72 godz. · 24 godz. ciszy po błędzie</string>
+    <string name="settings_update_up_to_date">Masz najnowszą wersję (%1$s).</string>
+    <string name="privacy_policy_title">Polityka prywatności ExamForge</string>
+    <string name="common_close">Zamknij</string>
+    <string name="common_cancel">Anuluj</string>
+</resources>

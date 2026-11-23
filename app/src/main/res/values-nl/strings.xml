@@ -1,0 +1,174 @@
+<resources>
+    <!-- App Identity & Home Widget -->
+    <string name="app_name">ExamForge</string>
+    <string name="widget_label">ExamForge Snel Herhalen</string>
+    <string name="widget_description">Oefen 1 active-recall flashcard direct op je startscherm telkens wanneer je je telefoon ontgrendelt.</string>
+    <string name="widget_header_default">EXAMFORGE</string>
+    <string name="widget_due_default">0 te herhalen</string>
+    <string name="widget_empty_question">Fotografeer een whiteboard of collegenotities in ExamForge om dagelijkse startscherm-flashcards te openen.</string>
+    <string name="widget_reveal_answer">Toon antwoord</string>
+    <string name="widget_next">Volgende</string>
+    <string name="widget_again">Opnieuw</string>
+    <string name="widget_got_it">Bekend</string>
+
+    <!-- Auth & Navigation -->
+    <string name="sign_in_google">Inloggen met Google</string>
+    <string name="sign_out">Uitloggen</string>
+    <string name="tab_decks">Sets</string>
+    <string name="tab_forge">Maak</string>
+    <string name="tab_quizmaster">Quizmaster</string>
+    <string name="tab_settings">Instellingen</string>
+    <string name="auth_headline">Maak van notities blijvende kennis</string>
+    <string name="auth_subtitle">Scan whiteboards, oefen mondeling en synchroniseer flashcards offline op al je apparaten.</string>
+    <string name="auth_sync_note">Log in met Google om sets en studievoortgang veilig te bewaren.</string>
+
+    <!-- Accessibility Content Descriptions -->
+    <string name="cd_app_logo">ExamForge-embleem</string>
+    <string name="cd_hero_banner">Studiebureau dat notities verandert in oplichtende flashcards</string>
+    <string name="cd_empty_illustration">Camera die natuurkunde-aantekeningen op het bord omzet in flashcards</string>
+    <string name="cd_toggle_theme">Wissel tussen donker en licht thema</string>
+    <string name="cd_navigate_back">Ga terug</string>
+    <string name="cd_snap_photo">Fotografeer whiteboard of notities met camera</string>
+    <string name="cd_pick_gallery">Kies notitiefoto uit galerij</string>
+    <string name="cd_voice_mic">Spreek antwoord hardop in</string>
+    <string name="cd_speak_toggle">Schakel voorlezen in of uit</string>
+    <string name="cd_camera_close">Camera sluiten</string>
+    <string name="cd_camera_flash">Flitsmodus wisselen</string>
+    <string name="cd_camera_torch">Zaklamp in- of uitschakelen</string>
+    <string name="cd_camera_switch">Cameralens wisselen</string>
+    <string name="cd_camera_shutter">Notitiefoto maken</string>
+    <string name="cd_flashcard_camera_fab">Fotografeer notities om flashcards te maken</string>
+    <string name="cd_flashcard_add_manual">Flashcard handmatig toevoegen</string>
+    <string name="cd_flashcard_edit">Flashcard bewerken</string>
+    <string name="cd_flashcard_delete">Flashcard verwijderen</string>
+
+    <!-- Camera & Saved Flashcards -->
+    <string name="camera_capture_title">Studienotities scannen</string>
+    <string name="camera_frame_hint">Plaats whiteboard, formules of handgeschreven notities binnen het kader</string>
+    <string name="camera_permission_title">Cameratoegang vereist</string>
+    <string name="camera_permission_rationale">ExamForge gebruikt je camera om whiteboards, boekschema\'s en handgeschreven notities met Gemini om te zetten in flashcards.</string>
+    <string name="camera_grant_permission">Camera inschakelen</string>
+    <string name="camera_retake">Opnieuw</string>
+    <string name="camera_analyze_now">Analyseer met Gemini</string>
+    <string name="camera_add_notes">Notities &amp; opties toevoegen</string>
+    <string name="flashcards_screen_title">Opgeslagen flashcards</string>
+    <string name="flashcards_fab_scan">Scan notities</string>
+    <string name="flashcards_search_placeholder">Zoek vragen of antwoorden…</string>
+    <string name="flashcards_empty_title">Nog geen flashcards opgeslagen</string>
+    <string name="flashcards_empty_body">Tik op Scan notities om handgeschreven pagina\'s, formules of dia\'s te fotograferen — Gemini maakt er automatisch kaarten van.</string>
+
+    <!-- Decks Hub & Study Arena -->
+    <string name="decks_all_filter">Alles</string>
+    <string name="decks_due_summary">%1$d te herhalen</string>
+    <string name="decks_study_all_due">Herhaal geplande kaarten</string>
+    <string name="decks_match_blitz_button">60s Match Blitz</string>
+    <string name="decks_best_score">Beste: %1$d</string>
+    <string name="decks_empty_title">Bouw je eerste studieset</string>
+    <string name="decks_empty_subtitle">Fotografeer een whiteboard, dicteer een college of plak aantekeningen voor active-recall flashcards.</string>
+    <string name="decks_new_deck">Nieuwe set</string>
+    <string name="decks_saved_cards">Alle kaarten</string>
+    <string name="study_arena_complete_title">Sessie voltooid</string>
+    <string name="study_arena_reviewed_summary">%1$d kaarten herhaald · %2$d beheerst</string>
+    <string name="study_arena_back_to_decks">Terug naar sets</string>
+    <string name="study_arena_show_hint">Toon hint</string>
+    <string name="study_arena_reveal_answer">Toon antwoord</string>
+    <string name="study_rating_again">Opnieuw</string>
+    <string name="study_rating_hard">Moeilijk</string>
+    <string name="study_rating_good">Goed</string>
+    <string name="study_rating_easy">Makkelijk</string>
+
+    <!-- Snapshot Forge & Lecture Dictation -->
+    <string name="forge_title">Snapshot Forge</string>
+    <string name="forge_subtitle">Fotografeer formules, upload dia\'s of dicteer een college — Gemini of onze offline parser maakt direct een set.</string>
+    <string name="forge_step_capture">1. Fotografeer of upload studiemateriaal</string>
+    <string name="forge_step_notes">2. College-audio, notities &amp; opties</string>
+    <string name="forge_camerax_scan">CameraX Scan</string>
+    <string name="forge_gallery">Galerij</string>
+    <string name="forge_dictate_start">Dicteer (€0)</string>
+    <string name="forge_dictate_stop">Stop mic</string>
+    <string name="forge_notes_label">Plak of dicteer aantekeningen, V:/A: of Term: Definitie</string>
+    <string name="forge_subject_label">Vak-hint (optioneel)</string>
+    <string name="forge_cards_count">Kaarten:</string>
+    <string name="forge_generate_gemini">Maak flashcards met Gemini</string>
+    <string name="forge_generate_eco_lite">Maak met Eco Lite AI</string>
+    <string name="forge_generate_offline">Maak kaarten offline (€0)</string>
+    <string name="forge_instant_offline_btn">Directe offline parser (€0 · Bespaart AI-limiet)</string>
+    <string name="forge_open_deck">Open set</string>
+    <string name="forge_scan_another">Nog een scannen</string>
+
+    <!-- Oral Quizmaster -->
+    <string name="quizmaster_title">Mondelinge Quizmaster</string>
+    <string name="quizmaster_subtitle">Spreek antwoorden hardop in of chat met Gemini</string>
+    <string name="quizmaster_ready_title">Klaar voor een active-recall training?</string>
+    <string name="quizmaster_ready_body">Gemini stelt één belangrijke vraag tegelijk uit je set, beoordeelt je gesproken of getypte uitleg en verdiept zwakke plekken.</string>
+    <string name="quizmaster_start_button">Start mondelinge quiz</string>
+    <string name="quizmaster_hint_chip">Hint</string>
+    <string name="quizmaster_next_chip">Volgende vraag</string>
+    <string name="quizmaster_input_placeholder">Spreek of typ je antwoord…</string>
+    <string name="quizmaster_empty_title">Geen sets klaar voor mondeling oefenen</string>
+    <string name="quizmaster_go_to_forge">Ga naar Maak</string>
+
+    <!-- Match Blitz Mini-Game -->
+    <string name="match_blitz_title">60s Match Blitz</string>
+    <string name="match_blitz_start">Start 60s Blitz</string>
+    <string name="match_blitz_play_again">Opnieuw spelen</string>
+    <string name="match_blitz_score_label">Score: %1$d</string>
+
+    <!-- Settings, AI Plan & Quota Recovery -->
+    <string name="settings_title">Instellingen &amp; Studietools</string>
+    <string name="settings_subtitle">Pas nachtmodus, AI-gebruik, offline cache en je startscherm-widget aan.</string>
+    <string name="settings_appearance_title">Weergave &amp; Nachtstudiemodus</string>
+    <string name="settings_appearance_desc">Obsidian Donker vermindert schittering tijdens het studeren laat op de avond.</string>
+    <string name="settings_oral_title">Quizmaster automatisch voorlezen</string>
+    <string name="settings_oral_desc">Lees vragen en feedback hardop voor via tekst-naar-spraak.</string>
+    <string name="settings_widget_title">Ontgrendel-en-herhaal startscherm-widget</string>
+    <string name="settings_widget_desc">Toont 1 geplande flashcard op je startscherm bij elke ontgrendeling.</string>
+    <string name="settings_pin_widget">Interactieve widget aan startscherm toevoegen</string>
+    <string name="settings_sync_now">Wachtende herhalingen synchroniseren</string>
+    <string name="ai_plan_title">AI-plan &amp; eigen BYOK-sleutel</string>
+    <string name="ai_plan_eco_lite_title">Eco Lite AI-modus (3× langer limiet)</string>
+    <string name="ai_plan_offline_title">Voorkeur voor directe offline parser</string>
+    <string name="ai_plan_claim_grace">Claim +3 extra tegoed voor vandaag</string>
+    <string name="ai_plan_byok_title">Gebruik je eigen Gemini API-sleutel (BYOK)</string>
+    <string name="ai_plan_test_save">Test &amp; bewaar</string>
+    <string name="ai_plan_get_key">Sleutel ophalen</string>
+    <string name="ai_plan_remove_key">Verwijderen</string>
+
+    <!-- Smart Auto-Popups: Update, Rate App, Share App -->
+    <string name="popup_update_title">Update beschikbaar</string>
+    <string name="popup_update_body">Een nieuwere versie van ExamForge (%1$s) is beschikbaar met soepelere studiesessies en verbeteringen.</string>
+    <string name="popup_update_primary">Nu updaten</string>
+    <string name="popup_update_later">Later herinneren</string>
+    <string name="popup_update_skip">Deze versie overslaan</string>
+
+    <string name="popup_rate_title">Bevalt ExamForge?</string>
+    <string name="popup_rate_body">Je hebt een sterk studieritme opgebouwd! Wil je een eerlijke beoordeling achterlaten op Google Play om andere studenten te helpen?</string>
+    <string name="popup_rate_primary">Beoordeel op Google Play</string>
+    <string name="popup_rate_later">Misschien later</string>
+    <string name="popup_rate_never">Niet opnieuw vragen</string>
+
+    <string name="popup_share_title">Deel ExamForge met studiegenoten</string>
+    <string name="popup_share_body">Mooie studiemijlpaal! Nodig klasgenoten uit om whiteboardnotities ook om te zetten in flashcards.</string>
+    <string name="popup_share_primary">App delen</string>
+    <string name="popup_share_later">Niet nu</string>
+    <string name="popup_share_never">Niet opnieuw vragen</string>
+
+    <string name="share_app_chooser_title">ExamForge delen</string>
+    <string name="share_app_message">Ik gebruik ExamForge om whiteboardfoto\'s en collegenotities om te zetten in active-recall flashcards en 60-seconden Match Blitz. Bekijk het hier: %1$s</string>
+
+    <!-- Settings: Community, Updates, Privacy & Event Telemetry -->
+    <string name="settings_community_title">Ondersteuning, updates &amp; privacy</string>
+    <string name="settings_community_subtitle">Versie %1$s · Slimme rustige herinneringen &amp; transparant lokaal activiteitenlog</string>
+    <string name="settings_check_update">Updates zoeken</string>
+    <string name="settings_rate_app">App beoordelen</string>
+    <string name="settings_share_app">App delen</string>
+    <string name="settings_privacy_policy">Privacybeleid</string>
+    <string name="settings_telemetry_toggle_show">Toon activiteitenlog (%1$d)</string>
+    <string name="settings_telemetry_toggle_hide">Verberg activiteitenlog</string>
+    <string name="settings_telemetry_summary">Sessies: %1$d · Actieve dagen: %2$d · Betrokkenheidsscore: %3$d</string>
+    <string name="settings_telemetry_guardrails">Pop-upregels: nooit bij opstarten · max 1/sessie · 72u pauze · 24u rust na foutmelding</string>
+    <string name="settings_update_up_to_date">Je gebruikt de nieuwste versie (%1$s).</string>
+    <string name="privacy_policy_title">ExamForge Privacybeleid</string>
+    <string name="common_close">Sluiten</string>
+    <string name="common_cancel">Annuleren</string>
+</resources>

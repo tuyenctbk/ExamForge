@@ -1,0 +1,6 @@
+{
+  "name": "ExamForge",
+  "description": "Snapshot-to-flashcard AI study companion with Gemini multimodal parsing, oral quizmaster, spaced repetition, offline Room cache, and home screen widget.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
