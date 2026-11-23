@@ -339,4 +339,6 @@
     <string name="quota_recovery_claim_grace">領取 +3 免費備用額度（每日 1 次）</string>
     <string name="quota_recovery_retry_eco">改用 Eco Lite AI 重試（快速輕量）</string>
     <string name="quota_recovery_connect_byok">連接自有 BYOK 金鑰（無上限）</string>
+    <string name="sm2_next_review_pill">SM-2 · 下次複習 %1$s (%2$s) · EF %3$s</string>
+    <string name="deck_card_in_ten_min">10分鐘後</string>
 </resources>

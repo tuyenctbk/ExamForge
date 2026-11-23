@@ -449,7 +449,7 @@ private fun ExamForgeAppShell(
                     onCheckCloze = viewModel::checkClozeAnswer,
                     onReveal = viewModel::revealCurrentCard,
                     onToggleHint = viewModel::toggleHint,
-                    onRate = viewModel::rateCurrentCard,
+                    onRate = { viewModel.rateCurrentCard(it) },
                     showPostOpSupportCard = showPostOpSupportCard,
                     onOpenSupportSheet = { viewModel.openDonationSheet(source = "study_complete_card") },
                     onDismissSupportCard = viewModel::dismissHomeDonationBanner

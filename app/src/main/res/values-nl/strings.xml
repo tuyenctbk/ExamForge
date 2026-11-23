@@ -339,4 +339,6 @@
     <string name="quota_recovery_claim_grace">Claim +3 extra credits (1× per dag)</string>
     <string name="quota_recovery_retry_eco">Opnieuw met Eco Lite AI (Snel &amp; licht)</string>
     <string name="quota_recovery_connect_byok">Eigen BYOK-sleutel koppelen (Onbeperkt)</string>
+    <string name="sm2_next_review_pill">SM-2 · Volgende herhaling %1$s (%2$s) · EF %3$s</string>
+    <string name="deck_card_in_ten_min">OVER 10M</string>
 </resources>

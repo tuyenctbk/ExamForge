@@ -352,4 +352,6 @@
     <string name="quota_recovery_claim_grace">Claim +3 Free Grace Credits (Once Daily)</string>
     <string name="quota_recovery_retry_eco">Retry with Eco Lite AI (Fast &amp; Lightweight)</string>
     <string name="quota_recovery_connect_byok">Connect Free BYOK Key (Unlimited)</string>
+    <string name="sm2_next_review_pill">SM-2 · Next review %1$s (%2$s) · EF %3$s</string>
+    <string name="deck_card_in_ten_min">IN 10M</string>
 </resources>

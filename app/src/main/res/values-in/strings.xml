@@ -339,4 +339,6 @@
     <string name="quota_recovery_claim_grace">Klaim +3 Kredit Bonus (Sekali Sehari)</string>
     <string name="quota_recovery_retry_eco">Coba Ulang dengan Eco Lite AI (Cepat &amp; Hemat)</string>
     <string name="quota_recovery_connect_byok">Hubungkan Kunci BYOK Sendiri (Tanpa Batas)</string>
+    <string name="sm2_next_review_pill">SM-2 · Ulasan berikut %1$s (%2$s) · EF %3$s</string>
+    <string name="deck_card_in_ten_min">DALAM 10M</string>
 </resources>

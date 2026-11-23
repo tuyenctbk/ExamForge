@@ -339,4 +339,6 @@
     <string name="quota_recovery_claim_grace">+3 Bonus Kredi Al (Günde 1 Kez)</string>
     <string name="quota_recovery_retry_eco">Eco Lite AI ile Tekrar Dene (Hızlı)</string>
     <string name="quota_recovery_connect_byok">Kendi BYOK Anahtarını Bağla (Sınırsız)</string>
+    <string name="sm2_next_review_pill">SM-2 · Sonraki tekrar %1$s (%2$s) · EF %3$s</string>
+    <string name="deck_card_in_ten_min">10 DK SONRA</string>
 </resources>

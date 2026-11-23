@@ -339,4 +339,6 @@
     <string name="quota_recovery_claim_grace">Получить +3 бонусных кредита (1× в день)</string>
     <string name="quota_recovery_retry_eco">Повторить с Eco Lite AI (Быстро)</string>
     <string name="quota_recovery_connect_byok">Подключить свой ключ BYOK (Без лимита)</string>
+    <string name="sm2_next_review_pill">SM-2 · След. повтор %1$s (%2$s) · EF %3$s</string>
+    <string name="deck_card_in_ten_min">ЧЕРЕЗ 10М</string>
 </resources>

@@ -31,6 +31,8 @@ import com.example.data.model.GeneratedCardDraft
 import com.example.data.model.GeneratedDeckDraft
 import com.example.data.model.QuizMessage
 import com.example.data.model.ReviewRating
+import com.example.data.model.Sm2ScheduleResult
+import com.example.data.model.SpacedRepetitionEngine
 import com.example.data.model.StudyDeck
 import com.example.data.model.UserProfile
 import com.example.data.repository.GeminiStudyService
@@ -84,6 +86,16 @@ data class QuizmasterUiState(
     val lastCompletedAiReply: String? = null
 )
 
+data class StudySm2Feedback(
+    val cardId: String,
+    val rating: ReviewRating,
+    val easeFactor: Double,
+    val intervalDays: Int,
+    val repetitions: Int,
+    val nextReviewAtMillis: Long,
+    val intervalLabel: String
+)
+
 data class StudySessionUiState(
     val deckId: String = "",
     val deckTitle: String = "",
@@ -94,6 +106,8 @@ data class StudySessionUiState(
     val selectedMcqOption: Int? = null,
     val clozeInput: String = "",
     val clozeChecked: Boolean = false,
+    val recommendedRating: ReviewRating? = null,
+    val lastSm2Feedback: StudySm2Feedback? = null,
     val reviewedCount: Int = 0,
     val masteredInSession: Int = 0
 ) {
@@ -557,8 +571,17 @@ class ExamForgeViewModel(
 
     fun selectMcqOption(index: Int) {
         _studySession.update { state ->
-            if (state.selectedMcqOption != null) state
-            else state.copy(selectedMcqOption = index, revealed = true)
+            if (state.selectedMcqOption != null) {
+                state
+            } else {
+                val isCorrect = state.currentCard?.correctOptionIndex == index
+                val suggested = if (isCorrect) ReviewRating.GOOD else ReviewRating.AGAIN
+                state.copy(
+                    selectedMcqOption = index,
+                    revealed = true,
+                    recommendedRating = suggested
+                )
+            }
         }
     }
 
@@ -567,7 +590,16 @@ class ExamForgeViewModel(
     }
 
     fun checkClozeAnswer() {
-        _studySession.update { it.copy(clozeChecked = true, revealed = true) }
+        _studySession.update { state ->
+            val expected = state.currentCard?.answer?.trim().orEmpty()
+            val isCorrect = expected.isNotEmpty() && state.clozeInput.trim().equals(expected, ignoreCase = true)
+            val suggested = if (isCorrect) ReviewRating.GOOD else ReviewRating.AGAIN
+            state.copy(
+                clozeChecked = true,
+                revealed = true,
+                recommendedRating = suggested
+            )
+        }
     }
 
     fun revealCurrentCard() {
@@ -578,14 +610,51 @@ class ExamForgeViewModel(
         _studySession.update { it.copy(hintShown = !it.hintShown) }
     }
 
-    fun rateCurrentCard(rating: ReviewRating) {
+    /**
+     * Calculates the next SM-2 review interval, ease factor, repetitions, and next review date
+     * ([Sm2ScheduleResult.dueAtMillis]) from a flashcard and user performance rating.
+     */
+    fun calculateSm2Schedule(
+        card: Flashcard,
+        rating: ReviewRating,
+        nowMillis: Long = System.currentTimeMillis()
+    ): Sm2ScheduleResult = SpacedRepetitionEngine.scheduleNextReviewByQuality(
+        card = card,
+        quality = rating.quality,
+        nowMillis = nowMillis
+    )
+
+    fun rateCurrentCard(
+        rating: ReviewRating,
+        nowMillis: Long = System.currentTimeMillis()
+    ) {
         val current = _studySession.value.currentCard ?: return
         val wasLastCard = (_studySession.value.currentIndex + 1) >= _studySession.value.queue.size
         val nextReviewed = _studySession.value.reviewedCount + 1
         val nextMastered = _studySession.value.masteredInSession +
             if (rating == ReviewRating.GOOD || rating == ReviewRating.EASY) 1 else 0
+
+        val scheduled = calculateSm2Schedule(current, rating, nowMillis)
+        val updatedCard = current.copy(
+            easeFactor = scheduled.easeFactor,
+            intervalDays = scheduled.intervalDays,
+            repetitions = scheduled.repetitions,
+            dueAtMillis = scheduled.dueAtMillis,
+            lastReviewedAtMillis = scheduled.lastReviewedAtMillis,
+            pendingSync = true
+        )
+        val feedback = StudySm2Feedback(
+            cardId = current.id,
+            rating = rating,
+            easeFactor = scheduled.easeFactor,
+            intervalDays = scheduled.intervalDays,
+            repetitions = scheduled.repetitions,
+            nextReviewAtMillis = scheduled.dueAtMillis,
+            intervalLabel = SpacedRepetitionEngine.formatIntervalLabel(scheduled.intervalDays)
+        )
+
         viewModelScope.launch {
-            studyRepository.recordCardReview(current, rating)
+            studyRepository.saveScheduledCardReview(updatedCard, nowMillis)
             eventTracker.logEvent(AppEventType.CARD_REVIEWED, detail = rating.name)
             if (wasLastCard && nextReviewed >= 2) {
                 eventTracker.logEvent(
@@ -606,6 +675,8 @@ class ExamForgeViewModel(
                 selectedMcqOption = null,
                 clozeInput = "",
                 clozeChecked = false,
+                recommendedRating = null,
+                lastSm2Feedback = feedback,
                 reviewedCount = nextReviewed,
                 masteredInSession = nextMastered
             )

@@ -328,4 +328,6 @@
     <string name="quota_recovery_claim_grace">+3 Gratis-Bonuscredits abholen (1× täglich)</string>
     <string name="quota_recovery_retry_eco">Mit Eco Lite AI wiederholen (Schnell &amp; Schlank)</string>
     <string name="quota_recovery_connect_byok">Eigenen BYOK-Schlüssel verbinden (Unbegrenzt)</string>
+    <string name="sm2_next_review_pill">SM-2 · Nächste Wiederholung %1$s (%2$s) · EF %3$s</string>
+    <string name="deck_card_in_ten_min">IN 10M</string>
 </resources>

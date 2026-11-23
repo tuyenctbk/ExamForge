@@ -339,4 +339,6 @@
     <string name="quota_recovery_claim_grace">+3 ボーナスクレジットを受け取る（1日1回）</string>
     <string name="quota_recovery_retry_eco">Eco Lite AI で再試行（高速＆軽量）</string>
     <string name="quota_recovery_connect_byok">自分のBYOKキーを接続（無制限）</string>
+    <string name="sm2_next_review_pill">SM-2 · 次回復習 %1$s (%2$s) · EF %3$s</string>
+    <string name="deck_card_in_ten_min">10分後</string>
 </resources>

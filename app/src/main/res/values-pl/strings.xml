@@ -339,4 +339,6 @@
     <string name="quota_recovery_claim_grace">Odbierz +3 bonusowe kredyty (1× dziennie)</string>
     <string name="quota_recovery_retry_eco">Ponów z Eco Lite AI (Szybko i lekko)</string>
     <string name="quota_recovery_connect_byok">Połącz własny klucz BYOK (Bez limitu)</string>
+    <string name="sm2_next_review_pill">SM-2 · Następna powtórka %1$s (%2$s) · EF %3$s</string>
+    <string name="deck_card_in_ten_min">ZA 10 MIN</string>
 </resources>

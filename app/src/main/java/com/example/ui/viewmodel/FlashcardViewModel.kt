@@ -17,8 +17,10 @@ import com.example.data.local.encodeOptionsJson
 import com.example.data.local.toDomain
 import com.example.data.model.CardType
 import com.example.data.model.DeckSourceType
+import com.example.data.model.Flashcard as DomainFlashcard
 import com.example.data.model.GeneratedCardDraft
 import com.example.data.model.ReviewRating
+import com.example.data.model.Sm2ScheduleResult
 import com.example.data.model.SpacedRepetitionEngine
 import com.example.data.repository.FlashcardLocalRepository
 import com.example.data.repository.StudyRepository
@@ -58,6 +60,18 @@ data class FlashcardReviewFlag(
     val priorityScore: Double
 )
 
+data class Sm2ScheduledOutcome(
+    val cardId: String,
+    val rating: ReviewRating,
+    val quality: Int,
+    val easeFactor: Double,
+    val intervalDays: Int,
+    val repetitions: Int,
+    val nextReviewAtMillis: Long,
+    val lastReviewedAtMillis: Long,
+    val intervalLabel: String
+)
+
 data class ReviewNowSessionUiState(
     val isActive: Boolean = false,
     val queue: List<Flashcard> = emptyList(),
@@ -68,7 +82,8 @@ data class ReviewNowSessionUiState(
     val reinforcedMasteredCount: Int = 0,
     val totalFlaggedAtStart: Int = 0,
     val currentFlag: FlashcardReviewFlag? = null,
-    val isCompleted: Boolean = false
+    val isCompleted: Boolean = false,
+    val lastScheduledOutcome: Sm2ScheduledOutcome? = null
 ) {
     val currentCard: Flashcard?
         get() = if (!isCompleted) queue.getOrNull(currentIndex) else null
@@ -242,6 +257,9 @@ class FlashcardViewModel(
 
     private val _statusMessage = MutableStateFlow<String?>(null)
     val statusMessage: StateFlow<String?> = _statusMessage.asStateFlow()
+
+    private val _lastSm2Outcome = MutableStateFlow<Sm2ScheduledOutcome?>(null)
+    val lastSm2Outcome: StateFlow<Sm2ScheduledOutcome?> = _lastSm2Outcome.asStateFlow()
 
     private val _dbError = MutableStateFlow<String?>(null)
 
@@ -484,8 +502,74 @@ class FlashcardViewModel(
     }
 
     /**
-     * Records a reinforcement rating during a 'Review Now' cycle, persists the new [Flashcard.lastReviewDate]
-     * in Room, and advances or requeues the card accordingly.
+     * Calculates the next review schedule (`intervalDays`, `easeFactor`, `repetitions`,
+     * and next review timestamp `dueAtMillis`) using the SuperMemo-2 (SM-2) algorithm from
+     * a user's study-session rating.
+     */
+    fun calculateSm2Schedule(
+        card: Flashcard,
+        rating: ReviewRating,
+        nowMillis: Long = System.currentTimeMillis()
+    ): Sm2ScheduleResult = calculateSm2ScheduleByQuality(
+        card = card,
+        quality = rating.quality,
+        nowMillis = nowMillis
+    )
+
+    fun calculateSm2Schedule(
+        card: DomainFlashcard,
+        rating: ReviewRating,
+        nowMillis: Long = System.currentTimeMillis()
+    ): Sm2ScheduleResult = SpacedRepetitionEngine.scheduleNextReviewByQuality(
+        card = card,
+        quality = rating.quality,
+        nowMillis = nowMillis
+    )
+
+    /**
+     * Calculates the SM-2 schedule from a canonical 0..5 recall quality score.
+     */
+    fun calculateSm2ScheduleByQuality(
+        card: Flashcard,
+        quality: Int,
+        nowMillis: Long = System.currentTimeMillis()
+    ): Sm2ScheduleResult = SpacedRepetitionEngine.scheduleNextReviewByQuality(
+        card = card.toDomain(),
+        quality = quality,
+        nowMillis = nowMillis
+    )
+
+    /**
+     * Calculates SM-2 scheduling from a numeric quality score (0..5) for a stored card ID and
+     * persists the computed interval and next review date directly to the Room database.
+     */
+    suspend fun calculateAndSaveSm2Review(
+        cardId: String,
+        quality: Int,
+        nowMillis: Long = System.currentTimeMillis()
+    ): Sm2ScheduledOutcome? {
+        val existing = localRepository.getFlashcardById(cardId) ?: return null
+        val clampedQuality = quality.coerceIn(0, 5)
+        val mappedRating = when {
+            clampedQuality < 3 -> ReviewRating.AGAIN
+            clampedQuality == 3 -> ReviewRating.HARD
+            clampedQuality == 4 -> ReviewRating.GOOD
+            else -> ReviewRating.EASY
+        }
+        val scheduled = calculateSm2ScheduleByQuality(existing, clampedQuality, nowMillis)
+        persistSm2Schedule(existing, scheduled)
+        return buildSm2Outcome(
+            cardId = existing.id,
+            rating = mappedRating,
+            quality = clampedQuality,
+            scheduled = scheduled
+        ).also { _lastSm2Outcome.value = it }
+    }
+
+    /**
+     * Records a reinforcement rating during a 'Review Now' cycle, calculates the next SM-2
+     * review interval and due date in the ViewModel, persists it to Room, and advances or
+     * requeues the card accordingly.
      */
     fun submitReviewNowRating(
         rating: ReviewRating,
@@ -494,26 +578,51 @@ class FlashcardViewModel(
         val currentSession = _reviewNowSession.value
         val activeCard = currentSession.currentCard ?: return
 
-        recordFlashcardReview(activeCard, rating, nowMillis)
+        val scheduled = calculateSm2Schedule(activeCard, rating, nowMillis)
+        val outcome = buildSm2Outcome(
+            cardId = activeCard.id,
+            rating = rating,
+            quality = rating.quality,
+            scheduled = scheduled
+        )
+        _lastSm2Outcome.value = outcome
         _scheduleClockMillis.value = nowMillis
 
-        val scheduled = SpacedRepetitionEngine.scheduleNextReview(activeCard.toDomain(), rating, nowMillis)
+        val nextProgress = computeStudyProgress(
+            repetitions = scheduled.repetitions,
+            intervalDays = scheduled.intervalDays,
+            lastReviewDate = scheduled.lastReviewedAtMillis
+        )
         val updatedSnapshot = activeCard.copy(
-            studyProgress = computeStudyProgress(
-                repetitions = scheduled.repetitions,
-                intervalDays = scheduled.intervalDays,
-                lastReviewDate = scheduled.lastReviewedAtMillis
-            ),
+            studyProgress = nextProgress,
             easeFactor = scheduled.easeFactor,
             intervalDays = scheduled.intervalDays,
             repetitions = scheduled.repetitions,
             dueAtMillis = scheduled.dueAtMillis,
-            lastReviewDate = scheduled.lastReviewedAtMillis
+            lastReviewDate = scheduled.lastReviewedAtMillis,
+            pendingSync = true
         )
+
+        viewModelScope.launch {
+            try {
+                persistSm2Schedule(activeCard, scheduled)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed saving SM-2 review interval to Room for ${activeCard.id}", e)
+                _statusMessage.value = e.localizedMessage ?: "Failed to save review progress."
+            }
+        }
 
         _reviewNowSession.update { session ->
             val currentList = session.queue
-            if (currentList.isEmpty()) return@update session.copy(isCompleted = true, currentFlag = null)
+            if (currentList.isEmpty()) {
+                return@update session.copy(
+                    isCompleted = true,
+                    currentFlag = null,
+                    lastScheduledOutcome = outcome
+                )
+            }
 
             val remainingWithoutCurrent = currentList.filterIndexed { index, _ -> index != session.currentIndex }
             val nextQueue = if (rating == ReviewRating.AGAIN) {
@@ -536,7 +645,8 @@ class FlashcardViewModel(
                     reviewedInCycle = nextReviewedCount,
                     reinforcedMasteredCount = nextMasteredCount,
                     currentFlag = null,
-                    isCompleted = true
+                    isCompleted = true,
+                    lastScheduledOutcome = outcome
                 )
             } else {
                 val nextIndex = session.currentIndex.coerceIn(0, nextQueue.lastIndex)
@@ -549,7 +659,8 @@ class FlashcardViewModel(
                     reviewedInCycle = nextReviewedCount,
                     reinforcedMasteredCount = nextMasteredCount,
                     currentFlag = ReviewNowScheduler.evaluateFlag(nextCard, nowMillis),
-                    isCompleted = false
+                    isCompleted = false,
+                    lastScheduledOutcome = outcome
                 )
             }
         }
@@ -861,51 +972,92 @@ class FlashcardViewModel(
     }
 
     /**
-     * Updates a card's spaced-repetition metadata (`studyProgress` and `lastReviewDate`) in Room.
+     * Calculates SM-2 next review date, ease factor, repetitions, and interval in this ViewModel
+     * and persists them directly into the Room database (plus Firestore sync when available).
      */
     fun recordFlashcardReview(
         card: Flashcard,
         rating: ReviewRating,
         nowMillis: Long = System.currentTimeMillis()
     ) {
+        val scheduled = calculateSm2Schedule(card, rating, nowMillis)
+        val outcome = buildSm2Outcome(
+            cardId = card.id,
+            rating = rating,
+            quality = rating.quality,
+            scheduled = scheduled
+        )
+        _lastSm2Outcome.value = outcome
+
         viewModelScope.launch {
             try {
                 _scheduleClockMillis.value = nowMillis
-                val domainCard = card.toDomain()
-                val repo = studyRepository
-                if (repo != null) {
-                    repo.recordCardReview(domainCard, rating)
-                    _statusMessage.value = "Progress updated (${rating.label})."
-                    return@launch
-                }
-
-                val scheduled = SpacedRepetitionEngine.scheduleNextReview(domainCard, rating, nowMillis)
-                val nextProgress = computeStudyProgress(
-                    repetitions = scheduled.repetitions,
-                    intervalDays = scheduled.intervalDays,
-                    lastReviewDate = scheduled.lastReviewedAtMillis
-                )
-                localRepository.updateReviewMetadata(
-                    cardId = card.id,
-                    userId = card.userId,
-                    deckId = card.deckId,
-                    studyProgress = nextProgress,
-                    easeFactor = scheduled.easeFactor,
-                    intervalDays = scheduled.intervalDays,
-                    repetitions = scheduled.repetitions,
-                    dueAtMillis = scheduled.dueAtMillis,
-                    lastReviewDate = scheduled.lastReviewedAtMillis,
-                    pendingSync = true
-                )
-                _statusMessage.value = "Progress updated ($nextProgress%)."
+                val nextProgress = persistSm2Schedule(card, scheduled)
+                _statusMessage.value =
+                    "Next review in ${outcome.intervalLabel} (${nextProgress}% mastery)."
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                Log.e(TAG, "Failed recording review for ${card.id}", e)
+                Log.e(TAG, "Failed recording SM-2 review for ${card.id}", e)
                 _statusMessage.value = e.localizedMessage ?: "Failed to record review."
             }
         }
     }
+
+    private suspend fun persistSm2Schedule(
+        card: Flashcard,
+        scheduled: Sm2ScheduleResult
+    ): Int {
+        val nextProgress = computeStudyProgress(
+            repetitions = scheduled.repetitions,
+            intervalDays = scheduled.intervalDays,
+            lastReviewDate = scheduled.lastReviewedAtMillis
+        )
+        // Always persist the calculated interval and next review timestamp to Room first
+        localRepository.updateReviewMetadata(
+            cardId = card.id,
+            userId = card.userId,
+            deckId = card.deckId,
+            studyProgress = nextProgress,
+            easeFactor = scheduled.easeFactor,
+            intervalDays = scheduled.intervalDays,
+            repetitions = scheduled.repetitions,
+            dueAtMillis = scheduled.dueAtMillis,
+            lastReviewDate = scheduled.lastReviewedAtMillis,
+            pendingSync = true
+        )
+
+        val repo = studyRepository
+        if (repo != null) {
+            val updatedDomain = card.toDomain().copy(
+                easeFactor = scheduled.easeFactor,
+                intervalDays = scheduled.intervalDays,
+                repetitions = scheduled.repetitions,
+                dueAtMillis = scheduled.dueAtMillis,
+                lastReviewedAtMillis = scheduled.lastReviewedAtMillis,
+                pendingSync = true
+            )
+            repo.saveScheduledCardReview(updatedDomain, scheduled.lastReviewedAtMillis)
+        }
+        return nextProgress
+    }
+
+    private fun buildSm2Outcome(
+        cardId: String,
+        rating: ReviewRating,
+        quality: Int,
+        scheduled: Sm2ScheduleResult
+    ): Sm2ScheduledOutcome = Sm2ScheduledOutcome(
+        cardId = cardId,
+        rating = rating,
+        quality = quality,
+        easeFactor = scheduled.easeFactor,
+        intervalDays = scheduled.intervalDays,
+        repetitions = scheduled.repetitions,
+        nextReviewAtMillis = scheduled.dueAtMillis,
+        lastReviewedAtMillis = scheduled.lastReviewedAtMillis,
+        intervalLabel = SpacedRepetitionEngine.formatIntervalLabel(scheduled.intervalDays)
+    )
 
     // --- DELETE ---
 

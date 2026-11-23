@@ -328,4 +328,6 @@
     <string name="quota_recovery_claim_grace">Ottieni +3 crediti bonus (1× al giorno)</string>
     <string name="quota_recovery_retry_eco">Riprova con Eco Lite AI (Veloce e leggero)</string>
     <string name="quota_recovery_connect_byok">Collega chiave BYOK (Illimitato)</string>
+    <string name="sm2_next_review_pill">SM-2 · Prossimo ripasso %1$s (%2$s) · EF %3$s</string>
+    <string name="deck_card_in_ten_min">TRA 10M</string>
 </resources>

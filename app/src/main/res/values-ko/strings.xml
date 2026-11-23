@@ -339,4 +339,6 @@
     <string name="quota_recovery_claim_grace">+3 보너스 크레딧 받기 (일 1회)</string>
     <string name="quota_recovery_retry_eco">Eco Lite AI로 다시 시도 (빠르고 가벼움)</string>
     <string name="quota_recovery_connect_byok">개인 BYOK 키 연결 (무제한)</string>
+    <string name="sm2_next_review_pill">SM-2 · 다음 복습 %1$s (%2$s) · EF %3$s</string>
+    <string name="deck_card_in_ten_min">10분 후</string>
 </resources>

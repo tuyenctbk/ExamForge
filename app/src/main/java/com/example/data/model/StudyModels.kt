@@ -167,15 +167,30 @@ data class Sm2ScheduleResult(
 )
 
 object SpacedRepetitionEngine {
-    private const val DAY_MILLIS = 86_400_000L
-    private const val TEN_MINUTES_MILLIS = 600_000L
+    const val DAY_MILLIS = 86_400_000L
+    const val TEN_MINUTES_MILLIS = 600_000L
 
     fun scheduleNextReview(
         card: Flashcard,
         rating: ReviewRating,
         nowMillis: Long = System.currentTimeMillis()
+    ): Sm2ScheduleResult = scheduleNextReviewByQuality(
+        card = card,
+        quality = rating.quality,
+        nowMillis = nowMillis
+    )
+
+    /**
+     * Canonical SuperMemo-2 (SM-2) spaced-repetition scheduler accepting a 0..5 quality score:
+     * - q < 3 (Again / lapse): resets repetitions = 0, intervalDays = 0, due in 10 minutes
+     * - q >= 3: increments repetitions and grows interval via EF' = max(1.3, EF + (0.1 - (5 - q)*(0.08 + (5 - q)*0.02)))
+     */
+    fun scheduleNextReviewByQuality(
+        card: Flashcard,
+        quality: Int,
+        nowMillis: Long = System.currentTimeMillis()
     ): Sm2ScheduleResult {
-        val q = rating.quality
+        val q = quality.coerceIn(0, 5)
         var ef = card.easeFactor + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02))
         ef = ef.coerceIn(1.3, 5.0)
         // Round to 2 decimals for clean readability
@@ -186,20 +201,24 @@ object SpacedRepetitionEngine {
         val nextDueAtMillis: Long
 
         if (q < 3) {
-            // Again -> review soon (10 minutes) and reset repetition streak
+            // Lapse -> review soon (10 minutes) and reset repetition streak
             nextRepetitions = 0
             nextIntervalDays = 0
             nextDueAtMillis = nowMillis + TEN_MINUTES_MILLIS
         } else {
             nextRepetitions = card.repetitions + 1
             nextIntervalDays = when (nextRepetitions) {
-                1 -> if (rating == ReviewRating.EASY) 3 else 1
-                2 -> if (rating == ReviewRating.HARD) 3 else if (rating == ReviewRating.EASY) 8 else 6
+                1 -> if (q == 5) 3 else 1
+                2 -> when (q) {
+                    3 -> 3
+                    5 -> 8
+                    else -> 6
+                }
                 else -> {
-                    val base = (card.intervalDays * ef).roundToInt()
-                    val adjusted = when (rating) {
-                        ReviewRating.HARD -> max(1, (base * 0.8).roundToInt())
-                        ReviewRating.EASY -> max(2, (base * 1.3).roundToInt())
+                    val base = (card.intervalDays.coerceAtLeast(1) * ef).roundToInt()
+                    val adjusted = when (q) {
+                        3 -> max(1, (base * 0.8).roundToInt())
+                        5 -> max(2, (base * 1.3).roundToInt())
                         else -> max(1, base)
                     }
                     adjusted.coerceAtMost(3650)
@@ -217,13 +236,15 @@ object SpacedRepetitionEngine {
         )
     }
 
+    fun formatIntervalLabel(intervalDays: Int): String = when {
+        intervalDays <= 0 -> "10m"
+        intervalDays == 1 -> "1d"
+        intervalDays < 30 -> "${intervalDays}d"
+        else -> "${(intervalDays / 30.0).roundToInt().coerceAtLeast(1)}mo"
+    }
+
     fun previewNextIntervalLabel(card: Flashcard, rating: ReviewRating): String {
         val result = scheduleNextReview(card, rating, nowMillis = 0L)
-        return when {
-            result.intervalDays == 0 -> "10m"
-            result.intervalDays == 1 -> "1d"
-            result.intervalDays < 30 -> "${result.intervalDays}d"
-            else -> "${(result.intervalDays / 30.0).roundToInt()}mo"
-        }
+        return formatIntervalLabel(result.intervalDays)
     }
 }

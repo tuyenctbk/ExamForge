@@ -339,4 +339,6 @@
     <string name="quota_recovery_claim_grace">احصل على +3 أرصدة إضافية (مرة يومياً)</string>
     <string name="quota_recovery_retry_eco">إعادة المحاولة بـ Eco Lite AI (سريع وخفيف)</string>
     <string name="quota_recovery_connect_byok">ربط مفتاح BYOK مجاني (غير محدود)</string>
+    <string name="sm2_next_review_pill">SM-2 · المراجعة التالية %1$s (%2$s) · EF %3$s</string>
+    <string name="deck_card_in_ten_min">بعد 10د</string>
 </resources>

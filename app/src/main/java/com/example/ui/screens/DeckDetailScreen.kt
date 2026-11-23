@@ -401,7 +401,11 @@ private fun DeckCardRow(
                         shape = RoundedCornerShape(8.dp)
                     ) {
                         Text(
-                            text = if (isDueNow) "DUE NOW" else "IN ${card.intervalDays}D",
+                            text = when {
+                                isDueNow -> "DUE NOW"
+                                card.intervalDays <= 0 -> stringResource(id = R.string.deck_card_in_ten_min)
+                                else -> "IN ${card.intervalDays}D"
+                            },
                             style = MaterialTheme.typography.labelSmall,
                             color = if (isDueNow) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSecondaryContainer,
                             modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)

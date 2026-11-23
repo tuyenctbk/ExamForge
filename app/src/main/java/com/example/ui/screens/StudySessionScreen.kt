@@ -244,6 +244,61 @@ fun StudySession(
                         .clip(RoundedCornerShape(4.dp))
                 )
 
+                val lastSm2 = session.lastScheduledOutcome
+                AnimatedVisibility(
+                    visible = !session.isCompleted && lastSm2 != null,
+                    modifier = Modifier.padding(top = 10.dp)
+                ) {
+                    lastSm2?.let { outcome ->
+                        val dateFormatter = remember(outcome.intervalDays) {
+                            SimpleDateFormat(
+                                if (outcome.intervalDays <= 0) "h:mm a" else "MMM d",
+                                Locale.getDefault()
+                            )
+                        }
+                        val nextDateLabel = remember(outcome.nextReviewAtMillis, dateFormatter) {
+                            dateFormatter.format(Date(outcome.nextReviewAtMillis))
+                        }
+                        val efLabel = remember(outcome.easeFactor) {
+                            String.format(Locale.US, "%.2f", outcome.easeFactor)
+                        }
+                        Surface(
+                            color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.72f),
+                            shape = RoundedCornerShape(12.dp),
+                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.secondary.copy(alpha = 0.25f)),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .testTag("study_session_sm2_feedback")
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 7.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Schedule,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.secondary,
+                                    modifier = Modifier.size(15.dp)
+                                )
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Text(
+                                    text = stringResource(
+                                        id = R.string.sm2_next_review_pill,
+                                        nextDateLabel,
+                                        outcome.intervalLabel,
+                                        efLabel
+                                    ),
+                                    style = MaterialTheme.typography.labelMedium,
+                                    fontWeight = FontWeight.Medium,
+                                    color = MaterialTheme.colorScheme.onSecondaryContainer,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            }
+                        }
+                    }
+                }
+
                 Spacer(modifier = Modifier.height(16.dp))
 
                 val activeCard = session.currentCard

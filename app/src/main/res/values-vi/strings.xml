@@ -328,4 +328,6 @@
     <string name="quota_recovery_claim_grace">Nhận +3 Lượt dự phòng (Mỗi ngày 1 lần)</string>
     <string name="quota_recovery_retry_eco">Thử lại với Eco Lite AI (Nhanh &amp; Nhẹ)</string>
     <string name="quota_recovery_connect_byok">Gắn Khóa BYOK Cá nhân (Không giới hạn)</string>
+    <string name="sm2_next_review_pill">SM-2 · Ôn tập kế tiếp %1$s (%2$s) · EF %3$s</string>
+    <string name="deck_card_in_ten_min">SAU 10P</string>
 </resources>

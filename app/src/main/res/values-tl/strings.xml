@@ -339,4 +339,6 @@
     <string name="quota_recovery_claim_grace">Kunin ang +3 Bonus Credit (1× Araw-araw)</string>
     <string name="quota_recovery_retry_eco">Subukan sa Eco Lite AI (Mabilis at Magaan)</string>
     <string name="quota_recovery_connect_byok">Ikonekta ang Sariling BYOK Key (Walang Limit)</string>
+    <string name="sm2_next_review_pill">SM-2 · Susunod na balik-aral %1$s (%2$s) · EF %3$s</string>
+    <string name="deck_card_in_ten_min">SA 10M</string>
 </resources>

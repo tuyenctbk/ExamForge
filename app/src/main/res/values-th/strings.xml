@@ -339,4 +339,6 @@
     <string name="quota_recovery_claim_grace">รับโควตาสำรอง +3 (วันละ 1 ครั้ง)</string>
     <string name="quota_recovery_retry_eco">ลองใหม่ด้วย Eco Lite AI (เร็วและเบา)</string>
     <string name="quota_recovery_connect_byok">เชื่อมคีย์ BYOK ของคุณ (ไม่จำกัด)</string>
+    <string name="sm2_next_review_pill">SM-2 · ทบทวนถัดไป %1$s (%2$s) · EF %3$s</string>
+    <string name="deck_card_in_ten_min">ใน 10 นาที</string>
 </resources>

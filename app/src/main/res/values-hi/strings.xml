@@ -339,4 +339,6 @@
     <string name="quota_recovery_claim_grace">+3 अतिरिक्त क्रेडिट पाएँ (दिन में एक बार)</string>
     <string name="quota_recovery_retry_eco">Eco Lite AI से फिर प्रयास करें (तेज़ व हल्का)</string>
     <string name="quota_recovery_connect_byok">अपनी BYOK कुंजी जोड़ें (असीमित)</string>
+    <string name="sm2_next_review_pill">SM-2 · अगली समीक्षा %1$s (%2$s) · EF %3$s</string>
+    <string name="deck_card_in_ten_min">10 मि में</string>
 </resources>

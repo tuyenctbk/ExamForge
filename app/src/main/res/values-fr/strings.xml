@@ -328,4 +328,6 @@
     <string name="quota_recovery_claim_grace">Obtenir +3 crédits bonus (1×/jour)</string>
     <string name="quota_recovery_retry_eco">Réessayer avec Eco Lite AI (Rapide &amp; Léger)</string>
     <string name="quota_recovery_connect_byok">Connecter une clé BYOK (Illimité)</string>
+    <string name="sm2_next_review_pill">SM-2 · Prochaine révision %1$s (%2$s) · EF %3$s</string>
+    <string name="deck_card_in_ten_min">DANS 10M</string>
 </resources>
