@@ -1,9 +1,12 @@
 package com.example.data.ai
 
-enum class FactCheckVerdict(val badgeLabel: String) {
-    VERIFIED("Verified"),
-    PARTIAL_NUANCE("Add Nuance"),
-    NEEDS_CORRECTION("Needs Correction");
+import androidx.annotation.StringRes
+import com.example.R
+
+enum class FactCheckVerdict(val badgeLabel: String, @StringRes val badgeLabelRes: Int) {
+    VERIFIED("Verified", R.string.fact_check_verdict_verified),
+    PARTIAL_NUANCE("Add Nuance", R.string.fact_check_verdict_nuance),
+    NEEDS_CORRECTION("Needs Correction", R.string.fact_check_verdict_correction);
 
     companion object {
         fun fromRaw(raw: String?): FactCheckVerdict = when (raw?.uppercase()?.trim()) {

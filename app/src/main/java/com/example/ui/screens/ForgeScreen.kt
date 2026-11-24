@@ -148,7 +148,7 @@ fun ForgeScreen(
         speechRecognizer?.setRecognitionListener(object : RecognitionListener {
             override fun onReadyForSpeech(params: Bundle?) {
                 isDictatingLecture = true
-                dictationStatus = "Listening to lecture... speak definitions, formulas, or key points."
+                dictationStatus = context.getString(R.string.forge_dictation_listening)
             }
 
             override fun onBeginningOfSpeech() {}
@@ -161,7 +161,7 @@ fun ForgeScreen(
             override fun onError(error: Int) {
                 isDictatingLecture = false
                 livePartialTranscript = ""
-                dictationStatus = "Lecture mic paused — tap Dictate Lecture again to continue."
+                dictationStatus = context.getString(R.string.forge_dictation_paused)
             }
 
             override fun onResults(results: Bundle?) {
@@ -177,7 +177,7 @@ fun ForgeScreen(
                     } else {
                         "${rawNotes.trimEnd()}\n$spoken"
                     }.take(6000)
-                    dictationStatus = "Appended spoken lecture snippet ($0 on-device speech)."
+                    dictationStatus = context.getString(R.string.forge_dictation_appended)
                 }
             }
 
@@ -204,7 +204,7 @@ fun ForgeScreen(
 
     val startLectureDictation: () -> Unit = {
         if (speechRecognizer == null) {
-            dictationStatus = "On-device speech recognition is unavailable on this device."
+            dictationStatus = context.getString(R.string.forge_dictation_unavailable)
         } else {
             val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
                 putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
@@ -215,7 +215,7 @@ fun ForgeScreen(
                 speechRecognizer.startListening(intent)
             } catch (_: Exception) {
                 isDictatingLecture = false
-                dictationStatus = "Unable to start microphone right now."
+                dictationStatus = context.getString(R.string.forge_dictation_mic_error)
             }
         }
     }
@@ -227,7 +227,7 @@ fun ForgeScreen(
             dictationStatus = null
             startLectureDictation()
         } else {
-            dictationStatus = "Microphone permission denied. You can still type or paste notes below."
+            dictationStatus = context.getString(R.string.forge_dictation_permission_denied)
         }
     }
 
@@ -268,10 +268,10 @@ fun ForgeScreen(
                             shape = RoundedCornerShape(10.dp)
                         ) {
                             val badgeText = when {
-                                aiUsagePlan.preferOfflineParser -> "Offline ($0)"
-                                aiUsagePlan.hasByokKey -> "BYOK Unlimited"
-                                aiUsagePlan.ecoLiteMode -> "Eco Lite · ${aiUsagePlan.remainingForges} left"
-                                else -> "Free AI · ${aiUsagePlan.remainingForges} left"
+                                aiUsagePlan.preferOfflineParser -> stringResource(id = R.string.forge_badge_offline)
+                                aiUsagePlan.hasByokKey -> stringResource(id = R.string.forge_badge_byok)
+                                aiUsagePlan.ecoLiteMode -> stringResource(id = R.string.forge_badge_eco_lite_left, aiUsagePlan.remainingForges)
+                                else -> stringResource(id = R.string.forge_badge_free_ai_left, aiUsagePlan.remainingForges)
                             }
                             Text(
                                 text = badgeText,
@@ -294,9 +294,9 @@ fun ForgeScreen(
             if (aiUsagePlan.isApproachingForgeLimit && forgeState is ForgeUiState.Idle) {
                 item {
                     QuotaSoftNudgeBanner(
-                        featureLabel = "AI Forge",
+                        featureLabel = stringResource(id = R.string.forge_feature_label),
                         remainingCount = aiUsagePlan.remainingForges,
-                        resetLabel = aiUsagePlan.timeUntilResetLabel(),
+                        resetLabel = aiUsagePlan.timeUntilResetLabel(context),
                         ecoLiteEnabled = aiUsagePlan.ecoLiteMode,
                         onSwitchToEcoLite = onEnableEcoLite
                     )
@@ -325,7 +325,7 @@ fun ForgeScreen(
                                 CircularProgressIndicator()
                                 Spacer(modifier = Modifier.height(14.dp))
                                 Text(
-                                    text = "Saving deck to Room SQLite & Firestore...",
+                                    text = stringResource(id = R.string.forge_saving_deck),
                                     style = MaterialTheme.typography.titleMedium
                                 )
                             }
@@ -352,13 +352,13 @@ fun ForgeScreen(
                                 )
                                 Spacer(modifier = Modifier.height(12.dp))
                                 Text(
-                                    text = "${forgeState.cardCount} Flashcards Forged!",
+                                    text = stringResource(id = R.string.forge_saved_count_title, forgeState.cardCount),
                                     style = MaterialTheme.typography.headlineSmall,
                                     color = MaterialTheme.colorScheme.onSecondaryContainer
                                 )
                                 Spacer(modifier = Modifier.height(6.dp))
                                 Text(
-                                    text = "Cached locally for offline subway study and synced to your Firestore cloud library.",
+                                    text = stringResource(id = R.string.forge_saved_desc),
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSecondaryContainer
                                 )
@@ -399,7 +399,7 @@ fun ForgeScreen(
                                 if (showPostOpSupportCard) {
                                     Spacer(modifier = Modifier.height(14.dp))
                                     PostOperationSupportCard(
-                                        headline = "Deck forged & saved offline!",
+                                        headline = stringResource(id = R.string.forge_saved_support_headline),
                                         onOpenSupport = onOpenSupportSheet,
                                         onDismiss = onDismissSupportCard
                                     )
@@ -428,14 +428,14 @@ fun ForgeScreen(
                                     modifier = Modifier.fillMaxWidth()
                                 ) {
                                     Text(
-                                        text = "Review Forged Deck (${draft.cards.size} cards)",
+                                        text = stringResource(id = R.string.forge_review_deck_title, draft.cards.size),
                                         style = MaterialTheme.typography.titleLarge,
                                         color = MaterialTheme.colorScheme.onSurface
                                     )
                                     IconButton(onClick = onResetForge) {
                                         Icon(
                                             imageVector = Icons.Default.Refresh,
-                                            contentDescription = "Start over"
+                                            contentDescription = stringResource(id = R.string.forge_cd_start_over)
                                         )
                                     }
                                 }
@@ -443,7 +443,7 @@ fun ForgeScreen(
                                 OutlinedTextField(
                                     value = draft.title,
                                     onValueChange = { onUpdateDraftMeta(it.take(120), draft.subject) },
-                                    label = { Text("Deck Title") },
+                                    label = { Text(stringResource(id = R.string.decks_field_title)) },
                                     singleLine = true,
                                     modifier = Modifier.fillMaxWidth()
                                 )
@@ -451,7 +451,7 @@ fun ForgeScreen(
                                 OutlinedTextField(
                                     value = draft.subject,
                                     onValueChange = { onUpdateDraftMeta(draft.title, it.take(60)) },
-                                    label = { Text("Subject") },
+                                    label = { Text(stringResource(id = R.string.decks_field_subject)) },
                                     singleLine = true,
                                     modifier = Modifier.fillMaxWidth()
                                 )
@@ -466,7 +466,7 @@ fun ForgeScreen(
 
                                 // Save destination selector (New Deck or append to existing)
                                 Text(
-                                    text = "Destination",
+                                    text = stringResource(id = R.string.forge_destination_label),
                                     style = MaterialTheme.typography.labelLarge,
                                     color = MaterialTheme.colorScheme.onSurface
                                 )
@@ -475,7 +475,7 @@ fun ForgeScreen(
                                         FilterChip(
                                             selected = selectedExistingDeckId == null,
                                             onClick = { selectedExistingDeckId = null },
-                                            label = { Text("New Deck") }
+                                            label = { Text(stringResource(id = R.string.decks_new_deck)) }
                                         )
                                     }
                                     items(existingDecks) { deck ->
@@ -528,9 +528,9 @@ fun ForgeScreen(
                                 ) {
                                     Text(
                                         text = if (selectedExistingDeckId == null) {
-                                            "Save New Deck (${draft.cards.size} cards)"
+                                            stringResource(id = R.string.forge_save_new_deck_btn, draft.cards.size)
                                         } else {
-                                            "Append ${draft.cards.size} Cards"
+                                            stringResource(id = R.string.forge_append_cards_btn, draft.cards.size)
                                         },
                                         fontWeight = FontWeight.Bold
                                     )
@@ -554,8 +554,8 @@ fun ForgeScreen(
                             if (forgeState.isQuotaLimit) {
                                 SmartQuotaRecoveryCard(
                                     aiUsagePlan = aiUsagePlan,
-                                    headline = "Today's standard AI Forge allowance is complete",
-                                    localFallbackLabel = "Build Cards Offline ($0 Local Parser)",
+                                    headline = stringResource(id = R.string.forge_quota_complete_headline),
+                                    localFallbackLabel = stringResource(id = R.string.forge_quota_local_fallback_btn),
                                     showLocalFallbackButton = rawNotes.isNotBlank(),
                                     onClaimGraceCredits = onClaimGraceCredits,
                                     onRetryWithEcoLite = {
@@ -615,7 +615,7 @@ fun ForgeScreen(
                                     ) {
                                         Image(
                                             bitmap = selectedSnapshot.asImageBitmap(),
-                                            contentDescription = "Selected study snapshot",
+                                            contentDescription = stringResource(id = R.string.forge_cd_selected_snapshot),
                                             contentScale = ContentScale.Crop,
                                             modifier = Modifier.fillMaxSize()
                                         )
@@ -629,7 +629,7 @@ fun ForgeScreen(
                                             IconButton(onClick = { onSnapshotSelected(null) }) {
                                                 Icon(
                                                     imageVector = Icons.Default.Close,
-                                                    contentDescription = "Remove photo"
+                                                    contentDescription = stringResource(id = R.string.forge_cd_remove_photo)
                                                 )
                                             }
                                         }
@@ -765,7 +765,7 @@ fun ForgeScreen(
                                     ) {
                                         Text(
                                             text = if (livePartialTranscript.isNotBlank()) {
-                                                "Live transcript: \"$livePartialTranscript\""
+                                                stringResource(id = R.string.forge_live_transcript, livePartialTranscript)
                                             } else {
                                                 dictationStatus.orEmpty()
                                             },
@@ -784,7 +784,7 @@ fun ForgeScreen(
                                     value = rawNotes,
                                     onValueChange = { if (it.length <= 6000) rawNotes = it },
                                     label = { Text(stringResource(R.string.forge_notes_label)) },
-                                    placeholder = { Text("Paste notes, Term: Definition, or Q:/A: pairs…") },
+                                    placeholder = { Text(stringResource(id = R.string.forge_notes_placeholder)) },
                                     minLines = 3,
                                     maxLines = 6,
                                     modifier = Modifier
@@ -796,7 +796,7 @@ fun ForgeScreen(
                                     value = subjectHint,
                                     onValueChange = { if (it.length <= 60) subjectHint = it },
                                     label = { Text(stringResource(R.string.forge_subject_label)) },
-                                    placeholder = { Text("Course or subject (optional)") },
+                                    placeholder = { Text(stringResource(id = R.string.forge_subject_placeholder)) },
                                     singleLine = true,
                                     modifier = Modifier.fillMaxWidth()
                                 )
@@ -897,16 +897,16 @@ private fun GeneratingCard(isOffline: Boolean = false) {
             Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = if (isOffline) {
-                    "Parsing study notes locally ($0)..."
+                    stringResource(id = R.string.forge_generating_offline)
                 } else {
-                    "Gemini is parsing your study material..."
+                    stringResource(id = R.string.forge_generating_gemini)
                 },
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onSurface
             )
             Spacer(modifier = Modifier.height(6.dp))
             Text(
-                text = "Extracting equations, diagrams, and key concepts into Multiple Choice, Fill-in-the-Blank, and Concept Explanation cards.",
+                text = stringResource(id = R.string.forge_generating_sub),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -937,7 +937,7 @@ private fun DraftCardPreviewItem(
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text(
-                        text = card.cardType.displayLabel.uppercase(),
+                        text = stringResource(id = card.cardType.displayLabelRes).uppercase(),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onTertiaryContainer,
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
@@ -946,7 +946,7 @@ private fun DraftCardPreviewItem(
                 IconButton(onClick = onRemove) {
                     Icon(
                         imageVector = Icons.Default.DeleteOutline,
-                        contentDescription = "Remove generated card",
+                        contentDescription = stringResource(id = R.string.forge_cd_remove_card),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
@@ -971,7 +971,7 @@ private fun DraftCardPreviewItem(
             } else {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Answer: ${card.answer}",
+                    text = stringResource(id = R.string.forge_answer_prefix, card.answer),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.secondary,
                     fontWeight = FontWeight.Medium

@@ -14,6 +14,7 @@ import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.PurchasesUpdatedListener
 import com.android.billingclient.api.QueryProductDetailsParams
 import com.android.billingclient.api.QueryPurchasesParams
+import com.example.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -61,13 +62,14 @@ class DonationBillingManager(
     private val onSupporterVerified: (productId: String, purchaseToken: String) -> Unit
 ) : PurchasesUpdatedListener {
 
+    private val context: Context = appContext.applicationContext
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private val productDetailsCache = mutableMapOf<String, ProductDetails>()
 
     private val _billingState = MutableStateFlow(DonationBillingUiState())
     val billingState: StateFlow<DonationBillingUiState> = _billingState.asStateFlow()
 
-    private val billingClient: BillingClient = BillingClient.newBuilder(appContext.applicationContext)
+    private val billingClient: BillingClient = BillingClient.newBuilder(context)
         .setListener(this)
         .enablePendingPurchases(
             PendingPurchasesParams.newBuilder()
@@ -103,7 +105,7 @@ class DonationBillingManager(
             _billingState.update {
                 it.copy(
                     isPurchasing = false,
-                    lastError = "Unable to attach to an active window. Please return to the app screen and try again."
+                    lastError = context.getString(R.string.billing_err_no_activity)
                 )
             }
             return
@@ -119,7 +121,7 @@ class DonationBillingManager(
                 _billingState.update {
                     it.copy(
                         isPurchasing = false,
-                        lastError = "Google Play Billing is unavailable on this device. You can use PayPal or Ko-fi tabs right here."
+                        lastError = context.getString(R.string.billing_err_unavailable_alt)
                     )
                 }
                 return@launch
@@ -134,7 +136,7 @@ class DonationBillingManager(
                 _billingState.update {
                     it.copy(
                         isPurchasing = false,
-                        lastError = "Play Store product (${tier.productId}) is not active in this build yet. Publish the SKU in Google Play Console or use PayPal / Ko-fi."
+                        lastError = context.getString(R.string.billing_err_sku_inactive, tier.productId)
                     )
                 }
                 return@launch
@@ -150,7 +152,7 @@ class DonationBillingManager(
 
             val launchOutcome = withContext(Dispatchers.Main.immediate) {
                 if (activity.isFinishing || activity.isDestroyed || activity.window?.decorView?.windowToken == null) {
-                    Result.failure(IllegalStateException("Window closed or inactive before Google Play Billing opened."))
+                    Result.failure(IllegalStateException(context.getString(R.string.billing_err_window_closed)))
                 } else {
                     runCatching {
                         billingClient.launchBillingFlow(activity, billingFlowParams)
@@ -165,7 +167,7 @@ class DonationBillingManager(
                     it.copy(
                         isPurchasing = false,
                         lastError = err?.localizedMessage
-                            ?: "Unable to open Google Play Billing right now. Please try PayPal or Ko-fi below."
+                            ?: context.getString(R.string.billing_err_launch_failed)
                     )
                 }
                 return@launch
@@ -183,7 +185,7 @@ class DonationBillingManager(
                     _billingState.update {
                         it.copy(
                             isPurchasing = false,
-                            statusMessage = "Thank you! Your previous Google Play support has been restored."
+                            statusMessage = context.getString(R.string.billing_status_restored_prev)
                         )
                     }
                 }
@@ -212,7 +214,7 @@ class DonationBillingManager(
             if (!connected) {
                 if (!silent) {
                     _billingState.update {
-                        it.copy(lastError = "Google Play Billing is unavailable on this device.")
+                        it.copy(lastError = context.getString(R.string.billing_err_unavailable))
                     }
                 }
                 return@launch
@@ -240,12 +242,12 @@ class DonationBillingManager(
                     matching.forEach { handleVerifiedPurchase(it) }
                     if (!silent) {
                         _billingState.update {
-                            it.copy(statusMessage = "Active Supporter badge restored! Thank you for supporting ExamForge.")
+                            it.copy(statusMessage = context.getString(R.string.billing_status_restored))
                         }
                     }
                 } else if (!silent) {
                     _billingState.update {
-                        it.copy(statusMessage = "No prior Google Play support receipts found on this account.")
+                        it.copy(statusMessage = context.getString(R.string.billing_status_none_found))
                     }
                 }
             }
@@ -267,7 +269,7 @@ class DonationBillingManager(
                             _billingState.update {
                                 it.copy(
                                     isPurchasing = false,
-                                    statusMessage = "Payment pending in Google Play. Your Active Supporter badge will unlock once cleared."
+                                    statusMessage = context.getString(R.string.billing_status_pending)
                                 )
                             }
                         }
@@ -279,7 +281,7 @@ class DonationBillingManager(
                         it.copy(
                             isPurchasing = false,
                             lastError = null,
-                            statusMessage = "Thank you for supporting ExamForge! Active Supporter badge unlocked."
+                            statusMessage = context.getString(R.string.vm_supporter_unlocked)
                         )
                     }
                 } else {
@@ -401,14 +403,14 @@ class DonationBillingManager(
     private fun formatBillingError(result: BillingResult): String {
         return when (result.responseCode) {
             BillingClient.BillingResponseCode.BILLING_UNAVAILABLE ->
-                "Google Play Billing is unavailable on this device. Please try PayPal or Ko-fi."
+                context.getString(R.string.billing_err_unavailable_short)
             BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE,
             BillingClient.BillingResponseCode.NETWORK_ERROR ->
-                "Network issue connecting to Google Play. Please check your connection and retry."
+                context.getString(R.string.billing_err_network)
             BillingClient.BillingResponseCode.ITEM_UNAVAILABLE ->
-                "This support tier is not available on Google Play yet. PayPal and Ko-fi are ready right now."
+                context.getString(R.string.billing_err_item_unavailable)
             else ->
-                result.debugMessage.ifBlank { "Google Play Billing returned code ${result.responseCode}." }
+                result.debugMessage.ifBlank { context.getString(R.string.billing_err_code, result.responseCode) }
         }
     }
 

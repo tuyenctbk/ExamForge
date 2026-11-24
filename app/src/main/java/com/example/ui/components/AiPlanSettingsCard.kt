@@ -104,7 +104,7 @@ fun AiPlanSettingsCard(
                             color = MaterialTheme.colorScheme.onSurface
                         )
                         Text(
-                            text = aiUsagePlan.activeTierLabel,
+                            text = stringResource(id = aiUsagePlan.activeTierLabelRes()),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.primary,
                             fontWeight = FontWeight.SemiBold
@@ -121,7 +121,11 @@ fun AiPlanSettingsCard(
                     shape = RoundedCornerShape(10.dp)
                 ) {
                     Text(
-                        text = if (aiUsagePlan.hasByokKey) "UNLIMITED" else "SMART FREE",
+                        text = if (aiUsagePlan.hasByokKey) {
+                            stringResource(id = R.string.ai_plan_badge_unlimited)
+                        } else {
+                            stringResource(id = R.string.ai_plan_badge_smart_free)
+                        },
                         style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.Bold,
                         color = if (aiUsagePlan.hasByokKey) {
@@ -151,7 +155,7 @@ fun AiPlanSettingsCard(
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             Text(
-                                text = "TODAY'S AI VALUE RECEIPT",
+                                text = stringResource(id = R.string.ai_plan_value_receipt_title),
                                 style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 fontWeight = FontWeight.Bold
@@ -165,7 +169,7 @@ fun AiPlanSettingsCard(
                                 )
                                 Spacer(modifier = Modifier.width(4.dp))
                                 Text(
-                                    text = aiUsagePlan.timeUntilResetLabel(),
+                                    text = aiUsagePlan.timeUntilResetLabel(context),
                                     style = MaterialTheme.typography.labelSmall,
                                     color = MaterialTheme.colorScheme.primary,
                                     fontWeight = FontWeight.SemiBold
@@ -173,17 +177,27 @@ fun AiPlanSettingsCard(
                             }
                         }
 
+                        val baseReceipt = stringResource(
+                            id = R.string.ai_plan_receipt_summary,
+                            aiUsagePlan.dailyForgeUsed,
+                            aiUsagePlan.dailyQuizUsed,
+                            aiUsagePlan.dailyFactCheckUsed
+                        )
+                        val graceSuffix = if (aiUsagePlan.bonusGraceCredits > 0) {
+                            stringResource(id = R.string.ai_plan_receipt_grace_suffix, aiUsagePlan.bonusGraceCredits)
+                        } else {
+                            ""
+                        }
                         Text(
-                            text = "${aiUsagePlan.dailyForgeUsed} Forges • ${aiUsagePlan.dailyQuizUsed} Quiz Turns • ${aiUsagePlan.dailyFactCheckUsed} Fact-Checks" +
-                                if (aiUsagePlan.bonusGraceCredits > 0) " • +${aiUsagePlan.bonusGraceCredits} Grace left" else "",
+                            text = baseReceipt + graceSuffix,
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurface,
                             fontWeight = FontWeight.Medium
                         )
 
-                        QuotaBarRow("AI Forges (Camera/Notes)", aiUsagePlan.dailyForgeUsed, aiUsagePlan.dailyForgeLimit)
-                        QuotaBarRow("Oral Quizmaster Turns", aiUsagePlan.dailyQuizUsed, aiUsagePlan.dailyQuizLimit)
-                        QuotaBarRow("Card Fact-Checks", aiUsagePlan.dailyFactCheckUsed, aiUsagePlan.dailyFactCheckLimit)
+                        QuotaBarRow(stringResource(id = R.string.ai_plan_meter_forges), aiUsagePlan.dailyForgeUsed, aiUsagePlan.dailyForgeLimit)
+                        QuotaBarRow(stringResource(id = R.string.ai_plan_meter_quiz), aiUsagePlan.dailyQuizUsed, aiUsagePlan.dailyQuizLimit)
+                        QuotaBarRow(stringResource(id = R.string.ai_plan_meter_fact_check), aiUsagePlan.dailyFactCheckUsed, aiUsagePlan.dailyFactCheckLimit)
 
                         if (aiUsagePlan.canClaimGraceCredits) {
                             FilledTonalButton(
@@ -228,7 +242,7 @@ fun AiPlanSettingsCard(
                         )
                     }
                     Text(
-                        text = "Uses ultra-fast lightweight Gemini Flash-Lite to preserve daily quota and reduce rate limits.",
+                        text = stringResource(id = R.string.ai_plan_eco_lite_desc),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -253,7 +267,7 @@ fun AiPlanSettingsCard(
                         color = MaterialTheme.colorScheme.onSurface
                     )
                     Text(
-                        text = "Build cards locally from text & voice lectures at $0 API cost — saves AI quota for whiteboard photos.",
+                        text = stringResource(id = R.string.ai_plan_offline_desc),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -294,7 +308,7 @@ fun AiPlanSettingsCard(
                     }
 
                     Text(
-                        text = "Connect your own free-tier Gemini API key to unlock unlimited Forges, Oral Quizmaster, and live Google Search Fact-Check citations.",
+                        text = stringResource(id = R.string.ai_plan_byok_desc),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -320,7 +334,7 @@ fun AiPlanSettingsCard(
                                     Spacer(modifier = Modifier.width(8.dp))
                                     Column {
                                         Text(
-                                            text = "Personal Key Active",
+                                            text = stringResource(id = R.string.ai_plan_personal_key_active),
                                             style = MaterialTheme.typography.labelLarge,
                                             color = MaterialTheme.colorScheme.onSecondaryContainer,
                                             fontWeight = FontWeight.Bold
@@ -344,7 +358,7 @@ fun AiPlanSettingsCard(
                         OutlinedTextField(
                             value = apiKeyInput,
                             onValueChange = { apiKeyInput = it.trim() },
-                            label = { Text("Paste Gemini API Key") },
+                            label = { Text(stringResource(id = R.string.ai_plan_paste_key_label)) },
                             placeholder = { Text("AIza...") },
                             singleLine = true,
                             visualTransformation = if (showKeyText) VisualTransformation.None else PasswordVisualTransformation(),
@@ -352,7 +366,11 @@ fun AiPlanSettingsCard(
                                 IconButton(onClick = { showKeyText = !showKeyText }) {
                                     Icon(
                                         imageVector = if (showKeyText) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                                        contentDescription = if (showKeyText) "Hide API key" else "Show API key"
+                                        contentDescription = if (showKeyText) {
+                                            stringResource(id = R.string.ai_plan_cd_hide_key)
+                                        } else {
+                                            stringResource(id = R.string.ai_plan_cd_show_key)
+                                        }
                                     )
                                 }
                             },
@@ -384,7 +402,7 @@ fun AiPlanSettingsCard(
                                         color = MaterialTheme.colorScheme.onPrimary
                                     )
                                     Spacer(modifier = Modifier.width(8.dp))
-                                    Text("Testing...")
+                                    Text(stringResource(id = R.string.ai_plan_testing))
                                 } else {
                                     Text(stringResource(R.string.ai_plan_test_save))
                                 }
@@ -444,7 +462,7 @@ fun AiPlanSettingsCard(
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(
-                            text = "Encrypted on-device via Android Keystore. Never uploaded to developer servers.",
+                            text = stringResource(id = R.string.ai_plan_keystore_note),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )

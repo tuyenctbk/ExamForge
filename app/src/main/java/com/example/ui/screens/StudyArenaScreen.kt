@@ -1,5 +1,6 @@
 package com.example.ui.screens
 
+import android.text.format.DateFormat
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
@@ -41,6 +42,7 @@ import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.Flip
 import androidx.compose.material.icons.filled.Lightbulb
+import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -68,6 +70,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.testTag
@@ -84,6 +87,9 @@ import com.example.data.model.SpacedRepetitionEngine
 import com.example.ui.components.PostOperationSupportCard
 import com.example.ui.util.tvFocusHighlight
 import com.example.ui.viewmodel.StudySessionUiState
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import kotlin.math.abs
 import kotlin.math.sin
 
@@ -121,9 +127,9 @@ fun StudyArenaScreen(
                         )
                         Text(
                             text = if (session.isFinished) {
-                                "Session complete"
+                                stringResource(id = R.string.study_arena_session_complete)
                             } else {
-                                "Card ${session.currentIndex + 1} of ${session.queue.size}"
+                                stringResource(id = R.string.study_arena_card_progress, session.currentIndex + 1, session.queue.size)
                             },
                             style = MaterialTheme.typography.labelMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -170,6 +176,61 @@ fun StudyArenaScreen(
                         .height(6.dp)
                         .clip(RoundedCornerShape(4.dp))
                 )
+
+                val lastSm2 = session.lastSm2Feedback
+                val context = LocalContext.current
+                AnimatedVisibility(visible = lastSm2 != null) {
+                    lastSm2?.let { feedback ->
+                        val is24Hour = DateFormat.is24HourFormat(context)
+                        val locale = Locale.getDefault()
+                        val pattern = when {
+                            feedback.intervalDays <= 0 -> if (is24Hour) "HH:mm" else "h:mm a"
+                            feedback.intervalDays >= 180 -> "MMM d, yyyy"
+                            else -> "MMM d"
+                        }
+                        val nextDateLabel = remember(feedback.nextReviewAtMillis, pattern, locale) {
+                            SimpleDateFormat(pattern, locale).format(Date(feedback.nextReviewAtMillis))
+                        }
+                        val efLabel = remember(feedback.easeFactor) {
+                            String.format(Locale.US, "%.2f", feedback.easeFactor)
+                        }
+                        Surface(
+                            color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.72f),
+                            shape = RoundedCornerShape(12.dp),
+                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.secondary.copy(alpha = 0.25f)),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 10.dp)
+                                .testTag("study_arena_sm2_feedback")
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 7.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Schedule,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.secondary,
+                                    modifier = Modifier.size(15.dp)
+                                )
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Text(
+                                    text = stringResource(
+                                        id = R.string.sm2_next_review_pill,
+                                        nextDateLabel,
+                                        feedback.intervalLabel,
+                                        efLabel
+                                    ),
+                                    style = MaterialTheme.typography.labelMedium,
+                                    fontWeight = FontWeight.Medium,
+                                    color = MaterialTheme.colorScheme.onSecondaryContainer,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            }
+                        }
+                    }
+                }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -284,7 +345,7 @@ fun StudyArenaScreen(
                     AnimatedVisibility(visible = session.revealed) {
                         Column(modifier = Modifier.padding(top = 12.dp, bottom = 10.dp)) {
                             Text(
-                                text = "How well did you recall this?",
+                                text = stringResource(id = R.string.study_arena_recall_prompt),
                                 style = MaterialTheme.typography.labelLarge,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier.padding(bottom = 8.dp)
@@ -307,10 +368,17 @@ fun StudyArenaScreen(
                                         ReviewRating.GOOD -> MaterialTheme.colorScheme.onSecondaryContainer
                                         ReviewRating.EASY -> MaterialTheme.colorScheme.onPrimaryContainer
                                     }
+                                    val isRecommended = session.recommendedRating == rating
                                     Button(
                                         onClick = {
                                             haptics.performHapticFeedback(HapticFeedbackType.LongPress)
                                             onRate(rating)
+                                        },
+                                        enabled = session.revealed,
+                                        border = if (isRecommended) {
+                                            BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
+                                        } else {
+                                            null
                                         },
                                         colors = ButtonDefaults.buttonColors(
                                             containerColor = containerColor,
@@ -424,7 +492,7 @@ private fun Concept3DFlipCard(
                         shape = RoundedCornerShape(8.dp)
                     ) {
                         Text(
-                            text = card.cardType.displayLabel.uppercase(),
+                            text = stringResource(id = card.cardType.displayLabelRes).uppercase(),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onTertiaryContainer,
                             modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
@@ -466,7 +534,7 @@ private fun Concept3DFlipCard(
                             .padding(top = 14.dp)
                     ) {
                         Text(
-                            text = "Hint: ${card.hint}",
+                            text = stringResource(id = R.string.flashcard_hint_prefix, card.hint),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onPrimaryContainer,
                             modifier = Modifier.padding(12.dp)
@@ -516,7 +584,7 @@ private fun Concept3DFlipCard(
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text(
-                        text = "ANSWER KEY",
+                        text = stringResource(id = R.string.study_arena_answer_key),
                         style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSecondary,
@@ -576,7 +644,7 @@ private fun FlashcardPromptCard(
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text(
-                        text = card.cardType.displayLabel.uppercase(),
+                        text = stringResource(id = card.cardType.displayLabelRes).uppercase(),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onTertiaryContainer,
                         modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
@@ -618,7 +686,7 @@ private fun FlashcardPromptCard(
                         .padding(top = 14.dp)
                 ) {
                     Text(
-                        text = "Hint: ${card.hint}",
+                        text = stringResource(id = R.string.flashcard_hint_prefix, card.hint),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onPrimaryContainer,
                         modifier = Modifier.padding(12.dp)
@@ -714,8 +782,8 @@ private fun ClozeInteractionBlock(
             value = input,
             onValueChange = onInputChange,
             enabled = !checked,
-            label = { Text("Fill in the blank") },
-            placeholder = { Text("Type missing term or formula...") },
+            label = { Text(stringResource(id = R.string.study_arena_cloze_label)) },
+            placeholder = { Text(stringResource(id = R.string.study_arena_cloze_placeholder)) },
             singleLine = true,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
             keyboardActions = KeyboardActions(onDone = { if (!checked) onCheck() }),
@@ -738,7 +806,11 @@ private fun ClozeInteractionBlock(
                         .testTag("check_cloze_button")
                 ) {
                     Text(
-                        text = if (input.isBlank()) "Reveal Answer" else "Check Answer",
+                        text = if (input.isBlank()) {
+                            stringResource(id = R.string.study_arena_reveal_answer)
+                        } else {
+                            stringResource(id = R.string.study_arena_check_answer)
+                        },
                         fontWeight = FontWeight.Bold
                     )
                 }
@@ -760,7 +832,11 @@ private fun ClozeInteractionBlock(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = if (isExactMatch) "Spot on!" else "Compare your answer with the key below.",
+                        text = if (isExactMatch) {
+                            stringResource(id = R.string.study_arena_spot_on)
+                        } else {
+                            stringResource(id = R.string.study_arena_compare_key)
+                        },
                         style = MaterialTheme.typography.titleSmall
                     )
                 }
@@ -779,7 +855,7 @@ private fun AnswerExplanationPanel(card: Flashcard) {
     ) {
         Column(modifier = Modifier.padding(18.dp)) {
             Text(
-                text = "ANSWER KEY",
+                text = stringResource(id = R.string.study_arena_answer_key),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.secondary
             )
@@ -874,7 +950,7 @@ private fun StudyCompleteSummary(
                 if (showPostOpSupportCard) {
                     Spacer(modifier = Modifier.height(16.dp))
                     PostOperationSupportCard(
-                        headline = "Great recall session!",
+                        headline = stringResource(id = R.string.study_arena_support_headline),
                         onOpenSupport = onOpenSupportSheet,
                         onDismiss = onDismissSupportCard
                     )

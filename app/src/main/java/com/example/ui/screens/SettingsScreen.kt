@@ -163,18 +163,26 @@ fun SettingsScreen(
                         Spacer(modifier = Modifier.width(14.dp))
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                text = profile?.displayName ?: userDisplayName ?: "ExamForge Student",
+                                text = profile?.displayName ?: userDisplayName ?: stringResource(id = R.string.profile_examforge_student),
                                 style = MaterialTheme.typography.titleMedium,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
                             Text(
-                                text = userEmail ?: if (isCloudSignedIn) "Google Account Connected" else "Offline Local Profile · Room SQLite",
+                                text = userEmail ?: if (isCloudSignedIn) {
+                                    stringResource(id = R.string.settings_google_connected)
+                                } else {
+                                    stringResource(id = R.string.settings_offline_profile)
+                                },
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
-                                text = "${profile?.streakDays ?: 0} day streak · ${profile?.totalReviewed ?: 0} total reviews",
+                                text = stringResource(
+                                    id = R.string.settings_profile_stats,
+                                    profile?.streakDays ?: 0,
+                                    profile?.totalReviewed ?: 0
+                                ),
                                 style = MaterialTheme.typography.labelMedium,
                                 color = MaterialTheme.colorScheme.primary
                             )
@@ -247,7 +255,7 @@ fun SettingsScreen(
                                             modifier = Modifier.size(16.dp)
                                         )
                                         Spacer(modifier = Modifier.width(6.dp))
-                                        Text(mode.label, style = MaterialTheme.typography.labelLarge)
+                                        Text(stringResource(id = mode.labelRes), style = MaterialTheme.typography.labelLarge)
                                     }
                                 }
                             }
@@ -340,13 +348,16 @@ fun SettingsScreen(
                                     verticalAlignment = Alignment.CenterVertically,
                                     modifier = Modifier.fillMaxWidth()
                                 ) {
+                                    val widgetTypeBadge = previewWidgetCard?.let {
+                                        stringResource(id = it.cardType.shortBadgeRes)
+                                    } ?: stringResource(id = R.string.settings_widget_quick_recall)
                                     Text(
-                                        text = "EXAMFORGE · ${previewWidgetCard?.cardType?.shortBadge ?: "QUICK RECALL"}",
+                                        text = "${stringResource(id = R.string.widget_header_default)} · $widgetTypeBadge",
                                         style = MaterialTheme.typography.labelSmall,
                                         color = MaterialTheme.colorScheme.primary
                                     )
                                     Text(
-                                        text = "WIDGET PREVIEW",
+                                        text = stringResource(id = R.string.settings_widget_preview_badge),
                                         style = MaterialTheme.typography.labelSmall,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
@@ -354,7 +365,7 @@ fun SettingsScreen(
                                 Spacer(modifier = Modifier.height(8.dp))
                                 Text(
                                     text = previewWidgetCard?.question
-                                        ?: "Forge a deck from your notes to see live flashcards on your home screen.",
+                                        ?: stringResource(id = R.string.settings_widget_preview_empty),
                                     style = MaterialTheme.typography.titleSmall,
                                     color = MaterialTheme.colorScheme.onSurface,
                                     maxLines = 3
@@ -381,14 +392,14 @@ fun SettingsScreen(
                                         } else {
                                             Toast.makeText(
                                                 context,
-                                                "Long-press your home screen -> Widgets -> ExamForge Quick Recall",
+                                                context.getString(R.string.settings_widget_pin_fallback),
                                                 Toast.LENGTH_LONG
                                             ).show()
                                         }
                                     } else {
                                         Toast.makeText(
                                             context,
-                                            "Long-press your home screen -> Widgets -> ExamForge Quick Recall",
+                                            context.getString(R.string.settings_widget_pin_fallback),
                                             Toast.LENGTH_LONG
                                         ).show()
                                     }
@@ -430,12 +441,20 @@ fun SettingsScreen(
                             Spacer(modifier = Modifier.width(10.dp))
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
-                                    text = if (syncStatus.isOnline) "Cloud Synced · Offline Cache Ready" else "Offline Mode · Subway Ready",
+                                    text = if (syncStatus.isOnline) {
+                                        stringResource(id = R.string.settings_sync_online_title)
+                                    } else {
+                                        stringResource(id = R.string.settings_sync_offline_title)
+                                    },
                                     style = MaterialTheme.typography.titleMedium,
                                     color = MaterialTheme.colorScheme.onSurface
                                 )
                                 Text(
-                                    text = "$totalCachedCards card(s) cached in local Room SQLite · ${syncStatus.pendingOfflineCount} pending sync",
+                                    text = stringResource(
+                                        id = R.string.settings_sync_cache_summary,
+                                        totalCachedCards,
+                                        syncStatus.pendingOfflineCount
+                                    ),
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
@@ -473,7 +492,7 @@ fun SettingsScreen(
                             )
                             Spacer(modifier = Modifier.width(6.dp))
                             Text(
-                                text = "Reviews done offline or in the widget sync automatically when online.",
+                                text = stringResource(id = R.string.settings_sync_auto_note),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )

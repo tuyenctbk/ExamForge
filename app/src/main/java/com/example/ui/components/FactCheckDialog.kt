@@ -175,7 +175,7 @@ fun FactCheckDialog(
                                 )
                                 Spacer(modifier = Modifier.width(6.dp))
                                 Text(
-                                    text = result.verdict.badgeLabel,
+                                    text = stringResource(id = result.verdict.badgeLabelRes),
                                     style = MaterialTheme.typography.labelLarge,
                                     fontWeight = FontWeight.Bold,
                                     color = badgeContent

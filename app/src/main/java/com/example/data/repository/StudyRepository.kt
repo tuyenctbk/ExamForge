@@ -613,24 +613,35 @@ class StudyRepository(
         }
     }
 
-    suspend fun recordCardReview(card: Flashcard, rating: ReviewRating): Result<Flashcard> {
-        val nowMillis = System.currentTimeMillis()
+    suspend fun recordCardReview(
+        card: Flashcard,
+        rating: ReviewRating,
+        nowMillis: Long = System.currentTimeMillis()
+    ): Result<Flashcard> {
         val scheduled = SpacedRepetitionEngine.scheduleNextReview(card, rating, nowMillis)
-        val cloudTarget = activeCloudDbAndUid()
         val updatedCard = card.copy(
             easeFactor = scheduled.easeFactor,
             intervalDays = scheduled.intervalDays,
             repetitions = scheduled.repetitions,
             dueAtMillis = scheduled.dueAtMillis,
             lastReviewedAtMillis = scheduled.lastReviewedAtMillis,
-            pendingSync = cloudTarget != null
+            pendingSync = true
         )
+        return saveScheduledCardReview(updatedCard, nowMillis)
+    }
+
+    suspend fun saveScheduledCardReview(
+        updatedCard: Flashcard,
+        nowMillis: Long = System.currentTimeMillis()
+    ): Result<Flashcard> {
+        val cloudTarget = activeCloudDbAndUid()
+        val persistedCard = updatedCard.copy(pendingSync = cloudTarget != null)
 
         // 1. Always save immediately to Room SQLite + local study streak (works 100% offline!)
-        flashcardDao.upsertCard(updatedCard.toEntity(pendingSync = cloudTarget != null))
-        val deckCards = flashcardDao.getAllCardsSnapshot(card.userId).filter { it.deckId == card.deckId }
+        flashcardDao.upsertCard(persistedCard.toEntity(pendingSync = cloudTarget != null))
+        val deckCards = flashcardDao.getAllCardsSnapshot(persistedCard.userId).filter { it.deckId == persistedCard.deckId }
         val masteredCount = deckCards.count { it.toDomain().isMastered() }
-        deckDao.getDeckById(card.deckId)?.let { existingDeck ->
+        deckDao.getDeckById(persistedCard.deckId)?.let { existingDeck ->
             deckDao.upsertDeck(
                 existingDeck.copy(
                     cardCount = deckCards.size,
@@ -644,28 +655,28 @@ class StudyRepository(
 
         // 2. Sync to Firestore when signed in & online (if offline, Room retains pendingSync = true)
         if (cloudTarget == null) {
-            return Result.success(updatedCard)
+            return Result.success(persistedCard)
         }
         val (firestore, uid) = cloudTarget
-        if (uid != card.userId) return Result.success(updatedCard)
+        if (uid != persistedCard.userId) return Result.success(persistedCard)
 
-        var docPath = "users/${card.userId}/cards/${card.id}"
+        var docPath = "users/${persistedCard.userId}/cards/${persistedCard.id}"
         return try {
             val batch = firestore.batch()
-            val cardRef = firestore.collection("users").document(uid).collection("cards").document(card.id)
+            val cardRef = firestore.collection("users").document(uid).collection("cards").document(persistedCard.id)
             docPath = cardRef.path
             batch.update(
                 cardRef,
                 mapOf(
-                    "easeFactor" to updatedCard.easeFactor,
-                    "intervalDays" to updatedCard.intervalDays.toLong(),
-                    "repetitions" to updatedCard.repetitions.toLong(),
-                    "dueAtMillis" to updatedCard.dueAtMillis,
-                    "lastReviewedAtMillis" to updatedCard.lastReviewedAtMillis,
+                    "easeFactor" to persistedCard.easeFactor,
+                    "intervalDays" to persistedCard.intervalDays.toLong(),
+                    "repetitions" to persistedCard.repetitions.toLong(),
+                    "dueAtMillis" to persistedCard.dueAtMillis,
+                    "lastReviewedAtMillis" to persistedCard.lastReviewedAtMillis,
                     "updatedAt" to FieldValue.serverTimestamp()
                 )
             )
-            val deckRef = firestore.collection("users").document(uid).collection("decks").document(card.deckId)
+            val deckRef = firestore.collection("users").document(uid).collection("decks").document(persistedCard.deckId)
             batch.update(
                 deckRef,
                 mapOf(
@@ -675,17 +686,17 @@ class StudyRepository(
                 )
             )
             batch.commit().await()
-            flashcardDao.markSynced(card.id)
+            flashcardDao.markSynced(persistedCard.id)
 
             // Update cloud study streak & review total
             updateStudyStats(firestore, uid, nowMillis)
-            Result.success(updatedCard.copy(pendingSync = false))
+            Result.success(persistedCard.copy(pendingSync = false))
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
             handleFirestoreError(e, OperationType.UPDATE, docPath)
             Log.w(TAG, "Review saved locally in Room; cloud sync deferred: ${e.message}")
-            Result.success(updatedCard)
+            Result.success(persistedCard)
         }
     }
 

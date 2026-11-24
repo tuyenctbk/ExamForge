@@ -154,8 +154,16 @@ fun DecksScreen(
 
             // Section header + action buttons (responsive so narrow phones never wrap awkwardly)
             item {
-                val deckCountLabel = if (decks.size == 1) "1 deck" else "${decks.size} decks"
-                val cardCountLabel = if (allCards.size == 1) "1 card" else "${allCards.size} cards"
+                val deckCountLabel = if (decks.size == 1) {
+                    stringResource(id = R.string.decks_count_one)
+                } else {
+                    stringResource(id = R.string.decks_count_many, decks.size)
+                }
+                val cardCountLabel = if (allCards.size == 1) {
+                    stringResource(id = R.string.decks_cards_count_one)
+                } else {
+                    stringResource(id = R.string.decks_cards_count_many, allCards.size)
+                }
                 Column(
                     verticalArrangement = Arrangement.spacedBy(10.dp),
                     modifier = Modifier.fillMaxWidth()
@@ -167,14 +175,14 @@ fun DecksScreen(
                     ) {
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                text = "Your Study Decks",
+                                text = stringResource(id = R.string.decks_section_title),
                                 style = MaterialTheme.typography.headlineSmall,
                                 color = MaterialTheme.colorScheme.onBackground,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis
                             )
                             Text(
-                                text = "$deckCountLabel · $cardCountLabel cached offline",
+                                text = stringResource(id = R.string.decks_cached_offline_summary, deckCountLabel, cardCountLabel),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -395,7 +403,11 @@ private fun ReviewHeroCard(
                             )
                             Spacer(modifier = Modifier.width(6.dp))
                             Text(
-                                text = if (showCloudSynced) "CLOUD SYNCED" else "OFFLINE · ROOM DB",
+                                text = if (showCloudSynced) {
+                                    stringResource(id = R.string.decks_sync_cloud)
+                                } else {
+                                    stringResource(id = R.string.decks_sync_offline)
+                                },
                                 style = MaterialTheme.typography.labelSmall,
                                 color = if (showCloudSynced) MaterialTheme.colorScheme.onSecondaryContainer else MaterialTheme.colorScheme.onPrimaryContainer
                             )
@@ -419,7 +431,7 @@ private fun ReviewHeroCard(
                             )
                             Spacer(modifier = Modifier.width(4.dp))
                             Text(
-                                text = "${streakDays}d streak",
+                                text = stringResource(id = R.string.decks_streak_chip, streakDays),
                                 style = MaterialTheme.typography.labelMedium,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
@@ -588,7 +600,7 @@ private fun DeckListCard(
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
-                        text = "· ${deck.sourceType.displayLabel}",
+                        text = "· ${stringResource(id = deck.sourceType.displayLabelRes)}",
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 1,
@@ -607,7 +619,11 @@ private fun DeckListCard(
                     shape = RoundedCornerShape(10.dp)
                 ) {
                     Text(
-                        text = if (dueCount > 0) "$dueCount due" else "Caught up",
+                        text = if (dueCount > 0) {
+                            stringResource(id = R.string.study_session_due_badge, dueCount)
+                        } else {
+                            stringResource(id = R.string.decks_caught_up)
+                        },
                         style = MaterialTheme.typography.labelSmall,
                         color = if (dueCount > 0) {
                             MaterialTheme.colorScheme.onPrimaryContainer
@@ -647,7 +663,7 @@ private fun DeckListCard(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "$totalCards cards · $masteredCount mastered",
+                    text = stringResource(id = R.string.decks_cards_mastered_summary, totalCards, masteredCount),
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -694,7 +710,7 @@ private fun DeckListCard(
                         modifier = Modifier.size(16.dp)
                     )
                     Spacer(modifier = Modifier.width(6.dp))
-                    Text("Study Cards", fontWeight = FontWeight.Bold, maxLines = 1)
+                    Text(stringResource(id = R.string.decks_study_cards), fontWeight = FontWeight.Bold, maxLines = 1)
                 }
 
                 OutlinedButton(
@@ -713,7 +729,7 @@ private fun DeckListCard(
                         modifier = Modifier.size(16.dp)
                     )
                     Spacer(modifier = Modifier.width(6.dp))
-                    Text("Oral Quiz", maxLines = 1)
+                    Text(stringResource(id = R.string.decks_oral_quiz), maxLines = 1)
                 }
             }
         }
@@ -881,32 +897,34 @@ private fun CreateDeckDialog(
     var subject by rememberSaveable { mutableStateOf("") }
     var description by rememberSaveable { mutableStateOf("") }
     var selectedAccent by rememberSaveable { mutableIntStateOf(0) }
+    val defaultDeckTitle = stringResource(id = R.string.decks_default_title)
+    val defaultSubject = stringResource(id = R.string.decks_default_subject)
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Create Study Deck") },
+        title = { Text(stringResource(id = R.string.decks_create_dialog_title)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 OutlinedTextField(
                     value = title,
                     onValueChange = { if (it.length <= 120) title = it },
-                    label = { Text("Deck Title") },
-                    placeholder = { Text("Enter deck title") },
+                    label = { Text(stringResource(id = R.string.decks_field_title)) },
+                    placeholder = { Text(stringResource(id = R.string.decks_field_title_placeholder)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
                 OutlinedTextField(
                     value = subject,
                     onValueChange = { if (it.length <= 60) subject = it },
-                    label = { Text("Subject") },
-                    placeholder = { Text("Enter subject or topic") },
+                    label = { Text(stringResource(id = R.string.decks_field_subject)) },
+                    placeholder = { Text(stringResource(id = R.string.decks_field_subject_placeholder)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
                 OutlinedTextField(
                     value = description,
                     onValueChange = { if (it.length <= 350) description = it },
-                    label = { Text("Short Summary (optional)") },
+                    label = { Text(stringResource(id = R.string.decks_field_summary_opt)) },
                     maxLines = 2,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -941,15 +959,15 @@ private fun CreateDeckDialog(
             Button(
                 onClick = {
                     onConfirm(
-                        title.trim().ifBlank { "New Study Deck" },
-                        subject.trim().ifBlank { "General" },
+                        title.trim().ifBlank { defaultDeckTitle },
+                        subject.trim().ifBlank { defaultSubject },
                         description.trim(),
                         selectedAccent
                     )
                 },
                 enabled = title.isNotBlank()
             ) {
-                Text("Create")
+                Text(stringResource(id = R.string.common_create))
             }
         },
         dismissButton = {

@@ -303,7 +303,7 @@ private fun AuthHeroBanner(modifier: Modifier = Modifier) {
                 )
                 Spacer(modifier = Modifier.width(6.dp))
                 Text(
-                    text = "GEMINI MULTIMODAL",
+                    text = stringResource(id = R.string.auth_badge_gemini),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
@@ -336,23 +336,23 @@ private fun FeatureHighlightsColumn() {
     ) {
         FeatureHighlightRow(
             icon = Icons.Default.CameraAlt,
-            title = "Multimodal Note Parsing",
-            subtitle = "Turn math equations, bio diagrams, or notes into MCQ, Cloze & Concept cards."
+            title = stringResource(id = R.string.auth_feature_multimodal_title),
+            subtitle = stringResource(id = R.string.auth_feature_multimodal_sub)
         )
         FeatureHighlightRow(
             icon = Icons.Default.Mic,
-            title = "Oral Quizmaster Coach",
-            subtitle = "Recite answers aloud for instant active-recall grading and spoken follow-ups."
+            title = stringResource(id = R.string.auth_feature_oral_title),
+            subtitle = stringResource(id = R.string.auth_feature_oral_sub)
         )
         FeatureHighlightRow(
             icon = Icons.Default.CloudSync,
-            title = "Offline-First Room + Cloud Sync",
-            subtitle = "SM-2 spaced repetition cached locally for study anywhere, with optional backup."
+            title = stringResource(id = R.string.auth_feature_offline_title),
+            subtitle = stringResource(id = R.string.auth_feature_offline_sub)
         )
         FeatureHighlightRow(
             icon = Icons.Default.Widgets,
-            title = "3D Flip Cards & Match Blitz",
-            subtitle = "Review flagged cards in 3D, drill 60-second Match Blitz, or use the Home Widget."
+            title = stringResource(id = R.string.auth_feature_flip_title),
+            subtitle = stringResource(id = R.string.auth_feature_flip_sub)
         )
     }
 }
@@ -432,7 +432,13 @@ private fun AuthActionsBlock(
                             strokeWidth = 2.dp
                         )
                         Spacer(modifier = Modifier.width(10.dp))
-                        Text(if (isCheckingSilent) "Checking account..." else "Signing in...")
+                        Text(
+                            if (isCheckingSilent) {
+                                stringResource(id = R.string.auth_checking_account)
+                            } else {
+                                stringResource(id = R.string.auth_signing_in)
+                            }
+                        )
                     } else {
                         Text(
                             text = stringResource(id = R.string.sign_in_google),
@@ -465,7 +471,11 @@ private fun AuthActionsBlock(
                     )
                     Spacer(modifier = Modifier.width(10.dp))
                     Text(
-                        text = if (isCheckingSilent) "Checking account..." else "Signing in...",
+                        text = if (isCheckingSilent) {
+                            stringResource(id = R.string.auth_checking_account)
+                        } else {
+                            stringResource(id = R.string.auth_signing_in)
+                        },
                         style = MaterialTheme.typography.labelLarge
                     )
                 } else {

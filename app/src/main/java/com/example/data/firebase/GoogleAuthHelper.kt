@@ -101,7 +101,7 @@ fun onGoogleSignInClicked(
     onAuthCancelled: () -> Unit = {}
 ) {
     if (!isFirebaseConfigured(context)) {
-        onAuthError("Cloud Sign-In isn't configured in this offline build. Tap \"Continue Offline\" below to start studying immediately!")
+        onAuthError(context.getString(R.string.auth_err_offline_build))
         return
     }
     val clientId = try {
@@ -111,12 +111,12 @@ fun onGoogleSignInClicked(
         null
     }
     if (clientId == null) {
-        onAuthError("Google Sign-In isn't configured yet. Tap \"Continue Offline\" below to use all offline study tools.")
+        onAuthError(context.getString(R.string.auth_err_not_configured))
         return
     }
     val activity = context.findActivity()
     if (activity == null) {
-        onAuthError("Unable to launch Google Sign-In from this context.")
+        onAuthError(context.getString(R.string.auth_err_unable_launch))
         return
     }
     val signInOption = GetSignInWithGoogleOption.Builder(serverClientId = clientId).build()
@@ -131,14 +131,14 @@ fun onGoogleSignInClicked(
                 Firebase.auth.signInWithCredential(GoogleAuthProvider.getCredential(token, null)).await()
                 onAuthSuccess()
             } else {
-                onAuthError("Unexpected credential type returned.")
+                onAuthError(context.getString(R.string.auth_err_unexpected_credential))
             }
         } catch (e: GetCredentialCancellationException) {
             Log.w("Auth", "Google Sign-In flow cancelled or dismissed: ${e.message}", e)
             onAuthCancelled()
         } catch (e: Exception) {
             Log.e("Auth", "Google Sign-In failed", e)
-            onAuthError(e.localizedMessage ?: "Sign-in failed. You can also Continue Offline anytime.")
+            onAuthError(e.localizedMessage ?: context.getString(R.string.auth_err_sign_in_failed))
         }
     }
 }

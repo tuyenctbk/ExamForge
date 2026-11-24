@@ -1,5 +1,6 @@
 package com.example.ui.screens
 
+import android.text.format.DateFormat
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
@@ -72,6 +73,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -245,19 +247,18 @@ fun StudySession(
                 )
 
                 val lastSm2 = session.lastScheduledOutcome
-                AnimatedVisibility(
-                    visible = !session.isCompleted && lastSm2 != null,
-                    modifier = Modifier.padding(top = 10.dp)
-                ) {
+                val context = LocalContext.current
+                AnimatedVisibility(visible = lastSm2 != null) {
                     lastSm2?.let { outcome ->
-                        val dateFormatter = remember(outcome.intervalDays) {
-                            SimpleDateFormat(
-                                if (outcome.intervalDays <= 0) "h:mm a" else "MMM d",
-                                Locale.getDefault()
-                            )
+                        val is24Hour = DateFormat.is24HourFormat(context)
+                        val locale = Locale.getDefault()
+                        val pattern = when {
+                            outcome.intervalDays <= 0 -> if (is24Hour) "HH:mm" else "h:mm a"
+                            outcome.intervalDays >= 180 -> "MMM d, yyyy"
+                            else -> "MMM d"
                         }
-                        val nextDateLabel = remember(outcome.nextReviewAtMillis, dateFormatter) {
-                            dateFormatter.format(Date(outcome.nextReviewAtMillis))
+                        val nextDateLabel = remember(outcome.nextReviewAtMillis, pattern, locale) {
+                            SimpleDateFormat(pattern, locale).format(Date(outcome.nextReviewAtMillis))
                         }
                         val efLabel = remember(outcome.easeFactor) {
                             String.format(Locale.US, "%.2f", outcome.easeFactor)
@@ -268,6 +269,7 @@ fun StudySession(
                             border = BorderStroke(1.dp, MaterialTheme.colorScheme.secondary.copy(alpha = 0.25f)),
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .padding(top = 10.dp)
                                 .testTag("study_session_sm2_feedback")
                         ) {
                             Row(
@@ -467,6 +469,7 @@ fun StudySession(
                                                     slideDirection = 1
                                                     viewModel.submitReviewNowRating(rating)
                                                 },
+                                                enabled = session.answerRevealed,
                                                 colors = ButtonDefaults.buttonColors(
                                                     containerColor = containerColor,
                                                     contentColor = contentColor

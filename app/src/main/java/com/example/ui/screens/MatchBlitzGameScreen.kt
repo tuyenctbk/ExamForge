@@ -65,6 +65,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -107,7 +108,9 @@ fun MatchBlitzGameScreen(
     onBack: () -> Unit
 ) {
     BackHandler(onBack = onBack)
+    val context = LocalContext.current
     val haptics = LocalHapticFeedback.current
+    val resolvedDeckTitle = deckTitle.ifBlank { stringResource(id = R.string.match_blitz_title) }
 
     val playableCards = remember(cards) {
         cards.filter { it.question.isNotBlank() && it.answer.isNotBlank() }
@@ -233,17 +236,21 @@ fun MatchBlitzGameScreen(
             selectedAnswerId = null
 
             if (updatedMatchedQ.size >= questionTiles.size) {
-                feedbackBanner = "Round Clear! +150 pts · +8s Bonus" to true
+                feedbackBanner = context.getString(R.string.match_blitz_round_clear) to true
                 pendingRoundAdvance = true
             } else {
-                feedbackBanner = "+$gained pts${if (multiplier > 1) " (x$multiplier streak!)" else ""}" to true
+                feedbackBanner = (if (multiplier > 1) {
+                    context.getString(R.string.match_blitz_gain_pts_streak, gained, multiplier)
+                } else {
+                    context.getString(R.string.match_blitz_gain_pts, gained)
+                }) to true
             }
         } else {
             haptics.performHapticFeedback(HapticFeedbackType.LongPress)
             combo = 0
             val updatedTime = (timeLeftSeconds - 2).coerceAtLeast(0)
             timeLeftSeconds = updatedTime
-            feedbackBanner = "Mismatch · −2s penalty" to false
+            feedbackBanner = context.getString(R.string.match_blitz_mismatch) to false
             if (updatedTime == 0 && phase == MatchGamePhase.PLAYING) {
                 mismatchIds = null
                 phase = MatchGamePhase.FINISHED
@@ -264,7 +271,7 @@ fun MatchBlitzGameScreen(
                             style = MaterialTheme.typography.titleLarge
                         )
                         Text(
-                            text = "$deckTitle · Offline $0 Study Game",
+                            text = stringResource(id = R.string.match_blitz_subtitle, resolvedDeckTitle),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             maxLines = 1,
@@ -313,19 +320,19 @@ fun MatchBlitzGameScreen(
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                     Text(
-                        text = "Need at least 3 flashcards",
+                        text = stringResource(id = R.string.match_blitz_need_cards_title),
                         style = MaterialTheme.typography.headlineSmall
                     )
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(
-                        text = "Forge or add a few more cards to unlock Match Blitz speed training.",
+                        text = stringResource(id = R.string.match_blitz_need_cards_body),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         textAlign = TextAlign.Center
                     )
                     Spacer(modifier = Modifier.height(18.dp))
                     Button(onClick = onBack) {
-                        Text("Back to Deck")
+                        Text(stringResource(id = R.string.match_blitz_back_to_deck))
                     }
                 }
                 return@Box
@@ -334,7 +341,7 @@ fun MatchBlitzGameScreen(
             when (phase) {
                 MatchGamePhase.READY -> {
                     MatchBlitzStartOverlay(
-                        deckTitle = deckTitle,
+                        deckTitle = resolvedDeckTitle,
                         cardCount = playableCards.size,
                         bestScore = bestScore,
                         onStart = ::startNewGame
@@ -402,7 +409,7 @@ fun MatchBlitzGameScreen(
                                             )
                                             Spacer(modifier = Modifier.width(6.dp))
                                             Text(
-                                                text = "${timeLeftSeconds}s",
+                                                text = stringResource(id = R.string.match_blitz_timer_sec, timeLeftSeconds),
                                                 style = MaterialTheme.typography.titleMedium,
                                                 fontWeight = FontWeight.Bold,
                                                 color = if (timeLeftSeconds <= 12) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface
@@ -426,7 +433,7 @@ fun MatchBlitzGameScreen(
                                                 )
                                                 Spacer(modifier = Modifier.width(4.dp))
                                                 Text(
-                                                    text = "x${combo.coerceAtLeast(1)} · Rd $roundNumber",
+                                                    text = stringResource(id = R.string.match_blitz_combo_round, combo.coerceAtLeast(1), roundNumber),
                                                     style = MaterialTheme.typography.labelMedium,
                                                     fontWeight = FontWeight.Bold,
                                                     color = MaterialTheme.colorScheme.onPrimaryContainer
@@ -435,7 +442,7 @@ fun MatchBlitzGameScreen(
                                         }
 
                                         Text(
-                                            text = "$animatedScore pts",
+                                            text = stringResource(id = R.string.match_blitz_pts_value, animatedScore),
                                             style = MaterialTheme.typography.titleMedium,
                                             fontWeight = FontWeight.ExtraBold,
                                             color = MaterialTheme.colorScheme.secondary
@@ -491,13 +498,13 @@ fun MatchBlitzGameScreen(
                                 horizontalArrangement = Arrangement.spacedBy(10.dp)
                             ) {
                                 Text(
-                                    text = "PROMPTS",
+                                    text = stringResource(id = R.string.match_blitz_col_prompts),
                                     style = MaterialTheme.typography.labelSmall,
                                     color = MaterialTheme.colorScheme.primary,
                                     modifier = Modifier.weight(1f)
                                 )
                                 Text(
-                                    text = "ANSWERS",
+                                    text = stringResource(id = R.string.match_blitz_col_answers),
                                     style = MaterialTheme.typography.labelSmall,
                                     color = MaterialTheme.colorScheme.secondary,
                                     modifier = Modifier.weight(1f)
@@ -625,7 +632,7 @@ private fun MatchTileCard(
             modifier = Modifier.padding(12.dp)
         ) {
             Text(
-                text = if (isMatched) "✓ Matched" else text,
+                text = if (isMatched) stringResource(id = R.string.match_blitz_tile_matched) else text,
                 style = MaterialTheme.typography.bodySmall,
                 fontWeight = if (isSelected || isMatched) FontWeight.Bold else FontWeight.Medium,
                 color = when {
@@ -681,7 +688,7 @@ private fun MatchBlitzStartOverlay(
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "Pair prompts with their exact answers from \"$deckTitle\" ($cardCount cards). Build combos up to x5 and clear rounds for +8s bonus time — 100% offline.",
+            text = stringResource(id = R.string.match_blitz_start_body, deckTitle, cardCount),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center
@@ -774,7 +781,11 @@ private fun MatchBlitzFinishedSummary(
         )
         Spacer(modifier = Modifier.height(12.dp))
         Text(
-            text = if (isNewBest) "New High Score!" else "Time's Up!",
+            text = if (isNewBest) {
+                stringResource(id = R.string.match_blitz_new_high_score)
+            } else {
+                stringResource(id = R.string.match_blitz_times_up)
+            },
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold
         )
@@ -797,10 +808,10 @@ private fun MatchBlitzFinishedSummary(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 modifier = Modifier.padding(16.dp)
             ) {
-                StatChip("Pairs", "$matchedPairs")
-                StatChip("Accuracy", "$accuracyPercent%")
-                StatChip("Max Streak", "x${maxCombo.coerceAtLeast(1)}")
-                StatChip("Best", "$bestScore")
+                StatChip(stringResource(id = R.string.match_blitz_stat_pairs), "$matchedPairs")
+                StatChip(stringResource(id = R.string.match_blitz_stat_accuracy), "$accuracyPercent%")
+                StatChip(stringResource(id = R.string.match_blitz_stat_max_streak), "x${maxCombo.coerceAtLeast(1)}")
+                StatChip(stringResource(id = R.string.match_blitz_stat_best), "$bestScore")
             }
         }
 

@@ -1,6 +1,7 @@
 package com.example.ui.theme
 
 import android.app.Activity
+import androidx.annotation.StringRes
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -13,11 +14,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
+import com.example.R
 
-enum class ThemeMode(val label: String) {
-    SYSTEM("System"),
-    DARK("Dark"),
-    LIGHT("Light");
+enum class ThemeMode(val label: String, @StringRes val labelRes: Int) {
+    SYSTEM("System", R.string.theme_mode_system),
+    DARK("Dark", R.string.theme_mode_dark),
+    LIGHT("Light", R.string.theme_mode_light);
 
     companion object {
         fun fromRaw(raw: String?): ThemeMode =

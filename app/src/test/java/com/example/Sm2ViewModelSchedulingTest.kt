@@ -6,11 +6,14 @@ import androidx.test.core.app.ApplicationProvider
 import com.example.data.local.AppDatabase
 import com.example.data.local.DeckEntity
 import com.example.data.local.Flashcard
+import com.example.data.local.toDomain
 import com.example.data.model.DeckSourceType
 import com.example.data.model.ReviewRating
 import com.example.data.model.SpacedRepetitionEngine
 import com.example.data.repository.FlashcardLocalRepository
+import com.example.data.repository.StudyRepository
 import com.example.ui.viewmodel.FlashcardViewModel
+import com.example.ui.viewmodel.ReviewUrgency
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -280,5 +283,71 @@ class Sm2ViewModelSchedulingTest {
         assertEquals(1, afterSecondRating.queue.size)
         assertEquals(firstCard.id, afterSecondRating.currentCard?.id)
         assertEquals("1d", afterSecondRating.lastScheduledOutcome?.intervalLabel)
+        // Requeued lapsed card must keep CRITICAL_LAPSE urgency in-session rather than "Reviewed recently"
+        assertEquals(ReviewUrgency.CRITICAL_LAPSE, afterSecondRating.currentFlag?.urgency)
+        assertTrue(afterSecondRating.currentFlag?.isReviewNow == true)
+    }
+
+    @Test
+    fun scheduleNextReviewByQuality_handlesCorruptEaseFactorAndFormatsYears() {
+        val corrupt = Flashcard(
+            id = "corrupt_1",
+            userId = userId,
+            deckId = deckId,
+            cardType = "CONCEPT_EXPLAIN",
+            question = "Q",
+            answer = "A",
+            easeFactor = Double.NaN,
+            intervalDays = -5,
+            repetitions = -2
+        )
+        val result = viewModel.calculateSm2Schedule(corrupt, ReviewRating.GOOD, baseNowMs)
+        assertEquals(1, result.repetitions)
+        assertEquals(1, result.intervalDays)
+        assertEquals(2.5, result.easeFactor, 0.001)
+        assertEquals("1y", SpacedRepetitionEngine.formatIntervalLabel(365))
+        assertEquals("2y", SpacedRepetitionEngine.formatIntervalLabel(730))
+    }
+
+    @Test
+    fun studyRepository_saveScheduledCardReview_persistsOfflineAndUpdatesDeckMastery() = runTest {
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        val repo = StudyRepository(
+            appContext = context,
+            db = null,
+            auth = null,
+            localDb = database,
+            ownerUserId = userId,
+            preferencesRepository = null
+        )
+        val seeded = seedDeckAndCard(
+            cardId = "card_repo_sm2",
+            easeFactor = 2.5,
+            intervalDays = 1,
+            repetitions = 1,
+            dueAtMillis = baseNowMs - dayMs,
+            lastReviewDate = baseNowMs - 2L * dayMs,
+            studyProgress = 45
+        )
+        val scheduled = SpacedRepetitionEngine.scheduleNextReview(seeded.toDomain(), ReviewRating.GOOD, baseNowMs)
+        val updatedDomain = seeded.toDomain().copy(
+            easeFactor = scheduled.easeFactor,
+            intervalDays = scheduled.intervalDays,
+            repetitions = scheduled.repetitions,
+            dueAtMillis = scheduled.dueAtMillis,
+            lastReviewedAtMillis = scheduled.lastReviewedAtMillis,
+            pendingSync = true
+        )
+
+        val saveResult = repo.saveScheduledCardReview(updatedDomain, baseNowMs)
+        assertTrue(saveResult.isSuccess)
+        val storedCard = database.flashcardDao().getCardById(seeded.id)!!
+        assertEquals(6, storedCard.intervalDays)
+        assertEquals(2, storedCard.repetitions)
+        assertEquals(baseNowMs + 6L * dayMs, storedCard.dueAtMillis)
+        assertFalse(storedCard.pendingSync) // Offline-only mode should not leave phantom pendingSync flags
+
+        val storedDeck = database.deckDao().getDeckById(deckId)!!
+        assertEquals(1, storedDeck.masteredCount)
     }
 }

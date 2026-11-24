@@ -10,6 +10,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.BuildConfig
+import com.example.R
 import com.example.data.ai.AiQuotaExceededException
 import com.example.data.ai.FactCheckResult
 import com.example.data.analytics.AppEventTracker
@@ -129,7 +130,7 @@ class ExamForgeViewModel(
     private val geminiService: GeminiStudyService,
     private val preferencesRepository: PreferencesRepository,
     private val eventTracker: AppEventTracker,
-    appContext: Context
+    private val appContext: Context
 ) : ViewModel() {
 
     private val _decksLoaded = MutableStateFlow(false)
@@ -192,7 +193,7 @@ class ExamForgeViewModel(
         onSupporterVerified = { productId, _ ->
             viewModelScope.launch {
                 eventTracker.markActiveSupporter("GOOGLE_PLAY:$productId")
-                _actionBanner.value = "Thank you for supporting ExamForge! Active Supporter badge unlocked."
+                _actionBanner.value = appContext.getString(R.string.vm_supporter_unlocked)
             }
         }
     )
@@ -350,12 +351,12 @@ class ExamForgeViewModel(
             val result = studyRepository.flushPendingOfflineReviews(currentUserId)
             result.onSuccess { count ->
                 _actionBanner.value = if (count > 0) {
-                    "Synced $count offline review(s) to Firestore."
+                    appContext.getString(R.string.vm_synced_offline_reviews, count)
                 } else {
-                    "All flashcards are synced with the cloud."
+                    appContext.getString(R.string.vm_all_cards_synced)
                 }
             }.onFailure { err ->
-                _actionBanner.value = err.localizedMessage ?: "Sync deferred — staying in offline mode."
+                _actionBanner.value = err.localizedMessage ?: appContext.getString(R.string.vm_sync_deferred)
             }
         }
     }
@@ -399,14 +400,14 @@ class ExamForgeViewModel(
                 Log.w(TAG, "Daily free AI forge quota reached", e)
                 eventTracker.logEvent(AppEventType.QUOTA_HIT, detail = "forge_quota")
                 _forgeState.value = ForgeUiState.Error(
-                    message = e.message ?: "Daily free AI limit reached.",
+                    message = e.message ?: appContext.getString(R.string.vm_forge_quota_reached),
                     isQuotaLimit = true
                 )
             } catch (e: TimeoutCancellationException) {
                 Log.e(TAG, "Flashcard generation timed out", e)
                 eventTracker.logEvent(AppEventType.ERROR_OCCURRED, detail = "forge_timeout")
                 _forgeState.value = ForgeUiState.Error(
-                    "Gemini took longer than 60 seconds. Try a closer crop or Offline Instant Mode."
+                    appContext.getString(R.string.vm_forge_timeout)
                 )
             } catch (e: CancellationException) {
                 throw e
@@ -414,7 +415,7 @@ class ExamForgeViewModel(
                 Log.e(TAG, "Flashcard generation failed", e)
                 eventTracker.logEvent(AppEventType.ERROR_OCCURRED, detail = "forge_error")
                 _forgeState.value = ForgeUiState.Error(
-                    e.localizedMessage ?: "Could not parse notes into flashcards."
+                    e.localizedMessage ?: appContext.getString(R.string.vm_forge_parse_error)
                 )
             }
         }
@@ -437,7 +438,7 @@ class ExamForgeViewModel(
         val preview = _forgeState.value as? ForgeUiState.Preview ?: return
         val draft = preview.draft
         if (draft.cards.isEmpty()) {
-            _forgeState.value = ForgeUiState.Error("Keep at least one flashcard before saving.")
+            _forgeState.value = ForgeUiState.Error(appContext.getString(R.string.vm_forge_keep_one_card))
             return
         }
         viewModelScope.launch {
@@ -446,12 +447,12 @@ class ExamForgeViewModel(
                 val res = studyRepository.addCardsToExistingDeck(targetExistingDeckId, draft.cards)
                 res.onSuccess {
                     _forgeState.value = ForgeUiState.Saved(targetExistingDeckId, draft.cards.size)
-                    _actionBanner.value = "Added ${draft.cards.size} cards to your deck."
+                    _actionBanner.value = appContext.getString(R.string.vm_added_cards_to_deck, draft.cards.size)
                     eventTracker.logEvent(AppEventType.DECK_FORGED, detail = draft.title, value = draft.cards.size)
                     maybeEvaluateAutoPopup(PopupTriggerMoment.DECK_FORGED)
                 }.onFailure { err ->
                     eventTracker.logEvent(AppEventType.ERROR_OCCURRED, detail = "save_cards_failed")
-                    _forgeState.value = ForgeUiState.Error(err.localizedMessage ?: "Failed to save cards.")
+                    _forgeState.value = ForgeUiState.Error(err.localizedMessage ?: appContext.getString(R.string.vm_failed_save_cards))
                 }
             } else {
                 val res = studyRepository.createDeckWithCards(
@@ -464,12 +465,12 @@ class ExamForgeViewModel(
                 )
                 res.onSuccess { deckId ->
                     _forgeState.value = ForgeUiState.Saved(deckId, draft.cards.size)
-                    _actionBanner.value = "Forged \"${draft.title}\" with ${draft.cards.size} cards."
+                    _actionBanner.value = appContext.getString(R.string.vm_forged_deck_banner, draft.title, draft.cards.size)
                     eventTracker.logEvent(AppEventType.DECK_FORGED, detail = draft.title, value = draft.cards.size)
                     maybeEvaluateAutoPopup(PopupTriggerMoment.DECK_FORGED)
                 }.onFailure { err ->
                     eventTracker.logEvent(AppEventType.ERROR_OCCURRED, detail = "save_deck_failed")
-                    _forgeState.value = ForgeUiState.Error(err.localizedMessage ?: "Failed to save deck.")
+                    _forgeState.value = ForgeUiState.Error(err.localizedMessage ?: appContext.getString(R.string.vm_failed_save_deck))
                 }
             }
         }
@@ -493,9 +494,9 @@ class ExamForgeViewModel(
                 drafts = emptyList()
             )
             result.onSuccess {
-                _actionBanner.value = "Created deck \"$title\"."
+                _actionBanner.value = appContext.getString(R.string.vm_created_deck_banner, title)
             }.onFailure { err ->
-                _actionBanner.value = err.localizedMessage ?: "Unable to create deck."
+                _actionBanner.value = err.localizedMessage ?: appContext.getString(R.string.vm_unable_create_deck)
             }
         }
     }
@@ -523,9 +524,9 @@ class ExamForgeViewModel(
             )
             val result = studyRepository.addCardsToExistingDeck(deckId, listOf(draft))
             result.onSuccess {
-                _actionBanner.value = "Flashcard saved to deck."
+                _actionBanner.value = appContext.getString(R.string.vm_card_saved_to_deck)
             }.onFailure { err ->
-                _actionBanner.value = err.localizedMessage ?: "Unable to save card."
+                _actionBanner.value = err.localizedMessage ?: appContext.getString(R.string.vm_unable_save_card)
             }
         }
     }
@@ -533,16 +534,16 @@ class ExamForgeViewModel(
     fun deleteDeck(deck: StudyDeck) {
         viewModelScope.launch {
             studyRepository.deleteDeck(deck)
-                .onSuccess { _actionBanner.value = "Deleted \"${deck.title}\"." }
-                .onFailure { _actionBanner.value = it.localizedMessage ?: "Failed to delete deck." }
+                .onSuccess { _actionBanner.value = appContext.getString(R.string.vm_deleted_deck_banner, deck.title) }
+                .onFailure { _actionBanner.value = it.localizedMessage ?: appContext.getString(R.string.vm_failed_delete_deck) }
         }
     }
 
     fun deleteCard(card: Flashcard) {
         viewModelScope.launch {
             studyRepository.deleteCard(card)
-                .onSuccess { _actionBanner.value = "Card removed." }
-                .onFailure { _actionBanner.value = it.localizedMessage ?: "Failed to remove card." }
+                .onSuccess { _actionBanner.value = appContext.getString(R.string.vm_card_removed) }
+                .onFailure { _actionBanner.value = it.localizedMessage ?: appContext.getString(R.string.vm_failed_remove_card) }
         }
     }
 
@@ -563,7 +564,7 @@ class ExamForgeViewModel(
         }
         _studySession.value = StudySessionUiState(
             deckId = deck?.id ?: "all_due",
-            deckTitle = deck?.title ?: "Daily Spaced Review",
+            deckTitle = deck?.title ?: appContext.getString(R.string.study_session_daily_spaced_title),
             queue = filtered.sortedBy { it.dueAtMillis },
             currentIndex = 0
         )
@@ -696,7 +697,7 @@ class ExamForgeViewModel(
         if (deckCards.isEmpty()) {
             _quizState.value = QuizmasterUiState(
                 selectedDeckId = deckId,
-                errorMessage = "Add or forge flashcards in \"${deck.title}\" before starting an oral quiz."
+                errorMessage = appContext.getString(R.string.vm_quiz_add_cards_first, deck.title)
             )
             return
         }
@@ -715,7 +716,7 @@ class ExamForgeViewModel(
         val deckId = _quizState.value.selectedDeckId ?: decks.value.firstOrNull()?.id
         val deck = decks.value.firstOrNull { it.id == deckId }
         if (deck == null) {
-            _quizState.update { it.copy(errorMessage = "Select or forge a study deck first.") }
+            _quizState.update { it.copy(errorMessage = appContext.getString(R.string.vm_quiz_select_deck_first)) }
             return
         }
         val deckCards = allCards.value.filter { it.deckId == deck.id }
@@ -778,13 +779,13 @@ class ExamForgeViewModel(
             } catch (e: TimeoutCancellationException) {
                 Log.e(TAG, "Quizmaster timed out", e)
                 eventTracker.logEvent(AppEventType.ERROR_OCCURRED, detail = "quiz_timeout")
-                failStreamingBubble(aiBubbleId, "Quizmaster timed out. Tap retry or check your connection.")
+                failStreamingBubble(aiBubbleId, appContext.getString(R.string.vm_quiz_timeout))
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
                 Log.e(TAG, "Quizmaster streaming failed", e)
                 eventTracker.logEvent(AppEventType.ERROR_OCCURRED, detail = "quiz_error")
-                failStreamingBubble(aiBubbleId, e.localizedMessage ?: "Quizmaster unavailable right now.")
+                failStreamingBubble(aiBubbleId, e.localizedMessage ?: appContext.getString(R.string.vm_quiz_unavailable))
             }
         }
     }
@@ -832,13 +833,13 @@ class ExamForgeViewModel(
             } catch (e: AiQuotaExceededException) {
                 _factCheckState.value = FactCheckUiState.Error(
                     card = card,
-                    message = e.message ?: "Daily free Fact-Check quota reached.",
+                    message = e.message ?: appContext.getString(R.string.vm_fact_check_quota_reached),
                     isQuotaLimit = true
                 )
             } catch (e: TimeoutCancellationException) {
                 _factCheckState.value = FactCheckUiState.Error(
                     card = card,
-                    message = "Fact-check timed out. Please try again."
+                    message = appContext.getString(R.string.vm_fact_check_timeout)
                 )
             } catch (e: CancellationException) {
                 throw e
@@ -846,7 +847,7 @@ class ExamForgeViewModel(
                 Log.e(TAG, "Fact-check failed for card ${card.id}", e)
                 _factCheckState.value = FactCheckUiState.Error(
                     card = card,
-                    message = e.localizedMessage ?: "Unable to verify this flashcard right now."
+                    message = e.localizedMessage ?: appContext.getString(R.string.vm_fact_check_unavailable)
                 )
             }
         }
@@ -861,10 +862,10 @@ class ExamForgeViewModel(
             studyRepository.updateCardContent(updated)
                 .onSuccess {
                     _factCheckState.value = FactCheckUiState.Idle
-                    _actionBanner.value = "Updated flashcard with verified answer."
+                    _actionBanner.value = appContext.getString(R.string.vm_fact_check_updated_banner)
                 }
                 .onFailure { err ->
-                    _actionBanner.value = err.localizedMessage ?: "Could not save verified answer."
+                    _actionBanner.value = err.localizedMessage ?: appContext.getString(R.string.vm_fact_check_save_failed)
                 }
         }
     }
@@ -878,7 +879,7 @@ class ExamForgeViewModel(
     fun testAndSaveByokKey(rawKey: String) {
         val cleaned = rawKey.trim()
         if (cleaned.isBlank()) {
-            _byokKeyState.value = ByokKeyUiState.Error("Paste your Gemini API key first.")
+            _byokKeyState.value = ByokKeyUiState.Error(appContext.getString(R.string.vm_byok_paste_first))
             return
         }
         viewModelScope.launch {
@@ -887,10 +888,10 @@ class ExamForgeViewModel(
             verification.onSuccess { statusText ->
                 preferencesRepository.saveByokGeminiKey(cleaned)
                 _byokKeyState.value = ByokKeyUiState.Saved(statusText)
-                _actionBanner.value = "BYOK Unlimited connected securely on device."
+                _actionBanner.value = appContext.getString(R.string.vm_byok_connected_banner)
             }.onFailure { err ->
                 _byokKeyState.value = ByokKeyUiState.Error(
-                    err.localizedMessage ?: "Could not validate this API key."
+                    err.localizedMessage ?: appContext.getString(R.string.vm_byok_validate_failed)
                 )
             }
         }
@@ -900,7 +901,7 @@ class ExamForgeViewModel(
         viewModelScope.launch {
             preferencesRepository.clearByokGeminiKey()
             _byokKeyState.value = ByokKeyUiState.Idle
-            _actionBanner.value = "Removed personal API key. Switched to Smart Free Plan."
+            _actionBanner.value = appContext.getString(R.string.vm_byok_removed_banner)
         }
     }
 
@@ -918,9 +919,9 @@ class ExamForgeViewModel(
         viewModelScope.launch {
             preferencesRepository.setEcoLiteMode(enabled)
             _actionBanner.value = if (enabled) {
-                "Eco Lite AI enabled — lightweight model stretches your free quota 3× further."
+                appContext.getString(R.string.vm_eco_lite_enabled)
             } else {
-                "Standard AI tier restored."
+                appContext.getString(R.string.vm_eco_lite_disabled)
             }
         }
     }
@@ -929,9 +930,9 @@ class ExamForgeViewModel(
         viewModelScope.launch {
             val granted = preferencesRepository.claimDailyGraceCredits()
             _actionBanner.value = if (granted) {
-                "+3 Free Grace Credits added for today! Continue right where you left off."
+                appContext.getString(R.string.vm_grace_added)
             } else {
-                "Today's +3 Grace Credits were already claimed. Resets at midnight."
+                appContext.getString(R.string.vm_grace_already_claimed)
             }
             if (granted && (_forgeState.value as? ForgeUiState.Error)?.isQuotaLimit == true) {
                 _forgeState.value = ForgeUiState.Idle
@@ -1043,7 +1044,7 @@ class ExamForgeViewModel(
     fun optOutDonationReminders() {
         viewModelScope.launch {
             eventTracker.recordPopupOptOut(AutoPopupType.DONATE_SUPPORT)
-            _actionBanner.value = "Donation reminders turned off. Support remains available anytime in Settings."
+            _actionBanner.value = appContext.getString(R.string.vm_donation_reminders_off)
         }
     }
 
@@ -1059,7 +1060,7 @@ class ExamForgeViewModel(
                     targetVersionName = state.latestKnownVersionName.ifBlank { "v${state.latestKnownVersionCode}" }
                 )
             } else {
-                _actionBanner.value = "You are on the latest version (${BuildConfig.VERSION_NAME})."
+                _actionBanner.value = appContext.getString(R.string.settings_update_up_to_date, BuildConfig.VERSION_NAME)
             }
         }
     }

@@ -3,11 +3,13 @@ package com.example.ui.viewmodel
 import android.content.Context
 import android.graphics.Bitmap
 import android.util.Log
+import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.R
 import com.example.data.ai.FlashcardAiService
 import com.example.data.local.AppDatabase
 import com.example.data.local.Flashcard
@@ -235,8 +237,14 @@ class FlashcardViewModel(
     private val currentUserId: String,
     private val localRepository: FlashcardLocalRepository,
     private val flashcardAiService: FlashcardAiService = FlashcardAiService(),
-    private val studyRepository: StudyRepository? = null
+    private val studyRepository: StudyRepository? = null,
+    private val appContext: Context? = null
 ) : ViewModel() {
+
+    private fun localized(@StringRes resId: Int, fallback: String, vararg args: Any): String {
+        val ctx = appContext ?: return fallback
+        return if (args.isEmpty()) ctx.getString(resId) else ctx.getString(resId, *args)
+    }
 
     private val _searchQuery = MutableStateFlow("")
     val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
@@ -268,7 +276,7 @@ class FlashcardViewModel(
         .catch { error ->
             if (error is CancellationException) throw error
             Log.e(TAG, "Failed observing Room flashcards", error)
-            _dbError.value = error.localizedMessage ?: "Unable to load saved flashcards."
+            _dbError.value = error.localizedMessage ?: localized(R.string.vm_fc_load_error, "Unable to load saved flashcards.")
             emit(emptyList())
         }
         .stateIn(
@@ -610,7 +618,7 @@ class FlashcardViewModel(
                 throw e
             } catch (e: Exception) {
                 Log.e(TAG, "Failed saving SM-2 review interval to Room for ${activeCard.id}", e)
-                _statusMessage.value = e.localizedMessage ?: "Failed to save review progress."
+                _statusMessage.value = e.localizedMessage ?: localized(R.string.vm_fc_save_progress_error, "Failed to save review progress.")
             }
         }
 
@@ -651,6 +659,21 @@ class FlashcardViewModel(
             } else {
                 val nextIndex = session.currentIndex.coerceIn(0, nextQueue.lastIndex)
                 val nextCard = nextQueue[nextIndex]
+                val evaluatedFlag = ReviewNowScheduler.evaluateFlag(nextCard, nowMillis)
+                val effectiveFlag = if (
+                    !evaluatedFlag.isReviewNow &&
+                    nextCard.repetitions <= 0 &&
+                    nextCard.intervalDays <= 0 &&
+                    nextCard.lastReviewDate > 0L
+                ) {
+                    evaluatedFlag.copy(
+                        isReviewNow = true,
+                        urgency = ReviewUrgency.CRITICAL_LAPSE,
+                        statusLabel = "Review Now · Reinforce"
+                    )
+                } else {
+                    evaluatedFlag
+                }
                 session.copy(
                     queue = nextQueue,
                     currentIndex = nextIndex,
@@ -658,7 +681,7 @@ class FlashcardViewModel(
                     hintShown = false,
                     reviewedInCycle = nextReviewedCount,
                     reinforcedMasteredCount = nextMasteredCount,
-                    currentFlag = ReviewNowScheduler.evaluateFlag(nextCard, nowMillis),
+                    currentFlag = effectiveFlag,
                     isCompleted = false,
                     lastScheduledOutcome = outcome
                 )
@@ -696,7 +719,7 @@ class FlashcardViewModel(
         val cleanQuestion = question.trim().take(1000)
         val cleanAnswer = answer.trim().take(1500)
         if (cleanQuestion.isBlank() || cleanAnswer.isBlank()) {
-            _statusMessage.value = "Question and answer cannot be empty."
+            _statusMessage.value = localized(R.string.vm_fc_empty_qa, "Question and answer cannot be empty.")
             return
         }
 
@@ -730,20 +753,20 @@ class FlashcardViewModel(
                 val repo = studyRepository
                 if (repo != null && !deckId.isNullOrBlank()) {
                     repo.addCardsToExistingDeck(deckId, listOf(draft))
-                    _statusMessage.value = "Flashcard saved."
+                    _statusMessage.value = localized(R.string.vm_fc_saved, "Flashcard saved.")
                     return@launch
                 }
 
                 if (repo != null && deckId.isNullOrBlank()) {
                     repo.createDeckWithCards(
-                        title = "Quick Study Cards",
-                        subject = "General",
-                        description = "Saved flashcards",
+                        title = localized(R.string.vm_fc_quick_deck_title, "Quick Study Cards"),
+                        subject = localized(R.string.decks_default_subject, "General"),
+                        description = localized(R.string.vm_fc_quick_deck_desc, "Saved flashcards"),
                         sourceType = DeckSourceType.MANUAL,
                         accentIndex = 0,
                         drafts = listOf(draft)
                     )
-                    _statusMessage.value = "Flashcard saved to new deck."
+                    _statusMessage.value = localized(R.string.vm_fc_saved_new_deck, "Flashcard saved to new deck.")
                     return@launch
                 }
 
@@ -752,9 +775,9 @@ class FlashcardViewModel(
                 localRepository.ensureLocalDeck(
                     deckId = resolvedDeckId,
                     userId = currentUserId,
-                    title = "Saved Study Cards",
-                    subject = "General",
-                    description = "Offline Room flashcard collection",
+                    title = localized(R.string.vm_fc_local_deck_title, "Saved Study Cards"),
+                    subject = localized(R.string.decks_default_subject, "General"),
+                    description = localized(R.string.vm_fc_local_deck_desc, "Offline Room flashcard collection"),
                     sourceType = DeckSourceType.MANUAL,
                     accentIndex = 0
                 )
@@ -779,12 +802,12 @@ class FlashcardViewModel(
                     pendingSync = true
                 )
                 localRepository.insertFlashcard(entity)
-                _statusMessage.value = "Flashcard saved locally."
+                _statusMessage.value = localized(R.string.vm_fc_saved_locally, "Flashcard saved locally.")
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
                 Log.e(TAG, "Failed adding flashcard", e)
-                _statusMessage.value = e.localizedMessage ?: "Failed to save flashcard."
+                _statusMessage.value = e.localizedMessage ?: localized(R.string.vm_fc_save_failed, "Failed to save flashcard.")
             }
         }
     }
@@ -819,7 +842,11 @@ class FlashcardViewModel(
                                 deckId = targetDeckId,
                                 deckTitle = parsedBatch.deckTitle
                             )
-                            _statusMessage.value = "Saved ${drafts.size} camera flashcards to Room & cloud."
+                            _statusMessage.value = localized(
+                                R.string.vm_fc_camera_saved_cloud,
+                                "Saved ${drafts.size} camera flashcards to Room & cloud.",
+                                drafts.size
+                            )
                             return@launch
                         }
                     } else {
@@ -838,7 +865,11 @@ class FlashcardViewModel(
                                 deckId = newDeckId,
                                 deckTitle = parsedBatch.deckTitle
                             )
-                            _statusMessage.value = "Saved ${drafts.size} flashcards from camera capture."
+                            _statusMessage.value = localized(
+                                R.string.vm_fc_camera_saved,
+                                "Saved ${drafts.size} flashcards from camera capture.",
+                                drafts.size
+                            )
                             return@launch
                         }
                     }
@@ -868,18 +899,22 @@ class FlashcardViewModel(
                     deckId = resolvedDeckId,
                     deckTitle = parsedBatch.deckTitle
                 )
-                _statusMessage.value = "Saved ${entities.size} flashcards from camera capture to Room."
+                _statusMessage.value = localized(
+                    R.string.vm_fc_camera_saved_room,
+                    "Saved ${entities.size} flashcards from camera capture to Room.",
+                    entities.size
+                )
             } catch (e: TimeoutCancellationException) {
                 Log.e(TAG, "Camera capture Gemini analysis timed out", e)
                 _cameraCaptureState.value = CameraCaptureImportState.Error(
-                    "Analysis timed out. Try a clearer photo with tighter framing."
+                    localized(R.string.vm_fc_camera_timeout, "Analysis timed out. Try a clearer photo with tighter framing.")
                 )
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
                 Log.e(TAG, "Failed creating flashcards from camera capture", e)
                 _cameraCaptureState.value = CameraCaptureImportState.Error(
-                    e.localizedMessage ?: "Could not extract flashcards from the captured photo."
+                    e.localizedMessage ?: localized(R.string.vm_fc_camera_extract_failed, "Could not extract flashcards from the captured photo.")
                 )
             }
         }
@@ -903,7 +938,7 @@ class FlashcardViewModel(
         val cleanQuestion = question.trim().take(1000)
         val cleanAnswer = answer.trim().take(1500)
         if (cleanQuestion.isBlank() || cleanAnswer.isBlank()) {
-            _statusMessage.value = "Question and answer cannot be empty."
+            _statusMessage.value = localized(R.string.vm_fc_empty_qa, "Question and answer cannot be empty.")
             return
         }
 
@@ -939,12 +974,12 @@ class FlashcardViewModel(
                 } else {
                     localRepository.updateFlashcard(updatedEntity)
                 }
-                _statusMessage.value = "Flashcard updated."
+                _statusMessage.value = localized(R.string.vm_fc_updated, "Flashcard updated.")
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
                 Log.e(TAG, "Failed updating flashcard ${card.id}", e)
-                _statusMessage.value = e.localizedMessage ?: "Unable to update flashcard."
+                _statusMessage.value = e.localizedMessage ?: localized(R.string.vm_fc_update_failed, "Unable to update flashcard.")
             }
         }
     }
@@ -993,13 +1028,17 @@ class FlashcardViewModel(
             try {
                 _scheduleClockMillis.value = nowMillis
                 val nextProgress = persistSm2Schedule(card, scheduled)
-                _statusMessage.value =
-                    "Next review in ${outcome.intervalLabel} (${nextProgress}% mastery)."
+                _statusMessage.value = localized(
+                    R.string.vm_fc_next_review_status,
+                    "Next review in ${outcome.intervalLabel} (${nextProgress}% mastery).",
+                    outcome.intervalLabel,
+                    nextProgress
+                )
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
                 Log.e(TAG, "Failed recording SM-2 review for ${card.id}", e)
-                _statusMessage.value = e.localizedMessage ?: "Failed to record review."
+                _statusMessage.value = e.localizedMessage ?: localized(R.string.vm_fc_review_failed, "Failed to record review.")
             }
         }
     }
@@ -1013,20 +1052,6 @@ class FlashcardViewModel(
             intervalDays = scheduled.intervalDays,
             lastReviewDate = scheduled.lastReviewedAtMillis
         )
-        // Always persist the calculated interval and next review timestamp to Room first
-        localRepository.updateReviewMetadata(
-            cardId = card.id,
-            userId = card.userId,
-            deckId = card.deckId,
-            studyProgress = nextProgress,
-            easeFactor = scheduled.easeFactor,
-            intervalDays = scheduled.intervalDays,
-            repetitions = scheduled.repetitions,
-            dueAtMillis = scheduled.dueAtMillis,
-            lastReviewDate = scheduled.lastReviewedAtMillis,
-            pendingSync = true
-        )
-
         val repo = studyRepository
         if (repo != null) {
             val updatedDomain = card.toDomain().copy(
@@ -1037,7 +1062,21 @@ class FlashcardViewModel(
                 lastReviewedAtMillis = scheduled.lastReviewedAtMillis,
                 pendingSync = true
             )
+            // Single source of truth: persists to Room, updates deck mastery & local streak, refreshes widget, syncs cloud
             repo.saveScheduledCardReview(updatedDomain, scheduled.lastReviewedAtMillis)
+        } else {
+            localRepository.updateReviewMetadata(
+                cardId = card.id,
+                userId = card.userId,
+                deckId = card.deckId,
+                studyProgress = nextProgress,
+                easeFactor = scheduled.easeFactor,
+                intervalDays = scheduled.intervalDays,
+                repetitions = scheduled.repetitions,
+                dueAtMillis = scheduled.dueAtMillis,
+                lastReviewDate = scheduled.lastReviewedAtMillis,
+                pendingSync = true
+            )
         }
         return nextProgress
     }
@@ -1073,12 +1112,12 @@ class FlashcardViewModel(
                 } else {
                     localRepository.deleteFlashcard(card)
                 }
-                _statusMessage.value = "Flashcard deleted."
+                _statusMessage.value = localized(R.string.vm_fc_deleted, "Flashcard deleted.")
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
                 Log.e(TAG, "Failed deleting flashcard ${card.id}", e)
-                _statusMessage.value = e.localizedMessage ?: "Unable to delete flashcard."
+                _statusMessage.value = e.localizedMessage ?: localized(R.string.vm_fc_delete_failed, "Unable to delete flashcard.")
             }
         }
     }
@@ -1090,7 +1129,7 @@ class FlashcardViewModel(
                 deleteFlashcard(existing)
             } else {
                 localRepository.deleteFlashcardById(cardId)
-                _statusMessage.value = "Flashcard deleted."
+                _statusMessage.value = localized(R.string.vm_fc_deleted, "Flashcard deleted.")
             }
         }
     }
@@ -1117,7 +1156,8 @@ class FlashcardViewModel(
                     currentUserId = currentUserId,
                     localRepository = FlashcardLocalRepository(database, appContext),
                     flashcardAiService = flashcardAiService,
-                    studyRepository = studyRepository
+                    studyRepository = studyRepository,
+                    appContext = appContext
                 )
             }
         }

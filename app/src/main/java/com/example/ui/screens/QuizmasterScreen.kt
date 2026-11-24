@@ -133,7 +133,7 @@ fun QuizmasterScreen(
         speechRecognizer?.setRecognitionListener(object : RecognitionListener {
             override fun onReadyForSpeech(params: Bundle?) {
                 isListening = true
-                voiceNotice = "Listening... recite your answer aloud."
+                voiceNotice = context.getString(R.string.quiz_voice_listening)
             }
 
             override fun onBeginningOfSpeech() {}
@@ -145,7 +145,7 @@ fun QuizmasterScreen(
 
             override fun onError(error: Int) {
                 isListening = false
-                voiceNotice = "Didn't catch that — tap the mic to try again or type below."
+                voiceNotice = context.getString(R.string.quiz_voice_didnt_catch)
             }
 
             override fun onResults(results: Bundle?) {
@@ -187,7 +187,7 @@ fun QuizmasterScreen(
 
     val startVoiceCapture: () -> Unit = {
         if (speechRecognizer == null) {
-            voiceNotice = "Speech recognition is unavailable on this device. Type your answer below."
+            voiceNotice = context.getString(R.string.quiz_voice_unavailable)
         } else {
             tts.stop()
             val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
@@ -202,7 +202,7 @@ fun QuizmasterScreen(
                 speechRecognizer.startListening(intent)
             } catch (_: Exception) {
                 isListening = false
-                voiceNotice = "Unable to start microphone right now."
+                voiceNotice = context.getString(R.string.forge_dictation_mic_error)
             }
         }
     }
@@ -214,7 +214,7 @@ fun QuizmasterScreen(
             voiceNotice = null
             startVoiceCapture()
         } else {
-            voiceNotice = "Microphone permission denied. You can still chat by typing below."
+            voiceNotice = context.getString(R.string.quiz_voice_permission_denied)
         }
     }
 
@@ -287,7 +287,7 @@ fun QuizmasterScreen(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Refresh,
-                                contentDescription = "Restart quiz"
+                                contentDescription = stringResource(id = R.string.quiz_cd_restart)
                             )
                         }
                     }
@@ -322,7 +322,7 @@ fun QuizmasterScreen(
                         )
                         Spacer(modifier = Modifier.height(6.dp))
                         Text(
-                            text = "Snap a whiteboard or paste lecture notes in the Forge tab first.",
+                            text = stringResource(id = R.string.quiz_empty_body),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -365,9 +365,9 @@ fun QuizmasterScreen(
             // Stage 1 Proactive Soft Nudge Banner at >= 80% daily quiz turns
             if (aiUsagePlan.isApproachingQuizLimit) {
                 QuotaSoftNudgeBanner(
-                    featureLabel = "Cloud Quizmaster",
+                    featureLabel = stringResource(id = R.string.quiz_feature_label),
                     remainingCount = aiUsagePlan.remainingQuizTurns,
-                    resetLabel = aiUsagePlan.timeUntilResetLabel(),
+                    resetLabel = aiUsagePlan.timeUntilResetLabel(context),
                     ecoLiteEnabled = aiUsagePlan.ecoLiteMode,
                     onSwitchToEcoLite = onEnableEcoLite,
                     modifier = Modifier.padding(bottom = 8.dp)
@@ -389,24 +389,24 @@ fun QuizmasterScreen(
                     ) {
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                text = "Offline Reflex Coach Active ($0 Quota)",
+                                text = stringResource(id = R.string.quiz_offline_coach_title),
                                 style = MaterialTheme.typography.labelLarge,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.onSecondaryContainer
                             )
                             Text(
-                                text = "Instant on-device grading active • ${aiUsagePlan.timeUntilResetLabel()}",
+                                text = stringResource(id = R.string.quiz_offline_coach_sub, aiUsagePlan.timeUntilResetLabel(context)),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSecondaryContainer
                             )
                         }
                         if (aiUsagePlan.canClaimGraceCredits) {
                             TextButton(onClick = onClaimGraceCredits) {
-                                Text("+3 Cloud")
+                                Text(stringResource(id = R.string.quiz_plus_three_cloud))
                             }
                         } else {
                             TextButton(onClick = onOpenByokSettings) {
-                                Text("BYOK")
+                                Text(stringResource(id = R.string.quiz_byok_short))
                             }
                         }
                     }
@@ -540,7 +540,7 @@ fun QuizmasterScreen(
                         .padding(vertical = 6.dp)
                 ) {
                     OutlinedButton(
-                        onClick = { onSendMessage("Give me a hint", oralAutoSpeak) },
+                        onClick = { onSendMessage(context.getString(R.string.quiz_prompt_hint), oralAutoSpeak) },
                         enabled = !quizState.isStreaming,
                         shape = RoundedCornerShape(12.dp),
                         contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
@@ -548,7 +548,7 @@ fun QuizmasterScreen(
                         Text(stringResource(R.string.quizmaster_hint_chip), style = MaterialTheme.typography.labelLarge)
                     }
                     OutlinedButton(
-                        onClick = { onSendMessage("Skip and ask the next question", oralAutoSpeak) },
+                        onClick = { onSendMessage(context.getString(R.string.quiz_prompt_skip), oralAutoSpeak) },
                         enabled = !quizState.isStreaming,
                         shape = RoundedCornerShape(12.dp),
                         contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
@@ -636,7 +636,7 @@ fun QuizmasterScreen(
                         } else {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.Send,
-                                contentDescription = "Send answer",
+                                contentDescription = stringResource(id = R.string.quiz_cd_send),
                                 tint = MaterialTheme.colorScheme.onPrimary
                             )
                         }
@@ -674,13 +674,17 @@ private fun QuizChatBubble(
         ) {
             Column(modifier = Modifier.padding(horizontal = 14.dp, vertical = 12.dp)) {
                 Text(
-                    text = if (isUser) "YOU" else "QUIZMASTER",
+                    text = if (isUser) {
+                        stringResource(id = R.string.quiz_sender_you)
+                    } else {
+                        stringResource(id = R.string.quiz_sender_quizmaster)
+                    },
                     style = MaterialTheme.typography.labelSmall,
                     color = if (isUser) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.tertiary
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = message.text.ifBlank { "Thinking..." },
+                    text = message.text.ifBlank { stringResource(id = R.string.quiz_thinking) },
                     style = MaterialTheme.typography.bodyMedium,
                     color = if (isUser) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface
                 )

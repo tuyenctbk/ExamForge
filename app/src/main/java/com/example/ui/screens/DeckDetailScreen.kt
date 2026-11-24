@@ -63,6 +63,7 @@ import androidx.compose.ui.unit.dp
 import com.example.R
 import com.example.data.model.CardType
 import com.example.data.model.Flashcard
+import com.example.data.model.SpacedRepetitionEngine
 import com.example.data.model.StudyDeck
 import com.example.ui.util.tvFocusHighlight
 
@@ -110,7 +111,7 @@ fun DeckDetailScreen(
                             overflow = TextOverflow.Ellipsis
                         )
                         Text(
-                            text = "${deck.subject} · ${cards.size} cards",
+                            text = stringResource(id = R.string.deck_detail_subtitle, deck.subject, cards.size),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -135,7 +136,7 @@ fun DeckDetailScreen(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.CameraAlt,
-                                contentDescription = "Scan notes into deck",
+                                contentDescription = stringResource(id = R.string.deck_detail_cd_scan_into),
                                 tint = MaterialTheme.colorScheme.primary
                             )
                         }
@@ -146,7 +147,7 @@ fun DeckDetailScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Add,
-                            contentDescription = "Add flashcard"
+                            contentDescription = stringResource(id = R.string.deck_detail_cd_add_card)
                         )
                     }
                     IconButton(
@@ -155,7 +156,7 @@ fun DeckDetailScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Delete,
-                            contentDescription = "Delete deck",
+                            contentDescription = stringResource(id = R.string.deck_detail_cd_delete_deck),
                             tint = MaterialTheme.colorScheme.error
                         )
                     }
@@ -216,7 +217,13 @@ fun DeckDetailScreen(
                                         modifier = Modifier.size(18.dp)
                                     )
                                     Spacer(modifier = Modifier.width(6.dp))
-                                    Text(if (dueCount > 0) "Study Due ($dueCount)" else "Practice All")
+                                    Text(
+                                        if (dueCount > 0) {
+                                            stringResource(id = R.string.deck_detail_study_due_count, dueCount)
+                                        } else {
+                                            stringResource(id = R.string.deck_detail_practice_all)
+                                        }
+                                    )
                                 }
 
                                 OutlinedButton(
@@ -235,7 +242,7 @@ fun DeckDetailScreen(
                                         modifier = Modifier.size(18.dp)
                                     )
                                     Spacer(modifier = Modifier.width(6.dp))
-                                    Text("Oral Quiz")
+                                    Text(stringResource(id = R.string.decks_oral_quiz))
                                 }
                             }
 
@@ -259,7 +266,11 @@ fun DeckDetailScreen(
                                 )
                                 Spacer(modifier = Modifier.width(6.dp))
                                 Text(
-                                    if (cards.size >= 3) "Play 60s Match Blitz (Offline Game)" else "Add 3+ cards for Match Blitz"
+                                    if (cards.size >= 3) {
+                                        stringResource(id = R.string.deck_detail_match_blitz_play)
+                                    } else {
+                                        stringResource(id = R.string.deck_detail_match_blitz_need_more)
+                                    }
                                 )
                             }
                         }
@@ -279,18 +290,18 @@ fun DeckDetailScreen(
                                 modifier = Modifier.padding(24.dp)
                             ) {
                                 Text(
-                                    text = "No flashcards in this deck yet",
+                                    text = stringResource(id = R.string.deck_detail_empty_title),
                                     style = MaterialTheme.typography.titleMedium
                                 )
                                 Spacer(modifier = Modifier.height(6.dp))
                                 Text(
-                                    text = "Add a card manually or scan notes from the Forge tab and append them here.",
+                                    text = stringResource(id = R.string.deck_detail_empty_body),
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                                 Spacer(modifier = Modifier.height(14.dp))
                                 Button(onClick = { showAddCardDialog = true }) {
-                                    Text("Add Flashcard")
+                                    Text(stringResource(id = R.string.deck_detail_add_flashcard))
                                 }
                             }
                         }
@@ -342,8 +353,8 @@ fun DeckDetailScreen(
     if (showDeleteDeckConfirm) {
         AlertDialog(
             onDismissRequest = { showDeleteDeckConfirm = false },
-            title = { Text("Delete \"${deck.title}\"?") },
-            text = { Text("This removes the deck and all ${cards.size} flashcards from both cloud sync and local offline cache.") },
+            title = { Text(stringResource(id = R.string.deck_detail_delete_confirm_title, deck.title)) },
+            text = { Text(stringResource(id = R.string.deck_detail_delete_confirm_body, cards.size)) },
             confirmButton = {
                 Button(
                     onClick = {
@@ -351,7 +362,7 @@ fun DeckDetailScreen(
                         onDeleteDeck()
                     }
                 ) {
-                    Text("Delete")
+                    Text(stringResource(id = R.string.common_delete))
                 }
             },
             dismissButton = {
@@ -390,7 +401,7 @@ private fun DeckCardRow(
                         shape = RoundedCornerShape(8.dp)
                     ) {
                         Text(
-                            text = card.cardType.shortBadge,
+                            text = stringResource(id = card.cardType.shortBadgeRes),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onTertiaryContainer,
                             modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
@@ -402,9 +413,12 @@ private fun DeckCardRow(
                     ) {
                         Text(
                             text = when {
-                                isDueNow -> "DUE NOW"
+                                isDueNow -> stringResource(id = R.string.deck_card_due_now)
                                 card.intervalDays <= 0 -> stringResource(id = R.string.deck_card_in_ten_min)
-                                else -> "IN ${card.intervalDays}D"
+                                else -> stringResource(
+                                    id = R.string.deck_card_in_interval,
+                                    SpacedRepetitionEngine.formatIntervalLabel(card.intervalDays).uppercase()
+                                )
                             },
                             style = MaterialTheme.typography.labelSmall,
                             color = if (isDueNow) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSecondaryContainer,
@@ -419,7 +433,7 @@ private fun DeckCardRow(
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.FactCheck,
-                            contentDescription = "Fact-check flashcard",
+                            contentDescription = stringResource(id = R.string.deck_card_cd_fact_check),
                             tint = MaterialTheme.colorScheme.secondary
                         )
                     }
@@ -429,7 +443,7 @@ private fun DeckCardRow(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Edit,
-                            contentDescription = "Edit flashcard",
+                            contentDescription = stringResource(id = R.string.cd_flashcard_edit),
                             tint = MaterialTheme.colorScheme.primary
                         )
                     }
@@ -439,7 +453,7 @@ private fun DeckCardRow(
                     ) {
                         Icon(
                             imageVector = Icons.Default.DeleteOutline,
-                            contentDescription = "Delete flashcard",
+                            contentDescription = stringResource(id = R.string.cd_flashcard_delete),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
@@ -486,7 +500,7 @@ private fun AddManualCardDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Add Flashcard") },
+        title = { Text(stringResource(id = R.string.deck_detail_add_flashcard)) },
         text = {
             Column(
                 verticalArrangement = Arrangement.spacedBy(10.dp),
@@ -497,20 +511,28 @@ private fun AddManualCardDialog(
                         FilterChip(
                             selected = cardType == type,
                             onClick = { cardType = type },
-                            label = { Text(type.shortBadge) }
+                            label = { Text(stringResource(id = type.shortBadgeRes)) }
                         )
                     }
                 }
                 OutlinedTextField(
                     value = question,
                     onValueChange = { if (it.length <= 1000) question = it },
-                    label = { Text(if (cardType == CardType.FILL_IN_BLANK) "Sentence (use ___ for blank)" else "Question") },
+                    label = {
+                        Text(
+                            if (cardType == CardType.FILL_IN_BLANK) {
+                                stringResource(id = R.string.deck_add_sentence_blank_label)
+                            } else {
+                                stringResource(id = R.string.flashcard_question_label)
+                            }
+                        )
+                    },
                     maxLines = 3,
                     modifier = Modifier.fillMaxWidth()
                 )
                 if (cardType == CardType.MULTIPLE_CHOICE) {
                     Text(
-                        text = "Tap a radio button to mark the correct choice",
+                        text = stringResource(id = R.string.deck_add_mcq_radio_hint),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -539,8 +561,14 @@ private fun AddManualCardDialog(
                                     }
                                 },
                                 label = {
-                                    val letter = ('A' + slotIdx)
-                                    Text(if (correctIdx == slotIdx) "Option $letter (Correct)" else "Option $letter")
+                                    val letter = ('A' + slotIdx).toString()
+                                    Text(
+                                        if (correctIdx == slotIdx) {
+                                            stringResource(id = R.string.deck_add_option_correct, letter)
+                                        } else {
+                                            stringResource(id = R.string.deck_add_option_plain, letter)
+                                        }
+                                    )
                                 },
                                 singleLine = true,
                                 modifier = Modifier.weight(1f)
@@ -551,7 +579,7 @@ private fun AddManualCardDialog(
                     OutlinedTextField(
                         value = answer,
                         onValueChange = { if (it.length <= 1500) answer = it },
-                        label = { Text("Answer") },
+                        label = { Text(stringResource(id = R.string.flashcard_answer_label)) },
                         maxLines = 3,
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -559,14 +587,14 @@ private fun AddManualCardDialog(
                 OutlinedTextField(
                     value = explanation,
                     onValueChange = { if (it.length <= 1500) explanation = it },
-                    label = { Text("Explanation (optional)") },
+                    label = { Text(stringResource(id = R.string.flashcard_explanation_opt)) },
                     maxLines = 2,
                     modifier = Modifier.fillMaxWidth()
                 )
                 OutlinedTextField(
                     value = hint,
                     onValueChange = { if (it.length <= 300) hint = it },
-                    label = { Text("Hint (optional)") },
+                    label = { Text(stringResource(id = R.string.flashcard_hint_opt)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -609,11 +637,11 @@ private fun AddManualCardDialog(
                 },
                 enabled = isValid
             ) {
-                Text("Save")
+                Text(stringResource(id = R.string.flashcard_save))
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Cancel") }
+            TextButton(onClick = onDismiss) { Text(stringResource(id = R.string.common_cancel)) }
         }
     )
 }

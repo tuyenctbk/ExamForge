@@ -187,7 +187,7 @@ private val SubScreenSaver = listSaver<SubScreen, Any?>(
             "study_arena" -> SubScreen.StudyArena(returnToDeckId = list.getOrNull(1) as? String)
             "match_blitz" -> SubScreen.MatchBlitz(
                 deckId = list.getOrNull(1) as? String,
-                deckTitle = list.getOrNull(2) as? String ?: "Match Blitz"
+                deckTitle = list.getOrNull(2) as? String ?: ""
             )
             "saved_flashcards" -> SubScreen.SavedFlashcards
             "study_session" -> SubScreen.StudySession(deckId = list.getOrNull(1) as? String)
@@ -238,7 +238,7 @@ private fun ExamForgeRoot(
                 currentUserId = effectiveUserId,
                 isCloudSignedIn = isCloudSignedIn,
                 userEmail = user?.email,
-                userDisplayName = user?.displayName ?: if (isCloudSignedIn) null else "Local Student",
+                userDisplayName = user?.displayName ?: if (isCloudSignedIn) null else stringResource(id = R.string.profile_local_student),
                 prefsRepo = prefsRepo,
                 themeMode = themeMode,
                 oralAutoSpeak = oralAutoSpeak
@@ -291,7 +291,7 @@ private fun ExamForgeAppShell(
                 )
                 ExamForgeViewModel(
                     currentUserId = currentUserId,
-                    initialDisplayName = userDisplayName ?: userEmail?.substringBefore("@") ?: "Student",
+                    initialDisplayName = userDisplayName ?: userEmail?.substringBefore("@") ?: app.getString(R.string.profile_default_student),
                     studyRepository = repo,
                     geminiService = GeminiStudyService(preferencesRepository = prefsRepo),
                     preferencesRepository = prefsRepo,
@@ -329,7 +329,8 @@ private fun ExamForgeAppShell(
                     currentUserId = currentUserId,
                     localRepository = FlashcardLocalRepository(localDb, app),
                     flashcardAiService = FlashcardAiService(preferencesRepository = prefsRepo),
-                    studyRepository = repo
+                    studyRepository = repo,
+                    appContext = app
                 )
             }
         }
@@ -756,7 +757,7 @@ private fun ExamForgeAppShell(
                                                 onOpenMatchBlitzAll = {
                                                     subScreen = SubScreen.MatchBlitz(
                                                         deckId = null,
-                                                        deckTitle = "All Saved Decks"
+                                                        deckTitle = context.getString(R.string.match_blitz_all_decks)
                                                     )
                                                 },
                                                 onOpenDeckDetail = { deck -> subScreen = SubScreen.DeckDetail(deck.id) },

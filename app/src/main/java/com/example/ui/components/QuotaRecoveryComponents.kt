@@ -29,6 +29,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -130,6 +131,7 @@ fun SmartQuotaRecoveryCard(
     onOpenByokSettings: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     Surface(
         color = MaterialTheme.colorScheme.surfaceContainerHigh,
         shape = RoundedCornerShape(20.dp),
@@ -170,7 +172,7 @@ fun SmartQuotaRecoveryCard(
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = aiUsagePlan.timeUntilResetLabel(),
+                            text = aiUsagePlan.timeUntilResetLabel(context),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSecondaryContainer,
                             fontWeight = FontWeight.SemiBold

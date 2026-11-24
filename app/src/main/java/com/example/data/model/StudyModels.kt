@@ -1,6 +1,8 @@
 package com.example.data.model
 
 import androidx.annotation.Keep
+import androidx.annotation.StringRes
+import com.example.R
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentId
 import com.google.firebase.firestore.IgnoreExtraProperties
@@ -8,10 +10,15 @@ import com.google.firebase.firestore.ServerTimestamp
 import kotlin.math.max
 import kotlin.math.roundToInt
 
-enum class CardType(val displayLabel: String, val shortBadge: String) {
-    MULTIPLE_CHOICE("Multiple Choice", "MCQ"),
-    FILL_IN_BLANK("Fill in the Blank", "CLOZE"),
-    CONCEPT_EXPLAIN("Concept Explanation", "EXPLAIN");
+enum class CardType(
+    val displayLabel: String,
+    val shortBadge: String,
+    @StringRes val displayLabelRes: Int,
+    @StringRes val shortBadgeRes: Int
+) {
+    MULTIPLE_CHOICE("Multiple Choice", "MCQ", R.string.card_type_mcq, R.string.card_type_mcq_short),
+    FILL_IN_BLANK("Fill in the Blank", "CLOZE", R.string.card_type_cloze, R.string.card_type_cloze_short),
+    CONCEPT_EXPLAIN("Concept Explanation", "EXPLAIN", R.string.card_type_concept, R.string.card_type_concept_short);
 
     companion object {
         fun fromRaw(raw: String?): CardType =
@@ -19,10 +26,10 @@ enum class CardType(val displayLabel: String, val shortBadge: String) {
     }
 }
 
-enum class DeckSourceType(val displayLabel: String) {
-    PHOTO("Photo Scan"),
-    NOTES("Text Notes"),
-    MANUAL("Manual");
+enum class DeckSourceType(val displayLabel: String, @StringRes val displayLabelRes: Int) {
+    PHOTO("Photo Scan", R.string.deck_source_photo),
+    NOTES("Text Notes", R.string.deck_source_notes),
+    MANUAL("Manual", R.string.deck_source_manual);
 
     companion object {
         fun fromRaw(raw: String?): DeckSourceType =
@@ -191,7 +198,9 @@ object SpacedRepetitionEngine {
         nowMillis: Long = System.currentTimeMillis()
     ): Sm2ScheduleResult {
         val q = quality.coerceIn(0, 5)
-        var ef = card.easeFactor + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02))
+        val baseEase = if (card.easeFactor.isFinite()) card.easeFactor.coerceIn(1.3, 5.0) else 2.5
+        val baseReps = card.repetitions.coerceAtLeast(0)
+        var ef = baseEase + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02))
         ef = ef.coerceIn(1.3, 5.0)
         // Round to 2 decimals for clean readability
         ef = (ef * 100.0).roundToInt() / 100.0
@@ -206,7 +215,7 @@ object SpacedRepetitionEngine {
             nextIntervalDays = 0
             nextDueAtMillis = nowMillis + TEN_MINUTES_MILLIS
         } else {
-            nextRepetitions = card.repetitions + 1
+            nextRepetitions = baseReps + 1
             nextIntervalDays = when (nextRepetitions) {
                 1 -> if (q == 5) 3 else 1
                 2 -> when (q) {
@@ -224,7 +233,7 @@ object SpacedRepetitionEngine {
                     adjusted.coerceAtMost(3650)
                 }
             }
-            nextDueAtMillis = nowMillis + nextIntervalDays * DAY_MILLIS
+            nextDueAtMillis = nowMillis + nextIntervalDays.toLong() * DAY_MILLIS
         }
 
         return Sm2ScheduleResult(
@@ -240,7 +249,8 @@ object SpacedRepetitionEngine {
         intervalDays <= 0 -> "10m"
         intervalDays == 1 -> "1d"
         intervalDays < 30 -> "${intervalDays}d"
-        else -> "${(intervalDays / 30.0).roundToInt().coerceAtLeast(1)}mo"
+        intervalDays < 365 -> "${(intervalDays / 30.0).roundToInt().coerceAtLeast(1)}mo"
+        else -> "${(intervalDays / 365.0).roundToInt().coerceAtLeast(1)}y"
     }
 
     fun previewNextIntervalLabel(card: Flashcard, rating: ReviewRating): String {

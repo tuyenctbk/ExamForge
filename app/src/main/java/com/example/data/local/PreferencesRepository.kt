@@ -5,6 +5,7 @@ import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import android.util.Base64
 import android.util.Log
+import androidx.annotation.StringRes
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -12,6 +13,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.example.R
 import com.example.ui.theme.ThemeMode
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -60,6 +62,14 @@ data class AiUsagePlanState(
             else -> "Smart Free Plan"
         }
 
+    @StringRes
+    fun activeTierLabelRes(): Int = when {
+        preferOfflineParser -> R.string.ai_tier_offline
+        hasByokKey -> R.string.ai_tier_byok
+        ecoLiteMode -> R.string.ai_tier_eco_lite
+        else -> R.string.ai_tier_smart_free
+    }
+
     val remainingForges: Int
         get() = if (hasByokKey) Int.MAX_VALUE else (dailyForgeLimit - dailyForgeUsed).coerceAtLeast(0) + bonusGraceCredits
 
@@ -94,7 +104,7 @@ data class AiUsagePlanState(
     val totalInteractionsToday: Int
         get() = dailyForgeUsed + dailyQuizUsed + dailyFactCheckUsed
 
-    fun timeUntilResetLabel(nowMs: Long = System.currentTimeMillis()): String {
+    fun timeUntilResetParts(nowMs: Long = System.currentTimeMillis()): Pair<Long, Long> {
         val cal = java.util.Calendar.getInstance().apply {
             timeInMillis = nowMs
             add(java.util.Calendar.DAY_OF_YEAR, 1)
@@ -104,9 +114,21 @@ data class AiUsagePlanState(
             set(java.util.Calendar.MILLISECOND, 0)
         }
         val diffMinutes = ((cal.timeInMillis - nowMs) / 60_000L).coerceAtLeast(1L)
-        val hours = diffMinutes / 60L
-        val mins = diffMinutes % 60L
+        return (diffMinutes / 60L) to (diffMinutes % 60L)
+    }
+
+    fun timeUntilResetLabel(nowMs: Long = System.currentTimeMillis()): String {
+        val (hours, mins) = timeUntilResetParts(nowMs)
         return if (hours > 0) "Resets in ${hours}h ${mins}m" else "Resets in ${mins}m"
+    }
+
+    fun timeUntilResetLabel(context: Context, nowMs: Long = System.currentTimeMillis()): String {
+        val (hours, mins) = timeUntilResetParts(nowMs)
+        return if (hours > 0) {
+            context.getString(R.string.ai_quota_resets_hm, hours, mins)
+        } else {
+            context.getString(R.string.ai_quota_resets_m, mins)
+        }
     }
 
     companion object {
@@ -167,7 +189,7 @@ class PreferencesRepository(private val context: Context) {
         context.examForgeDataStore.data.map { prefs ->
             com.example.data.model.UserProfile(
                 userId = userId,
-                displayName = fallbackDisplayName.ifBlank { "ExamForge Student" },
+                displayName = fallbackDisplayName.ifBlank { context.getString(R.string.profile_examforge_student) },
                 streakDays = prefs[Keys.LOCAL_STREAK_DAYS] ?: 0,
                 totalReviewed = prefs[Keys.LOCAL_TOTAL_REVIEWED] ?: 0,
                 lastStudyDayKey = prefs[Keys.LOCAL_LAST_STUDY_DAY_KEY]

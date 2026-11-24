@@ -144,7 +144,7 @@ fun CameraCaptureScreen(
                 capturedBitmap = decoded
                 cameraError = null
             } else {
-                cameraError = "Could not load selected image."
+                cameraError = context.getString(R.string.camera_err_load_image)
             }
         }
     }
@@ -248,7 +248,7 @@ fun CameraCaptureScreen(
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "CameraX bind failed", e)
-                cameraError = e.localizedMessage ?: "Camera preview unavailable on this device."
+                cameraError = e.localizedMessage ?: context.getString(R.string.camera_err_preview_unavailable)
             }
         }
 
@@ -472,7 +472,7 @@ fun CameraCaptureScreen(
                                         if (bitmap != null) {
                                             capturedBitmap = bitmap
                                         } else {
-                                            cameraError = "Failed to decode captured photo. Please try again."
+                                            cameraError = context.getString(R.string.camera_err_decode_photo)
                                         }
                                     }
                                 }
@@ -481,7 +481,7 @@ fun CameraCaptureScreen(
                                     Log.e(TAG, "Photo capture failed", exception)
                                     ContextCompat.getMainExecutor(context).execute {
                                         isCapturing = false
-                                        cameraError = exception.localizedMessage ?: "Capture failed. Try again."
+                                        cameraError = exception.localizedMessage ?: context.getString(R.string.camera_err_capture_failed)
                                     }
                                 }
                             }
@@ -593,7 +593,7 @@ private fun CapturedNoteReviewOverlay(
     ) {
         Image(
             bitmap = bitmap.asImageBitmap(),
-            contentDescription = "Captured study notes preview",
+            contentDescription = stringResource(id = R.string.camera_cd_captured_preview),
             contentScale = ContentScale.Fit,
             modifier = Modifier
                 .fillMaxSize()
@@ -616,12 +616,12 @@ private fun CapturedNoteReviewOverlay(
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 Text(
-                    text = "Snapshot Ready for Gemini",
+                    text = stringResource(id = R.string.camera_snapshot_ready_title),
                     style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
-                    text = "Make sure equations, labels, or handwriting are crisp and readable.",
+                    text = stringResource(id = R.string.camera_snapshot_ready_body),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -776,7 +776,7 @@ private fun CameraPermissionFallback(
                         .fillMaxWidth()
                         .height(48.dp)
                 ) {
-                    Text("Pick from Gallery Instead")
+                    Text(stringResource(id = R.string.camera_pick_gallery_instead))
                 }
                 Spacer(modifier = Modifier.height(6.dp))
                 Button(
@@ -784,7 +784,7 @@ private fun CameraPermissionFallback(
                     colors = ButtonDefaults.textButtonColors(),
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Back")
+                    Text(stringResource(id = R.string.common_back))
                 }
             }
         }

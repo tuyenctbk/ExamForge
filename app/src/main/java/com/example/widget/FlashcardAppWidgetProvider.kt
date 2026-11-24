@@ -213,7 +213,10 @@ class FlashcardAppWidgetProvider : AppWidgetProvider() {
         val deck = db.deckDao().getDeckById(card.deckId)
         val headerLabel = deck?.subject?.uppercase()?.take(18) ?: context.getString(R.string.widget_header_default)
 
-        views.setTextViewText(R.id.widget_brand, "$headerLabel · ${card.cardType.shortBadge}")
+        views.setTextViewText(
+            R.id.widget_brand,
+            "$headerLabel · ${context.getString(card.cardType.shortBadgeRes)}"
+        )
         views.setTextViewText(
             R.id.widget_due_badge,
             context.getString(R.string.study_session_due_badge, dueCards.size)

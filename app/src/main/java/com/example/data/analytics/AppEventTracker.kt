@@ -2,6 +2,7 @@ package com.example.data.analytics
 
 import android.content.Context
 import android.util.Log
+import androidx.annotation.StringRes
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -10,6 +11,7 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.example.R
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -27,28 +29,28 @@ private val Context.engagementDataStore: DataStore<Preferences> by preferencesDa
     name = "examforge_engagement_prefs"
 )
 
-enum class AppEventType(val label: String, val positiveWeight: Int = 0) {
-    APP_OPENED("App Opened", 0),
-    DECK_FORGED("Deck Forged", 4),
-    MANUAL_DECK_CREATED("Deck Created", 2),
-    STUDY_SESSION_COMPLETED("Study Completed", 4),
-    CARD_REVIEWED("Card Reviewed", 1),
-    QUIZ_TURN_COMPLETED("Quizmaster Turn", 2),
-    MATCH_BLITZ_COMPLETED("Match Blitz Finished", 3),
-    FACT_CHECK_COMPLETED("Card Fact-Checked", 2),
-    ERROR_OCCURRED("Error Encountered", 0),
-    QUOTA_HIT("Quota Limit Reached", 0),
-    POPUP_SHOWN("Popup Shown", 0),
-    POPUP_ACCEPTED("Popup Accepted", 0),
-    POPUP_DISMISSED("Popup Dismissed", 0),
-    POPUP_NEVER_ASK("Popup Opted Out", 0),
-    MANUAL_UPDATE_CHECK("Manual Update Check", 0),
-    MANUAL_SHARE("Manual Share", 0),
-    MANUAL_RATE("Manual Rate", 0),
-    DONATION_OPENED("Support Opened", 0),
-    DONATION_BANNER_DISMISSED("Support Banner Dismissed", 0),
-    DONATION_COMPLETED("Supporter Verified", 0),
-    MILESTONE_REACHED("Milestone Reached", 0)
+enum class AppEventType(val label: String, val positiveWeight: Int = 0, @StringRes val labelRes: Int) {
+    APP_OPENED("App Opened", 0, R.string.event_app_opened),
+    DECK_FORGED("Deck Forged", 4, R.string.event_deck_forged),
+    MANUAL_DECK_CREATED("Deck Created", 2, R.string.event_deck_created),
+    STUDY_SESSION_COMPLETED("Study Completed", 4, R.string.event_study_completed),
+    CARD_REVIEWED("Card Reviewed", 1, R.string.event_card_reviewed),
+    QUIZ_TURN_COMPLETED("Quizmaster Turn", 2, R.string.event_quiz_turn),
+    MATCH_BLITZ_COMPLETED("Match Blitz Finished", 3, R.string.event_match_blitz_finished),
+    FACT_CHECK_COMPLETED("Card Fact-Checked", 2, R.string.event_card_fact_checked),
+    ERROR_OCCURRED("Error Encountered", 0, R.string.event_error_occurred),
+    QUOTA_HIT("Quota Limit Reached", 0, R.string.event_quota_hit),
+    POPUP_SHOWN("Popup Shown", 0, R.string.event_popup_shown),
+    POPUP_ACCEPTED("Popup Accepted", 0, R.string.event_popup_accepted),
+    POPUP_DISMISSED("Popup Dismissed", 0, R.string.event_popup_dismissed),
+    POPUP_NEVER_ASK("Popup Opted Out", 0, R.string.event_popup_opted_out),
+    MANUAL_UPDATE_CHECK("Manual Update Check", 0, R.string.event_manual_update_check),
+    MANUAL_SHARE("Manual Share", 0, R.string.event_manual_share),
+    MANUAL_RATE("Manual Rate", 0, R.string.event_manual_rate),
+    DONATION_OPENED("Support Opened", 0, R.string.event_support_opened),
+    DONATION_BANNER_DISMISSED("Support Banner Dismissed", 0, R.string.event_support_banner_dismissed),
+    DONATION_COMPLETED("Supporter Verified", 0, R.string.event_supporter_verified),
+    MILESTONE_REACHED("Milestone Reached", 0, R.string.event_milestone_reached)
 }
 
 enum class AutoPopupType {

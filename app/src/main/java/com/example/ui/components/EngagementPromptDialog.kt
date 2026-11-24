@@ -392,7 +392,7 @@ fun EngagementCommunityCard(
                                     modifier = Modifier.fillMaxWidth()
                                 ) {
                                     Text(
-                                        text = "${ev.type.label}${if (ev.detail.isNotBlank()) " · ${ev.detail.take(28)}" else ""}",
+                                        text = "${stringResource(id = ev.type.labelRes)}${if (ev.detail.isNotBlank()) " · ${ev.detail.take(28)}" else ""}",
                                         style = MaterialTheme.typography.bodySmall,
                                         color = MaterialTheme.colorScheme.onSurface,
                                         modifier = Modifier.weight(1f)
